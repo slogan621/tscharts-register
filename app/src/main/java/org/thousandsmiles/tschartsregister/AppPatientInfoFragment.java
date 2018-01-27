@@ -21,6 +21,7 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -80,7 +81,43 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
                 m_patientId = m_sess.getPatientId();
                 m_patientData = m_sess.getPatientData(m_patientId);
             }
-            setViewDirtyListeners();
+        }
+    }
+
+    public void handleNextButtonPress(View v) {
+        //startActivity(new Intent(MedicalHistoryActivity.this, PatientInfoActivity.class));
+
+        final PatientData pd = this.copyPatientDataFromUI();
+
+        if (m_dirty || pd.equals(m_patientData) == false) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+            builder.setTitle(m_activity.getString(R.string.title_unsaved_patient_data));
+            builder.setMessage(m_activity.getString(R.string.msg_save_patient_data));
+
+            builder.setPositiveButton(m_activity.getString(R.string.button_yes), new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    m_sess.updatePatientData(pd);
+                    startActivity(new Intent(m_activity, MedicalHistoryActivity.class));
+                    m_activity.finish();
+                }
+            });
+
+            builder.setNegativeButton(m_activity.getString(R.string.button_no), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    startActivity(new Intent(m_activity, MedicalHistoryActivity.class));
+                    m_activity.finish();
+                }
+            });
+
+            AlertDialog alert = builder.create();
+            alert.show();
+        } else {
+            startActivity(new Intent(m_activity, MedicalHistoryActivity.class));
+            m_activity.finish();
         }
     }
 
@@ -391,6 +428,7 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
             });
         }
 
+        /*
         tx = (TextView) m_activity.findViewById(R.id.address_state);
         if (tx != null) {
             tx.addTextChangedListener(new TextWatcher() {
@@ -410,6 +448,7 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
                 }
             });
         }
+        */
 
         // gender and dob
 
@@ -751,6 +790,7 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
     public void onResume() {
         super.onResume();
         copyPatientDataToUI();
+        setViewDirtyListeners();
     }
 
     @Override

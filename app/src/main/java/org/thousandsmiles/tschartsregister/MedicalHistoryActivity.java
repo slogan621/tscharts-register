@@ -50,7 +50,7 @@ public class MedicalHistoryActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(MedicalHistoryActivity.this, CategorySelectorActivity.class));
+        startActivity(new Intent(MedicalHistoryActivity.this, PatientInfoActivity.class));
         finish();
     }
 

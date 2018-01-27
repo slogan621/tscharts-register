@@ -51,16 +51,15 @@ public class AppMedicalHistoryFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        if (context instanceof Activity){
-            m_activity=(Activity) context;
-            getMedicalHistoryDataFromREST();
+        if (context instanceof Activity) {
+            m_activity = (Activity) context;
         }
     }
 
     public void handleNextButtonPress(View v) {
         //startActivity(new Intent(MedicalHistoryActivity.this, PatientInfoActivity.class));
 
-        MedicalHistory mh = this.copyMedicalHistoryDataFromUI();
+        final MedicalHistory mh = this.copyMedicalHistoryDataFromUI();
 
         if (m_dirty || mh.equals(m_medicalHistory) == false) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -70,6 +69,7 @@ public class AppMedicalHistoryFragment extends Fragment {
 
             builder.setPositiveButton(m_activity.getString(R.string.button_yes), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
+                    m_sess.updatePatientMedicalHistory(mh);
                     dialog.dismiss();
                 }
             });
@@ -1063,7 +1063,6 @@ public class AppMedicalHistoryFragment extends Fragment {
                         }
                     });
                 }
-                setViewDirtyListeners();
                 }
             };
             thread.start();
@@ -1127,6 +1126,18 @@ public class AppMedicalHistoryFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        if (m_sess.getIsNewPatient() == false) {
+            m_medicalHistory = m_sess.getPatientMedicalHistory();
+            if (m_medicalHistory == null) {
+                getMedicalHistoryDataFromREST();
+            } else {
+                copyMedicalHistoryDataToUI();
+            }
+        } else {
+            m_medicalHistory = m_sess.getPatientMedicalHistory();
+            copyMedicalHistoryDataToUI();
+        }
+        setViewDirtyListeners();
     }
 
     @Override
@@ -1152,7 +1163,7 @@ public class AppMedicalHistoryFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.app_medical_history_layout, container, false);
-
+        m_sess = SessionSingleton.getInstance();
         return view;
     }
 

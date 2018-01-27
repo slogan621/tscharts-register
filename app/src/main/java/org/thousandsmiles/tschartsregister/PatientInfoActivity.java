@@ -30,26 +30,26 @@ public class PatientInfoActivity extends AppCompatActivity {
     private Activity m_activity = this;
     private SessionSingleton m_sess = SessionSingleton.getInstance();
     private Context m_context;
+    AppPatientInfoFragment m_fragment;
 
     @Override
     protected void onResume() {
         super.onResume();
         Bundle arguments = new Bundle();
-        AppPatientInfoFragment fragment = new AppPatientInfoFragment();
-        fragment.setArguments(arguments);
+        m_fragment = new AppPatientInfoFragment();
+        m_fragment.setArguments(arguments);
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.app_panel, fragment)
+                .replace(R.id.app_panel, m_fragment)
                 .commit();
     }
 
     public void handleNextButtonPress(View v) {
-        startActivity(new Intent(PatientInfoActivity.this, MedicalHistoryActivity.class));
-        finish();
+        m_fragment.handleNextButtonPress(v);
     }
 
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(PatientInfoActivity.this, MedicalHistoryActivity.class));
+        startActivity(new Intent(PatientInfoActivity.this, CategorySelectorActivity.class));
         finish();
     }
 
