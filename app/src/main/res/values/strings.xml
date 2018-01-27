@@ -1,3 +1,142 @@
 <resources>
-    <string name="app_name">TSChartsRegister</string>
+    <string name="app_name">1000 Smiles Register</string>
+    <string name="app_name_full">Thousand Smiles Register</string>
+    <string name="label_version">Version</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Username</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_clinic_not_found_date">No active clinic can be found on this date</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_invalid_username_or_password">Invalid name or password</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="error_internal_bad_request">Bad Request. Please report this problem</string>
+    <string name="error_internal_error">Internal Error. Please report this problem</string>
+    <string name="error_unknown">Unknown Error. Please report this problem</string>
+    <string name="error_unable_to_connect">Unable to connect. Make sure wireless is enabled, that the IP address and port settings are correct, and internet connectivity is present.</string>
+    <string name="error_unable_to_get_clinicstation_data">Unable to get clinic station data</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+
+    <!-- Example General settings -->
+    <string name="pref_header_general">General</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <string name="title_activity_patient_search">Patient Search</string>
+    <string name="error_no_matching_patients_found">No matching patients found</string>
+    <string name="button_label_add_new">Register New Patient</string>
+    <string name="register_yes">Yes</string>
+    <string name="register_no">No</string>
+    <string name="title_register_dialog">Would you like to register the following patient?</string>
+    <string name="error_unable_to_get_patient_data">Unable to get patient data</string>
+    <string name="button_yes">Yes</string>
+    <string name="button_no">No</string>
+    <string name="msg_select_another_category">Please select another category</string>
+    <string name="question_select_category">Select patient category %s?</string>
+    <string name="error_unable_to_get_category_data">Unable to read list of categories</string>
+    <string name="msg_unable_process_category">Unable to process category</string>
+
+    <!-- Medical History -->
+
+    <string name="title_medical_history">Medical History</string>
+
+    <string name="pregnancy">Pregnancy</string>
+    <string name="mother_alcohol">Did the mother consume alcohol during pregnancy?</string>
+    <string name="pregnancy_duration">Pregnancy duration (months)</string>
+    <string name="pregnancy_smoke">Did the pregnancy occur in a smoking environment?</string>
+    <string name="pregnancy_complications">Were there complications with the pregnancy?</string>
+    <string name="birth">Birth</string>
+    <string name="birth_complications">Were there complications during birth?</string>
+    <string name="birth_weight">Birth weight</string>
+    <string name="congenitalheartdefect">Does the child have a congenital heart defect?</string>
+    <string name="congenitalheartdefect_workup">If the child has a congenital heart defect, was a workup done at birth?</string>
+    <string name="congenitalheartdefect_planforcare">If the child has a congenital heart defect, was a plan for care created?</string>
+    <string name="growth_stages">Growth Stages</string>
+    <string name="first_crawl">Month child first started to crawl</string>
+    <string name="first_sit">Month child first started to sit</string>
+    <string name="first_words">Month child first started to speak</string>
+    <string name="first_walk">Month child first started to walk</string>
+    <string name="family_history">Family History</string>
+    <string name="relative_cleft">Did a relative of the child have a cleft?</string>
+    <string name="parents_cleft">Did the one of both parents of the child have a cleft?</string>
+    <string name="siblings_cleft">Did one of the childs\' sisters or brothers have a cleft?</string>
+    <string name="current_health">Current Health</string>
+    <string name="height">Height</string>
+    <string name="weight">Weight</string>
+    <string name="cold_cough_fever">Does the child have a cold, cough, or fever?</string>
+    <string name="hivaids">Does the child have HIV or AIDS?</string>
+    <string name="anemia">Is the child anemic?</string>
+    <string name="athsma">Does the child suffer from athsma?</string>
+    <string name="cancer">Does the child have cancer?</string>
+    <string name="diabetes">Is the child diabetic?</string>
+    <string name="epilepsy">Is the child epileptic?</string>
+    <string name="bleeding_problems">Does the child suffer from bleeding problems?</string>
+    <string name="hepititis">Does the child have hepititis?</string>
+    <string name="tuberculosis">Does the child have tuberculosis?</string>
+    <string name="troublespeaking">Does the child have trouble speaking?</string>
+    <string name="troublehearing">Does the child have trouble hearing?</string>
+    <string name="troubleeating">Does the child have trouble eating?</string>
+    <string name="medications">Medications</string>
+    <string name="meds">All medications the patient is currently taking</string>
+    <string name="allergymeds">All medications the patient is allergic to</string>
+    <string name="cm">cm</string>
+    <string name="in">in</string>
+    <string name="kg">kg</string>
+    <string name="lb">lb</string>
+
+    <string name="title_select_medications_dialog">Select Medications</string>
+    <string name="select_medications_yes">Update</string>
+    <string name="select_medications_cancel">Cancel</string>
+    <string name="msg_unable_to_get_medications_list">Unable to get list of medications</string>
+    <string name="title_edit_medications_dialog">Add or Remove Medications</string>
+    <string name="msg_enter_a_medication">Enter a medication then click add</string>
+
+    <string name="title_current_medications_dialog">Current Medications Dialog</string>
+    <string name="title_allergy_medications_dialog">Allergy Medications Dialog</string>
+    <string name="msg_unable_to_get_medical_history">Unable to get medical history data</string>
+    <string name="msg_successfully_got_medical_history">Successfully got medical history data</string>
+    <string name="msg_successfully_saved_medical_history">Successfully saved medical history</string>
+    <string name="msg_unable_to_save_medical_history">Unable to save medical history</string>
+    <string name="title_unsaved_medical_history">Unsaved Changes to Medical History</string>
+    <string name="msg_save_medical_history">Save medical history changes?</string>
+
+    <string name="title_category_selector">Select Patient Category</string>
+
+    <string name="button_back">Back</string>
+    <string name="button_next">Next</string>
+    <string name="question_register_new_patient">Would you like to register a new patient?</string>
+    <string name="patient_search_hint">Enter any part of last name, first name, or complete birthdate</string>
+    <string name="patient_name">Patient Name</string>
+    <string name="paternal_last">Paternal (Father\'s) Last Name</string>
+    <string name="patient_address">Patient Address</string>
+    <string name="maternal_last">Maternal (Mother\'s) Last Name</string>
+    <string name="first_name">First Name</string>
+    <string name="middle_name">Middle Name</string>
+    <string name="address_street_1">Street 1</string>
+    <string name="address_street_2">Street 2</string>
+    <string name="address_colonia">Colony</string>
+    <string name="address_city">City</string>
+    <string name="address_state">State</string>
+    <string name="patient_gender_dob">Gender and Date of Birth</string>
+    <string name="gender">Gender</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="dob">Date of Birth</string>
+    <string name="patient_contact_info">Patient Contact Information</string>
+    <string name="phone_1">Phone 1</string>
+    <string name="phone_2">Phone 2</string>
+    <string name="e_mail">E-Mail Address</string>
+    <string name="emergency_contact_info">Emergency Contact Information</string>
+    <string name="emergency_full_name">Full Name</string>
+    <string name="emergency_phone">Phone</string>
+    <string name="title_unsaved_patient_data">Unsaved Changes to Patient Data</string>
+    <string name="msg_save_patient_data">Save Patient Data?</string>
+    <string name="title_patient_info">Basic Patient Information</string>
+
 </resources>

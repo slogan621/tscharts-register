@@ -3,4 +3,18 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="colorThousandsmiles">#0055A2</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorBlack">#000000</color>
+    <color name="pressed_color">#aabfcf</color>
+    <color name="default_color">#ffffff</color>
+
+    <!--  shades of gray -->
+    <color name="graySelected">#ff777777</color>
+    <color name="grayUnselected">#ffbbbbbb</color>
+    <color name="lightGray">#ffc8c8c8</color>
+    <color name="white">#ffffffff</color>
+
+    <color name="boyBlue">#ff6288C5</color>
+    <color name="girlPink">#ffE388C5</color>
 </resources>

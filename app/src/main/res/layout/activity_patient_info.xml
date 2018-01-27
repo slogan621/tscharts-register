@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="org.thousandsmiles.tschartsregister.MedicalHistoryActivity">
+
+    <LinearLayout
+        android:id="@+id/app_panel"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        android:layout_weight="0"
+        android:orientation="horizontal"
+        android:paddingLeft="20dp"
+        android:paddingTop="0dp"
+        android:paddingBottom="20dp"
+        android:paddingRight="20dp" >
+
+        <FrameLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1">
+        </FrameLayout>
+
+        <Button
+            android:id="@+id/next_button"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/button_next"
+            android:onClick='handleNextButtonPress'
+            android:textSize="36sp"
+            android:padding="20sp"
+            android:background="@drawable/button_custom" />
+    </LinearLayout>
+</LinearLayout>

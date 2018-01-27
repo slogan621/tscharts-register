@@ -1,0 +1,348 @@
+/*
+ * (C) Copyright Syd Logan 2017
+ * (C) Copyright Thousand Smiles Foundation 2017
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ *
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.thousandsmiles.tschartsregister;
+
+import android.content.Context;
+import android.os.Looper;
+import android.util.DisplayMetrics;
+import android.view.Display;
+import android.view.WindowManager;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+
+public class SessionSingleton {
+    private static SessionSingleton m_instance;
+    private static String m_token = "";
+    private static Context m_ctx;
+    private JSONObject m_patientRoutingSlip = null;
+    private MedicalHistory m_patientMedicalHistory = null;
+    private JSONObject m_routingSlipEntryResponse = null;
+    private JSONArray m_patientSearchResults = null;
+    private int m_clinicId;
+    private HashMap<Integer, PatientData> m_patientData = new HashMap<Integer, PatientData>();
+    private static HashMap<String, Integer> m_categoryToSelector = new HashMap<String, Integer>();
+    private static ArrayList<JSONObject> m_categoryData = new ArrayList<JSONObject>();
+    private int m_selectorNumColumns;
+    private int m_width = -1;
+    private int m_height = -1;
+    private ArrayList<String> m_medicationsList = new ArrayList<String>();
+    private Registration m_registration = new Registration();
+    private int m_patientId;
+    private boolean m_isNewPatient = false;
+
+    public int getPatientId()
+    {
+        return m_patientId;
+    }
+
+    public void setPatientId(int id)
+    {
+        m_patientId = id;
+    }
+
+    public int getActivePatientId()
+    {
+        return getPatientId();
+    }
+
+    public int getDisplayPatientId()
+    {
+        return getPatientId();
+    }
+
+    public HashMap<Integer, PatientData> getPatientHashMap()
+    {
+        return m_patientData;
+    }
+
+    public void setIsNewPatient(boolean isNew) {
+        m_isNewPatient = isNew;
+    }
+
+    public boolean getIsNewPatient() {
+        return m_isNewPatient;
+    }
+
+    public void clearSearchResultData()
+    {
+        m_patientSearchResults = null;
+        m_patientData.clear();
+    }
+
+    public MedicalHistory getPatientMedicalHistory()
+    {
+        return m_patientMedicalHistory;
+    }
+
+    public JSONObject getPatientRoutingSlip()
+    {
+        return m_patientRoutingSlip;
+    }
+
+    public void setPatientSearchResults(JSONArray results)
+    {
+        m_patientSearchResults = results;
+    }
+
+    public void setToken(String token) {
+        m_token = String.format("Token %s", token);
+    }
+
+    public String getToken() {
+        return m_token;
+    }
+
+    public void setClinicId(int clinicId) {
+        m_clinicId = clinicId;
+    }
+
+    public void setCategory(int categoryId) {
+        m_registration.setCategory(categoryId);
+    }
+
+    public void setPatientMedicalHistory(JSONObject o)
+    {
+        if (m_patientMedicalHistory == null) {
+            m_patientMedicalHistory = new MedicalHistory();
+        }
+        m_patientMedicalHistory.fromJSONObject(o);
+    }
+
+    public void getPatientSearchResultData()
+    {
+        for (int i = 0; m_patientSearchResults != null && i < m_patientSearchResults.length(); i++) {
+            try {
+                getPatientData(m_patientSearchResults.getInt(i));
+            } catch (JSONException e) {
+            }
+        }
+    }
+
+    public PatientData getPatientData(final int id) {
+
+        PatientData o = null;
+
+        if (m_patientData != null) {
+            o = m_patientData.get(id);
+        }
+        if (o == null && Looper.myLooper() != Looper.getMainLooper()) {
+            final PatientREST patientData = new PatientREST(getContext());
+            Object lock = patientData.getPatientData(id);
+
+            synchronized (lock) {
+                // we loop here in case of race conditions or spurious interrupts
+                while (true) {
+                    try {
+                        lock.wait();
+                        break;
+                    } catch (InterruptedException e) {
+                        continue;
+                    }
+                }
+            }
+
+            int status = patientData.getStatus();
+            if (status == 200) {
+                o = m_patientData.get(id);
+            }
+        }
+        if (o == null) {
+            return o;
+        }
+        return o;
+    }
+
+    public int getClinicId() {
+        return m_clinicId;
+    }
+
+    public void addPatientData(JSONObject data) {
+        int id;
+
+        try {
+            id = data.getInt("id");
+        } catch (JSONException e) {
+            return;
+        }
+        m_patientData.put(id, new PatientData(data));
+    }
+
+    public MedicalHistory getMedicalHistory(int clinicid, int patientid)
+    {
+        boolean ret = false;
+        MedicalHistory mh = null;
+
+        if (Looper.myLooper() != Looper.getMainLooper()) {
+            final MedicalHistoryREST mhData = new MedicalHistoryREST(getContext());
+            Object lock = mhData.getMedicalHistoryData(clinicid, patientid);
+
+            synchronized (lock) {
+                // we loop here in case of race conditions or spurious interrupts
+                while (true) {
+                    try {
+                        lock.wait();
+                        break;
+                    } catch (InterruptedException e) {
+                        continue;
+                    }
+                }
+            }
+
+            int status = mhData.getStatus();
+            if (status == 200) {
+                mh = getPatientMedicalHistory();
+            }
+        }
+        return mh;
+    }
+
+    public void initCategoryNameToSelectorMap()
+    {
+        m_categoryToSelector.clear();
+        m_categoryToSelector.put("Dental", R.drawable.category_dental_selector);
+        m_categoryToSelector.put("Ortho", R.drawable.category_ortho_selector);
+        m_categoryToSelector.put("New Cleft", R.drawable.category_new_cleft_selector);
+        m_categoryToSelector.put("Returning Cleft", R.drawable.category_returning_cleft_selector);
+        m_categoryToSelector.put("Other", R.drawable.category_other_selector);
+    }
+
+    private void getScreenResolution(Context context)
+    {
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        DisplayMetrics metrics = new DisplayMetrics();
+        display.getMetrics(metrics);
+        m_width = (int) (metrics.widthPixels / metrics.density);
+        m_height = (int) (metrics.heightPixels / metrics.density);
+    }
+
+    public int getSelectorNumColumns()
+    {
+        if (m_width == -1 && m_height == -1) {
+            getScreenResolution(m_ctx);
+        }
+        m_selectorNumColumns = m_width / 250;
+        return m_selectorNumColumns;
+    }
+
+    public int getSelector(String name) {
+        int ret = R.drawable.category_other_selector;
+
+        if (m_categoryToSelector.containsKey(name)) {
+            ret = m_categoryToSelector.get(name);
+        }
+        return ret;
+    }
+
+    public void addCategoryData(JSONArray data) {
+        int i;
+        JSONObject categorydata;
+
+        for (i = 0; i < data.length(); i++)  {
+            try {
+                categorydata = data.getJSONObject(i);
+                m_categoryData.add(categorydata);
+            } catch (JSONException e) {
+                return;
+            }
+        }
+    }
+
+    public JSONObject getCategoryData(int i) {
+        JSONObject ret = null;
+
+        ret = m_categoryData.get(i);
+        return ret;
+    }
+
+    public int getCategoryCount() {
+        return m_categoryData.size();
+    }
+
+    public boolean updateCategoryData() {
+        boolean ret = false;
+
+        m_categoryData.clear();
+        if (Looper.myLooper() != Looper.getMainLooper()) {
+            final CategoryREST categoryData = new CategoryREST(getContext());
+            Object lock = categoryData.getCategoryData();
+
+            synchronized (lock) {
+                // we loop here in case of race conditions or spurious interrupts
+                while (true) {
+                    try {
+                        lock.wait();
+                        break;
+                    } catch (InterruptedException e) {
+                        continue;
+                    }
+                }
+            }
+
+            int status = categoryData.getStatus();
+            if (status == 200) {
+                ret = true;
+            }
+        }
+        return ret;
+    }
+
+    public void setMedicationsList(JSONArray a)
+    {
+        m_medicationsList.clear();
+        for (int i = 0; i < a.length(); i++) {
+            try {
+                m_medicationsList.add(a.getString(i));
+            } catch (JSONException e) {
+            }
+        }
+    }
+
+    public ArrayList<String> getMedicationsList()
+    {
+        return m_medicationsList;
+    }
+
+    public String[] getMedicationsListStringArray()
+    {
+        return m_medicationsList.toArray(new String[0]);
+    }
+
+    public static SessionSingleton getInstance() {
+        if (m_instance == null) {
+            m_instance = new SessionSingleton();
+        }
+        return m_instance;
+    }
+
+    public void setContext(Context ctx) {
+        m_ctx = ctx;
+    }
+    public Context getContext() {
+        return m_ctx;
+    }
+}
+
+
