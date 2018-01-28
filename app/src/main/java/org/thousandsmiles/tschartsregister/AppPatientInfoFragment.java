@@ -46,7 +46,7 @@ import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-public class AppPatientInfoFragment extends Fragment implements DatePickerDialog.OnDateSetListener  {
+public class AppPatientInfoFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
     private Activity m_activity = null;
     private SessionSingleton m_sess = null;
     private PatientData m_patientData;
@@ -58,16 +58,15 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
         return new AppPatientInfoFragment();
     }
 
-    @Override
-    public void onDateSet(DatePicker view, int year, int month, int day) {
-        Calendar cal = new GregorianCalendar(year, month, day);
-        setDate(cal);
-    }
-
     private void setDate(final Calendar calendar) {
         final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
-        ((TextView) m_activity.findViewById(R.id.patient_dob)).setText(dateFormat.format(calendar.getTime()));
+        ((TextView) m_activity.findViewById(R.id.dob)).setText(dateFormat.format(calendar.getTime()));
+    }
 
+    public void onDateSet(DatePicker view, int year, int month, int day) {
+        Calendar c = Calendar.getInstance();
+        c.set(year, month, day);
+        setDate(c);
     }
 
     @Override
@@ -187,10 +186,13 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
         }
 
         rb = (RadioButton) m_activity.findViewById(R.id.gender_female);
-        rb.setChecked(isFemale);
+        if (rb != null) {
+            rb.setChecked(isFemale);
+        }
         rb = (RadioButton) m_activity.findViewById(R.id.gender_male);
-        rb.setChecked(!isFemale);
-
+        if (rb != null) {
+            rb.setChecked(!isFemale);
+        }
         /*
         tx = (TextView) m_activity.findViewById(R.id.dob);
         if (tx != null) {
@@ -470,7 +472,7 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
             });
         }
 
-        final TextView tx1 = (TextView) m_activity.findViewById(R.id.patient_dob);
+        final TextView tx1 = (TextView) m_activity.findViewById(R.id.dob);
         if (tx1 != null) {
             tx1.setShowSoftInputOnFocus(false);
             tx1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -478,6 +480,7 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
                 public void onFocusChange(View view, boolean hasFocus) {
                     if (hasFocus) {
                         DatePickerFragment fragment = new DatePickerFragment();
+                        fragment.setListeningActivity(AppPatientInfoFragment.this);
                         fragment.show(m_activity.getFragmentManager(), "date");
                     }
                 }
@@ -486,6 +489,7 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
                 @Override
                 public void onClick(View view) {
                     DatePickerFragment fragment = new DatePickerFragment();
+                    fragment.setListeningActivity(AppPatientInfoFragment.this);
                     fragment.show(m_activity.getFragmentManager(), "date");
                 }
             });
