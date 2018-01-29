@@ -172,6 +172,14 @@ public class CategorySelectorActivity extends AppCompatActivity {
         m_context = getApplicationContext();
     }
 
+    private void getMexicanStates() {
+        new Thread(new Runnable() {
+            public void run() {
+                m_sess.getMexicanStates();
+            };
+        }).start();
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -217,6 +225,8 @@ public class CategorySelectorActivity extends AppCompatActivity {
                             LayoutCategoryGrid();
                         }
                     });
+                    /* go get the list of Mexican States for later use */
+                    getMexicanStates();
                 }
 
                 return;

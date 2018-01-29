@@ -24,12 +24,12 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Toast;
 
 public class PatientInfoActivity extends AppCompatActivity {
 
     private Activity m_activity = this;
     private SessionSingleton m_sess = SessionSingleton.getInstance();
-    private Context m_context;
     AppPatientInfoFragment m_fragment;
 
     @Override
@@ -58,7 +58,6 @@ public class PatientInfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         setContentView(R.layout.activity_patient_info);
-        m_context = getApplicationContext();
     }
 }
 

@@ -376,6 +376,7 @@
                     android:layout_weight="1"/>
                 <NumberPicker
                     android:id="@+id/address_state"
+                    android:descendantFocusability="blocksDescendants"
                     android:layout_width="match_parent"
                     android:layout_height="180dp" />
             </LinearLayout>

@@ -49,6 +49,7 @@ public class SessionSingleton {
     private int m_width = -1;
     private int m_height = -1;
     private ArrayList<String> m_medicationsList = new ArrayList<String>();
+    private ArrayList<String> m_mexicanStates = new ArrayList<String>();
     private Registration m_registration = new Registration();
     private int m_patientId;
     private boolean m_isNewPatient = false;
@@ -318,6 +319,53 @@ public class SessionSingleton {
             int status = categoryData.getStatus();
             if (status == 200) {
                 ret = true;
+            }
+        }
+        return ret;
+    }
+
+    public void addMexicanStates(JSONArray response) {
+        m_mexicanStates.clear();
+       for (int i = 0; i < response.length(); i++) {
+           try {
+               m_mexicanStates.add(response.get(i).toString());
+           } catch (JSONException e) {
+           }
+       }
+    }
+
+    public ArrayList<String> getMexicanStatesList()
+    {
+        return m_mexicanStates;
+    }
+
+    public boolean getMexicanStates() {
+        boolean ret = false;
+
+        if (m_mexicanStates.size() > 0) {
+            ret = true;
+        } else {
+            m_mexicanStates.clear();
+            if (Looper.myLooper() != Looper.getMainLooper()) {
+                final MexicanStatesREST mexicanStatesData = new MexicanStatesREST(getContext());
+                Object lock = mexicanStatesData.getMexicanStates();
+
+                synchronized (lock) {
+                    // we loop here in case of race conditions or spurious interrupts
+                    while (true) {
+                        try {
+                            lock.wait();
+                            break;
+                        } catch (InterruptedException e) {
+                            continue;
+                        }
+                    }
+                }
+
+                int status = mexicanStatesData.getStatus();
+                if (status == 200) {
+                    ret = true;
+                }
             }
         }
         return ret;

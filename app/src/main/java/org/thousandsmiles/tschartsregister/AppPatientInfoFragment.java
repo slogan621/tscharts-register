@@ -37,12 +37,14 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.NumberPicker;
 import android.widget.RadioButton;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -169,12 +171,22 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
             tx.setText(m_patientData.getColonia());
         }
 
-        /*
-        tx = (TextView) m_activity.findViewById(R.id.address_state);
-        if (tx != null) {
-            tx.setText(m_patientData.getState());
+        ArrayList<String> mexicanStates = m_sess.getMexicanStatesList();
+        if (mexicanStates != null && mexicanStates.size() > 0) {
+            NumberPicker picker = (NumberPicker) m_activity.findViewById(R.id.address_state);
+            if (picker != null) {
+                picker.setMinValue(0);
+                picker.setMaxValue(mexicanStates.size() - 1);
+                String[] a = mexicanStates.toArray(new String[0]);
+                picker.setDisplayedValues(a);
+                for (int i = 0; i < mexicanStates.size(); i++) {
+                    if (m_patientData.getState().equals(mexicanStates.get(i))) {
+                        picker.setValue(i);
+                        break;
+                    }
+                }
+            }
         }
-        */
 
         // Gender and DOB
 
@@ -430,27 +442,13 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
             });
         }
 
-        /*
-        tx = (TextView) m_activity.findViewById(R.id.address_state);
-        if (tx != null) {
-            tx.addTextChangedListener(new TextWatcher() {
-
-                @Override
-                public void afterTextChanged(Editable s) {}
-
-                @Override
-                public void beforeTextChanged(CharSequence s, int start,
-                                              int count, int after) {
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start,
-                                          int before, int count) {
-                    setDirty();
-                }
-            });
-        }
-        */
+        NumberPicker picker = (NumberPicker) m_activity.findViewById(R.id.address_state);
+        picker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal){
+                setDirty();
+            }
+        });
 
         // gender and dob
 
@@ -695,12 +693,12 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
             pd.setColonia(tx.getText().toString());
         }
 
-        /*
-        tx = (TextView) m_activity.findViewById(R.id.address_state);
-        if (tx != null) {
-            pd.setState(tx.getText().toString());
+        NumberPicker picker = (NumberPicker) m_activity.findViewById(R.id.address_state);
+        if (picker != null) {
+            int value = picker.getValue();
+            ArrayList<String> states = m_sess.getMexicanStatesList();
+            pd.setState(states.get(value));
         }
-        */
 
         // gender and dob
 
