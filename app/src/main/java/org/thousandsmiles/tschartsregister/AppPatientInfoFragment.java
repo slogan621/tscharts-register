@@ -171,6 +171,50 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
             tx.setText(m_patientData.getColonia());
         }
 
+        final TextView tx1 = (TextView) m_activity.findViewById(R.id.address_state);
+        if (tx1 != null) {
+
+            tx1.setText(m_patientData.getState());
+            tx1.setShowSoftInputOnFocus(false);
+            tx1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View view, boolean hasFocus) {
+                if (hasFocus) {
+                    MexicanStateDialogFragment mld = new MexicanStateDialogFragment();
+                    mld.setPatientId(m_sess.getActivePatientId());
+                    mld.setTextField(tx1);
+                    mld.show(getFragmentManager(), m_activity.getString(R.string.title_mexican_state_dialog));
+                }
+                }
+            });
+            tx1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                MexicanStateDialogFragment mld = new MexicanStateDialogFragment();
+                mld.setPatientId(m_sess.getActivePatientId());
+                mld.setTextField(tx1);
+                mld.show(getFragmentManager(), m_activity.getString(R.string.title_mexican_state_dialog));
+                }
+            });
+            tx1.addTextChangedListener(new TextWatcher() {
+
+                @Override
+                public void afterTextChanged(Editable s) {}
+
+                @Override
+                public void beforeTextChanged(CharSequence s, int start,
+                                              int count, int after) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start,
+                                          int before, int count) {
+                    setDirty();
+                }
+            });
+        }
+
+        /*
         ArrayList<String> mexicanStates = m_sess.getMexicanStatesList();
         if (mexicanStates != null && mexicanStates.size() > 0) {
             NumberPicker picker = (NumberPicker) m_activity.findViewById(R.id.address_state);
@@ -187,6 +231,7 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
                 }
             }
         }
+        */
 
         // Gender and DOB
 
@@ -228,7 +273,7 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
             tx.setText(m_patientData.getEmail());
         }
 
-        // Emergecny Contact Info
+        // Emergency Contact Info
 
         tx = (TextView) m_activity.findViewById(R.id.emergency_phone);
         if (tx != null) {
@@ -441,13 +486,25 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
             });
         }
 
-        NumberPicker picker = (NumberPicker) m_activity.findViewById(R.id.address_state);
-        picker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
-            @Override
-            public void onValueChange(NumberPicker picker, int oldVal, int newVal){
-                setDirty();
-            }
-        });
+        tx = (TextView) m_activity.findViewById(R.id.address_state);
+        if (tx != null) {
+            tx.addTextChangedListener(new TextWatcher() {
+
+                @Override
+                public void afterTextChanged(Editable s) {}
+
+                @Override
+                public void beforeTextChanged(CharSequence s, int start,
+                                              int count, int after) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start,
+                                          int before, int count) {
+                    setDirty();
+                }
+            });
+        }
 
         // gender and dob
 
@@ -692,11 +749,9 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
             pd.setColonia(tx.getText().toString());
         }
 
-        NumberPicker picker = (NumberPicker) m_activity.findViewById(R.id.address_state);
-        if (picker != null) {
-            int value = picker.getValue();
-            ArrayList<String> states = m_sess.getMexicanStatesList();
-            pd.setState(states.get(value));
+        tx = (TextView)  m_activity.findViewById(R.id.address_state);
+        if (tx != null) {
+            pd.setState(tx.getText().toString());
         }
 
         // gender and dob
@@ -737,12 +792,10 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
             pd.setColonia(tx.getText().toString());
         }
 
-        /*
         tx = (TextView) m_activity.findViewById(R.id.address_state);
         if (tx != null) {
             pd.setState(tx.getText().toString());
         }
-        */
 
         // contact info
 
