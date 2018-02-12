@@ -153,4 +153,8 @@
     <string name="title_successful_registration">Registration Successful</string>
     <string name="msg_successfully_registered_patient">Patient was successfully registered</string>
     <string name="button_ok">Ok</string>
+    <string name="title_mexican_state_dialog">Please select a state</string>
+    <string name="select_state_select">Select</string>
+    <string name="select_state_cancel">Cancel</string>
+    <string name="title_select_state_dialog">Select State</string>
 </resources>
