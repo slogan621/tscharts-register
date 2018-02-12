@@ -1,6 +1,6 @@
 /*
- * (C) Copyright Syd Logan 2017-2018
- * (C) Copyright Thousand Smiles Foundation 2017-2018
+ * (C) Copyright Syd Logan 2018
+ * (C) Copyright Thousand Smiles Foundation 2018
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ package org.thousandsmiles.tschartsregister;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -57,8 +58,6 @@ public class AppMedicalHistoryFragment extends Fragment {
     }
 
     public void handleNextButtonPress(View v) {
-        //startActivity(new Intent(MedicalHistoryActivity.this, PatientInfoActivity.class));
-
         final MedicalHistory mh = this.copyMedicalHistoryDataFromUI();
 
         if (m_dirty || mh.equals(m_medicalHistory) == false) {
@@ -71,6 +70,8 @@ public class AppMedicalHistoryFragment extends Fragment {
                 public void onClick(DialogInterface dialog, int which) {
                     m_sess.updatePatientMedicalHistory(mh);
                     dialog.dismiss();
+                    startActivity(new Intent(m_activity, PatientPhotoActivity.class));
+                    m_activity.finish();
                 }
             });
 
@@ -83,6 +84,9 @@ public class AppMedicalHistoryFragment extends Fragment {
 
             AlertDialog alert = builder.create();
             alert.show();
+        } else {
+            startActivity(new Intent(m_activity, PatientPhotoActivity.class));
+            m_activity.finish();
         }
     }
 
@@ -1154,7 +1158,7 @@ public class AppMedicalHistoryFragment extends Fragment {
 
         super.onPause();
 
-/*
+        /*
         View button_bar_item = getActivity().findViewById(R.id.save_button);
         button_bar_item.setVisibility(View.GONE);
         */

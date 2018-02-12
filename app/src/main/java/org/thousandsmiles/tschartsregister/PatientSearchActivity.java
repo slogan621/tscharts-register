@@ -62,8 +62,6 @@ public class PatientSearchActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        //HideyHelper h = new HideyHelper();
-        //h.toggleHideyBar(this);
 
         final ClinicREST clinicREST = new ClinicREST(m_context);
         final Object lock;

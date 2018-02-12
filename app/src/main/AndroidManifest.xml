@@ -4,12 +4,30 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <uses-feature android:name="android.hardware.camera"
+        android:required="true" />
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.example.android.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"></meta-data>
+        </provider>
+
+
         <activity
             android:name=".LoginActivity"
             android:screenOrientation="landscape"
@@ -21,9 +39,19 @@
             android:label="@string/title_medical_history">
         </activity>
         <activity
+            android:name=".WaiverActivity"
+            android:screenOrientation="landscape"
+            android:label="@string/title_waiver">
+        </activity>
+        <activity
             android:name=".PatientInfoActivity"
             android:screenOrientation="landscape"
             android:label="@string/title_patient_info">
+        </activity>
+        <activity
+            android:name=".PatientPhotoActivity"
+            android:screenOrientation="landscape"
+            android:label="@string/title_patient_photo">
         </activity>
         <activity
             android:name=".CategorySelectorActivity"

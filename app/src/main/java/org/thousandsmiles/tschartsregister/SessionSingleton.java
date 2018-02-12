@@ -124,6 +124,23 @@ public class SessionSingleton {
         m_registration.setCategory(categoryId);
     }
 
+    public int getCategorySelector(String name)
+    {
+        return m_categoryToSelector.get(name);
+    }
+
+    public int getCategory() {
+        return m_registration.getCategory();
+    }
+
+    public void setCategoryName(String name) {
+        m_registration.setCategoryName(name);
+    }
+
+    public String getCategoryName() {
+        return m_registration.getCategoryName();
+    }
+
     public void setPatientMedicalHistory(JSONObject o)
     {
         if (m_patientMedicalHistory == null) {

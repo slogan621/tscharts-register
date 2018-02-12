@@ -205,12 +205,11 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
         if (rb != null) {
             rb.setChecked(!isFemale);
         }
-        /*
+
         tx = (TextView) m_activity.findViewById(R.id.dob);
         if (tx != null) {
             tx.setText(m_patientData.getDob());
         }
-        */
 
         // Contact Info
 

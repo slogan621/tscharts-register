@@ -102,13 +102,6 @@ public class RegisterDialogFragment extends DialogFragment {
                             m_sess.setIsNewPatient(false);
                             Intent i = new Intent(getContext(), CategorySelectorActivity.class);
                             startActivity(i);
-                        /*
-                        AwayParams params = new AwayParams();
-
-                        params.setReturnMinutes(numMinutes);
-                        AsyncTask task = new StationAway();
-                        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (Object) params);
-                        */
                             dialog.dismiss();
                         }
                     })

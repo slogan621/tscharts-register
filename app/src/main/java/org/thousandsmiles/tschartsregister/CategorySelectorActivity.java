@@ -23,8 +23,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
@@ -47,6 +45,7 @@ public class CategorySelectorActivity extends AppCompatActivity {
     private Activity m_activity = this;
     private SessionSingleton m_sess = SessionSingleton.getInstance();
     private Context m_context;
+    private RegistrationSummaryFragment m_registrationSummaryFragment;
 
     public void handleButtonPress(View v)
     {
@@ -71,6 +70,7 @@ public class CategorySelectorActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface arg0, int arg1) {
                             m_sess.setCategory(id);
+                            m_sess.setCategoryName(name);
                             Intent intent = new Intent(m_activity, PatientInfoActivity.class);
                             startActivity(intent);
                             finish();
@@ -170,6 +170,13 @@ public class CategorySelectorActivity extends AppCompatActivity {
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         setContentView(R.layout.activity_category_selector);
         m_context = getApplicationContext();
+        Bundle arguments;
+        m_registrationSummaryFragment = new RegistrationSummaryFragment();
+        arguments = new Bundle();
+        m_registrationSummaryFragment.setArguments(arguments);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.registration_summary_panel, m_registrationSummaryFragment)
+                .commit();
     }
 
     private void getMexicanStates() {
@@ -266,5 +273,32 @@ public class CategorySelectorActivity extends AppCompatActivity {
         };
         thread.start();
     }
+
+    @Override
+    public void onBackPressed() {
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setMessage(String.format(getApplicationContext().getString(R.string.msg_are_you_sure_you_want_to_exit)));
+        alertDialogBuilder.setPositiveButton(R.string.button_yes,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        moveTaskToBack(true);
+                        android.os.Process.killProcess(android.os.Process.myPid());
+                        System.exit(1);
+                    }
+                });
+
+        alertDialogBuilder.setNegativeButton(R.string.button_no,new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //Toast.makeText(StationSelectorActivity.this,"Please select another station.",Toast.LENGTH_LONG).show();
+            }
+        });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
 }
 

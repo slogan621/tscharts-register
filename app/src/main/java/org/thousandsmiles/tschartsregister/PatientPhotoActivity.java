@@ -18,19 +18,17 @@
 package org.thousandsmiles.tschartsregister;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Toast;
 
-public class PatientInfoActivity extends AppCompatActivity {
+public class PatientPhotoActivity extends AppCompatActivity {
 
     private Activity m_activity = this;
     private SessionSingleton m_sess = SessionSingleton.getInstance();
-    AppPatientInfoFragment m_fragment;
+    AppPatientPhotoFragment m_patientPhotoFragment;
     RegistrationSummaryFragment m_registrationSummaryFragment;
 
     @Override
@@ -39,12 +37,36 @@ public class PatientInfoActivity extends AppCompatActivity {
     }
 
     public void handleNextButtonPress(View v) {
-        m_fragment.handleNextButtonPress(v);
+        m_patientPhotoFragment.handleNextButtonPress(v);
+    }
+
+    public void handleImageButton1Press(View v) {
+        m_patientPhotoFragment.handleImageButton1Press(v);
+    }
+
+    public void handleImageButton2Press(View v) {
+        m_patientPhotoFragment.handleImageButton2Press(v);
+    }
+
+    public void handleImageButton3Press(View v) {
+        m_patientPhotoFragment.handleImageButton3Press(v);
+    }
+
+    public void handleImage1Press(View v) {
+        m_patientPhotoFragment.handleImage1Press(v);
+    }
+
+    public void handleImage2Press(View v) {
+        m_patientPhotoFragment.handleImage2Press(v);
+    }
+
+    public void handleImage3Press(View v) {
+        m_patientPhotoFragment.handleImage3Press(v);
     }
 
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(PatientInfoActivity.this, CategorySelectorActivity.class));
+        startActivity(new Intent(PatientPhotoActivity.this, MedicalHistoryActivity.class));
         finish();
     }
 
@@ -52,12 +74,12 @@ public class PatientInfoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        setContentView(R.layout.activity_patient_info);
+        setContentView(R.layout.activity_patient_photo);
+        m_patientPhotoFragment = new AppPatientPhotoFragment();
         Bundle arguments = new Bundle();
-        m_fragment = new AppPatientInfoFragment();
-        m_fragment.setArguments(arguments);
+        m_patientPhotoFragment.setArguments(arguments);
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.app_panel, m_fragment)
+                .replace(R.id.app_panel, m_patientPhotoFragment)
                 .commit();
         m_registrationSummaryFragment = new RegistrationSummaryFragment();
         arguments = new Bundle();

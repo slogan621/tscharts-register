@@ -31,16 +31,11 @@ public class MedicalHistoryActivity extends AppCompatActivity {
     private SessionSingleton m_sess = SessionSingleton.getInstance();
     private Context m_context;
     AppMedicalHistoryFragment m_fragment;
+    RegistrationSummaryFragment m_registrationSummaryFragment;
 
     @Override
     protected void onResume() {
         super.onResume();
-        Bundle arguments = new Bundle();
-        m_fragment = new AppMedicalHistoryFragment();
-        m_fragment.setArguments(arguments);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.app_panel, m_fragment)
-                .commit();
    }
 
     public void handleNextButtonPress(View v) {
@@ -60,6 +55,18 @@ public class MedicalHistoryActivity extends AppCompatActivity {
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         setContentView(R.layout.activity_medical_history);
         m_context = getApplicationContext();
+        Bundle arguments = new Bundle();
+        m_fragment = new AppMedicalHistoryFragment();
+        m_fragment.setArguments(arguments);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.app_panel, m_fragment)
+                .commit();
+        m_registrationSummaryFragment = new RegistrationSummaryFragment();
+        arguments = new Bundle();
+        m_registrationSummaryFragment.setArguments(arguments);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.registration_summary_panel, m_registrationSummaryFragment)
+                .commit();
     }
 }
 

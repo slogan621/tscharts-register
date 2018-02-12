@@ -17,23 +17,13 @@
 
 package org.thousandsmiles.tschartsregister;
 
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.app.Fragment;
 import android.os.Bundle;
 import android.widget.DatePicker;
-import android.widget.TextView;
-
-import java.text.DateFormat;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 
-/**
- * Create a DatePickerFragment class that extends DialogFragment.
- * Define the onCreateDialog() method to return an instance of DatePickerDialog
- */
 public class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener  {
 
     private DatePickerDialog.OnDateSetListener m_listener = null;

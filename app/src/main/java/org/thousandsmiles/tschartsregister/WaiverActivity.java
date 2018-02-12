@@ -24,27 +24,33 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Toast;
 
-public class PatientInfoActivity extends AppCompatActivity {
+public class WaiverActivity extends AppCompatActivity {
 
     private Activity m_activity = this;
     private SessionSingleton m_sess = SessionSingleton.getInstance();
-    AppPatientInfoFragment m_fragment;
+    private Context m_context;
+    AppWaiverFragment m_fragment;
     RegistrationSummaryFragment m_registrationSummaryFragment;
 
     @Override
     protected void onResume() {
         super.onResume();
+   }
+
+    public void handleRegisterButtonPress(View v)
+    {
+         m_fragment.handleRegisterButtonPress(v);
     }
 
-    public void handleNextButtonPress(View v) {
-        m_fragment.handleNextButtonPress(v);
+    public void onWaiverCheckboxClicked(View v)
+    {
+        m_fragment.onWaiverCheckboxClicked(v);
     }
 
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(PatientInfoActivity.this, CategorySelectorActivity.class));
+        startActivity(new Intent(WaiverActivity.this, PatientInfoActivity.class));
         finish();
     }
 
@@ -52,9 +58,10 @@ public class PatientInfoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        setContentView(R.layout.activity_patient_info);
+        setContentView(R.layout.activity_waiver);
+        m_context = getApplicationContext();
         Bundle arguments = new Bundle();
-        m_fragment = new AppPatientInfoFragment();
+        m_fragment = new AppWaiverFragment();
         m_fragment.setArguments(arguments);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.app_panel, m_fragment)

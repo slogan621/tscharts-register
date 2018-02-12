@@ -138,5 +138,19 @@
     <string name="title_unsaved_patient_data">Unsaved Changes to Patient Data</string>
     <string name="msg_save_patient_data">Save Patient Data?</string>
     <string name="title_patient_info">Basic Patient Information</string>
-
+    <string name="title_patient_photo">Patient Photo</string>
+    <string name="msg_save_patient_photo">Save patient photo?</string>
+    <string name="title_unsaved_patient_photo">You have an unsaved patient photo</string>
+    <string name="label_summary_name">Name</string>
+    <string name="label_summary_dob">Date of Birth</string>
+    <string name="label_summary_category">Category</string>
+    <string name="msg_are_you_sure_you_want_to_exit">Are you sure you want to exit?</string>
+    <string name="button_register">Register Patient</string>
+    <string name="title_waiver">Sign Waiver and Register</string>
+    <string name="title_confirm_registration">Confirm Registration</string>
+    <string name="msg_register_patient">Register patient?</string>
+    <string name="waiver_acknowledgement">I accept the above terms and conditions</string>
+    <string name="title_successful_registration">Registration Successful</string>
+    <string name="msg_successfully_registered_patient">Patient was successfully registered</string>
+    <string name="button_ok">Ok</string>
 </resources>
