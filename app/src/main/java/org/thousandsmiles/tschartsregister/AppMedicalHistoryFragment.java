@@ -97,6 +97,10 @@ public class AppMedicalHistoryFragment extends Fragment {
         RadioButton rb;
         boolean bv;
 
+        if (m_medicalHistory == null) {
+            return;
+        }
+
         // Pregnancy
 
         sw = (Switch) m_activity.findViewById(R.id.mother_alcohol);
@@ -1138,7 +1142,7 @@ public class AppMedicalHistoryFragment extends Fragment {
                 copyMedicalHistoryDataToUI();
             }
         } else {
-            m_medicalHistory = m_sess.getPatientMedicalHistory();
+            m_medicalHistory = m_sess.getNewPatientMedicalHistory();
             copyMedicalHistoryDataToUI();
         }
         setViewDirtyListeners();

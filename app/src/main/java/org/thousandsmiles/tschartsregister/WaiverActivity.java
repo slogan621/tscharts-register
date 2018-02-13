@@ -48,6 +48,11 @@ public class WaiverActivity extends AppCompatActivity {
         m_fragment.onWaiverCheckboxClicked(v);
     }
 
+    public void onWaiverPhotoClicked(View v)
+    {
+        m_fragment.onWaiverPhotoClicked(v);
+    }
+
     @Override
     public void onBackPressed() {
         startActivity(new Intent(WaiverActivity.this, PatientInfoActivity.class));

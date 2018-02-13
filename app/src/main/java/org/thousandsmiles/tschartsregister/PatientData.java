@@ -40,6 +40,28 @@ public class PatientData {
     private String m_emergencyEmail = "";
     private boolean m_valid;
 
+    public PatientData() {
+        m_id = -1;
+        m_fatherLast = "";
+        m_motherLast = "";
+        m_first = "";
+        m_middle = "";
+        m_dob = "";
+        m_gender = "Female";
+        m_street1 = "";
+        m_street2 = "";
+        m_colonia = "";
+        m_city = "";
+        m_state = "Baja California";
+        m_phone1 = "";
+        m_phone2 = "";
+        m_email = "";
+        m_emergencyFullName = "";
+        m_emergencyPhone = "";
+        m_emergencyEmail = "";
+        m_valid = true;
+    }
+
     public PatientData(JSONObject o) {
         m_valid = false;
         if (o != null) {

@@ -67,23 +67,74 @@ public class RegistrationSummaryFragment extends Fragment {
         if (m_isNewPatient == false) {
             m_patientId = m_sess.getPatientId();
             m_patientData = m_sess.getPatientData(m_patientId);
-            TextView t = (TextView) getView().findViewById(R.id.value_summary_name);
-            t.setText(String.format("%s %s-%s", m_patientData.getFirst(),
-                    m_patientData.getFatherLast(), m_patientData.getMotherLast()));
-            t = (TextView) getView().findViewById(R.id.value_summary_dob);
-            t.setText(String.format("%s", m_patientData.getDob()));
-            if (m_activity.getClass() == CategorySelectorActivity.class) {
-                TableRow r = (TableRow) getView().findViewById(R.id.summary_category_row);
-                if (r != null) {
-                    r.setVisibility(View.GONE);
-                }
+        } else {
+            m_patientData = m_sess.getNewPatientData();
+        }
+        TextView t = (TextView) getView().findViewById(R.id.value_summary_name);
+        String middle = m_patientData.getMiddle();
+        String first = m_patientData.getFirst();
+        String flast = m_patientData.getFatherLast();
+        String mlast = m_patientData.getMotherLast();
+
+        String format = "";
+
+        if (first.length() > 0 || middle.length() > 0 || flast.length() > 0 || mlast.length() > 0) {
+
+            if (first.length() > 0) {
+                format = format.concat("%s");
             } else {
-                    String name = m_sess.getCategoryName();
-                    ImageView v  = (ImageView) getView().findViewById(R.id.value_summary_category);
-                    v.setImageResource(m_sess.getCategorySelector(name));
-                    t = (TextView) getView().findViewById(R.id.value_summary_category_name);
-                    t.setText(name);
+                format = format.concat("%s");
             }
+
+            if (middle.length() > 0) {
+                format = format.concat(" %s");
+            } else {
+                format = format.concat("%s");
+            }
+
+            if (flast.length() > 0) {
+                format = format.concat(" %s");
+            } else {
+                format = format.concat("%s");
+            }
+
+            if (mlast.length() > 0) {
+                format = format.concat("-%s");
+            } else {
+                format = format.concat("%s");
+            }
+
+            t.setText(String.format(format,
+                    m_patientData.getFirst(),
+                    m_patientData.getMiddle(),
+                    m_patientData.getFatherLast(),
+                    m_patientData.getMotherLast()));
+        } else {
+            TableRow r = (TableRow) getView().findViewById(R.id.summary_name_row);
+            if (r != null) {
+                r.setVisibility(View.GONE);
+            }
+        }
+        t = (TextView) getView().findViewById(R.id.value_summary_dob);
+        if (m_patientData.getDob().length() > 0) {
+            t.setText(String.format("%s", m_patientData.getDob()));
+        } else {
+            TableRow r = (TableRow) getView().findViewById(R.id.summary_dob_row);
+            if (r != null) {
+                r.setVisibility(View.GONE);
+            }
+        }
+        if (m_activity.getClass() == CategorySelectorActivity.class) {
+            TableRow r = (TableRow) getView().findViewById(R.id.summary_category_row);
+            if (r != null) {
+                r.setVisibility(View.GONE);
+            }
+        } else {
+                String name = m_sess.getCategoryName();
+                ImageView v  = (ImageView) getView().findViewById(R.id.value_summary_category);
+                v.setImageResource(m_sess.getCategorySelector(name));
+                t = (TextView) getView().findViewById(R.id.value_summary_category_name);
+                t.setText(name);
         }
     }
 

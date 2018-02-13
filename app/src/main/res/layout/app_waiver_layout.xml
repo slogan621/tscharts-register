@@ -49,11 +49,34 @@
             android:layout_weight="1"/>
 
         <CheckBox android:id="@+id/waiver_acknowledgement"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
+            android:layout_gravity="left"
             android:text="@string/waiver_acknowledgement"
             android:onClick="onWaiverCheckboxClicked"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="16dp"
+        android:orientation="horizontal" >
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            android:layout_weight="1"/>
+
+        <CheckBox android:id="@+id/photo_acknowledgement"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:text="@string/photo_acknowledgement"
+            android:onClick="onWaiverPhotoClicked"/>
 
     </LinearLayout>
 </LinearLayout>

@@ -81,6 +81,9 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
             if ((m_isNewPatient = m_sess.getIsNewPatient()) == false) {
                 m_patientId = m_sess.getPatientId();
                 m_patientData = m_sess.getPatientData(m_patientId);
+            } else {
+                // create new patient data here.
+                m_patientData = m_sess.getNewPatientData();
             }
         }
     }
@@ -128,6 +131,10 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
         RadioButton rb;
 
         // Name
+
+        if (m_patientData == null) {
+            return;
+        }
 
         tx = (TextView) m_activity.findViewById(R.id.paternal_last);
         if (tx != null) {
@@ -213,25 +220,6 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
                 }
             });
         }
-
-        /*
-        ArrayList<String> mexicanStates = m_sess.getMexicanStatesList();
-        if (mexicanStates != null && mexicanStates.size() > 0) {
-            NumberPicker picker = (NumberPicker) m_activity.findViewById(R.id.address_state);
-            if (picker != null) {
-                picker.setMinValue(0);
-                picker.setMaxValue(mexicanStates.size() - 1);
-                String[] a = mexicanStates.toArray(new String[0]);
-                picker.setDisplayedValues(a);
-                for (int i = 0; i < mexicanStates.size(); i++) {
-                    if (m_patientData.getState().equals(mexicanStates.get(i))) {
-                        picker.setValue(i);
-                        break;
-                    }
-                }
-            }
-        }
-        */
 
         // Gender and DOB
 

@@ -148,6 +148,11 @@ public class AppWaiverFragment extends Fragment implements OnPageChangeListener,
         setRegisterButtonEnabled(enable);
     }
 
+    public void onWaiverPhotoClicked(View v) {
+        // TBD
+    }
+
+
     private void setRegisterButtonEnabled(boolean enable)
     {
         Button b = (Button) m_activity.findViewById(R.id.register_button);

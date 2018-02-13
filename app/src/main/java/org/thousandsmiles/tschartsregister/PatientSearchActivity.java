@@ -60,6 +60,32 @@ public class PatientSearchActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed() {
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setMessage(String.format(getApplicationContext().getString(R.string.msg_are_you_sure_you_want_to_exit)));
+        alertDialogBuilder.setPositiveButton(R.string.button_yes,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        moveTaskToBack(true);
+                        android.os.Process.killProcess(android.os.Process.myPid());
+                        System.exit(1);
+                    }
+                });
+
+        alertDialogBuilder.setNegativeButton(R.string.button_no,new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //Toast.makeText(StationSelectorActivity.this,"Please select another station.",Toast.LENGTH_LONG).show();
+            }
+        });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
 
@@ -169,6 +195,7 @@ public class PatientSearchActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface arg0, int arg1) {
                                 m_sess.setIsNewPatient(true);
+                                m_sess.resetNewPatientObjects();
                                 Intent intent = new Intent(m_activity, CategorySelectorActivity.class);
                                 startActivity(intent);
                                 finish();

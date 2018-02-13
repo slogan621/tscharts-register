@@ -41,7 +41,7 @@ public class SessionSingleton {
     private JSONObject m_routingSlipEntryResponse = null;
     private JSONArray m_patientSearchResults = null;
     private int m_clinicId;
-    private PatientData m_newPatientData; // only if m_isNewPatient is true
+    private PatientData m_newPatientData = null; // only if m_isNewPatient is true
     private HashMap<Integer, PatientData> m_patientData = new HashMap<Integer, PatientData>();
     private static HashMap<String, Integer> m_categoryToSelector = new HashMap<String, Integer>();
     private static ArrayList<JSONObject> m_categoryData = new ArrayList<JSONObject>();
@@ -53,6 +53,20 @@ public class SessionSingleton {
     private Registration m_registration = new Registration();
     private int m_patientId;
     private boolean m_isNewPatient = false;
+
+    public void resetNewPatientObjects()
+    {
+        m_newPatientData = null;
+        m_patientMedicalHistory = null;
+    }
+
+    public PatientData getNewPatientData()
+    {
+        if (m_newPatientData == null) {
+            m_newPatientData = new PatientData();
+        }
+        return m_newPatientData;
+    }
 
     public int getPatientId()
     {
@@ -95,6 +109,14 @@ public class SessionSingleton {
 
     public MedicalHistory getPatientMedicalHistory()
     {
+        return m_patientMedicalHistory;
+    }
+
+    public MedicalHistory getNewPatientMedicalHistory()
+    {
+        if (m_patientMedicalHistory == null) {
+            m_patientMedicalHistory = new MedicalHistory();
+        }
         return m_patientMedicalHistory;
     }
 

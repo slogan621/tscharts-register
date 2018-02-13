@@ -157,4 +157,5 @@
     <string name="select_state_select">Select</string>
     <string name="select_state_cancel">Cancel</string>
     <string name="title_select_state_dialog">Select State</string>
+    <string name="photo_acknowledgement">Allow Thousand Smiles to take and use photos publically for fund-raising and advertising purposes</string>
 </resources>
