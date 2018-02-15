@@ -142,12 +142,16 @@ public class AppPatientPhotoFragment extends Fragment {
         if (takePictureIntent.resolveActivity(m_activity.getPackageManager()) != null) {
             // Create the File where the photo should go
             File photoFile = null;
+            String photoPath = null;
             if (which == 1) {
                 photoFile = m_photo1;
+                photoPath = m_photo1Path;
             } else if (which == 2) {
                 photoFile = m_photo2;
+                photoPath = m_photo2Path;
             } else {
                 photoFile = m_photo3;
+                photoPath = m_photo3Path;
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
@@ -156,6 +160,10 @@ public class AppPatientPhotoFragment extends Fragment {
                         photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+            }
+
+            if (photoPath != null) {
+                m_sess.setPhotoPath(photoPath);
             }
         }
     }

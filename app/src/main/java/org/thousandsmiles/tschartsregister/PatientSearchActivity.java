@@ -89,6 +89,7 @@ public class PatientSearchActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
+        m_sess.setPhotoPath("");
         final ClinicREST clinicREST = new ClinicREST(m_context);
         final Object lock;
 
@@ -153,6 +154,7 @@ public class PatientSearchActivity extends AppCompatActivity {
             }
         };
         thread.start();
+
     }
 
     private void LayoutSearchResults() {

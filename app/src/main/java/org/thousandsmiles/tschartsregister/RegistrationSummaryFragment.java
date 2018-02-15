@@ -38,6 +38,8 @@ import android.widget.ImageView;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -53,6 +55,7 @@ public class RegistrationSummaryFragment extends Fragment {
     private int m_patientId;
     private boolean m_isNewPatient = true;
     private PatientData m_patientData;
+    private ImageView m_imageView;
 
     public static RegistrationSummaryFragment newInstance() {
         return new RegistrationSummaryFragment();
@@ -64,12 +67,32 @@ public class RegistrationSummaryFragment extends Fragment {
         m_activity=(Activity) getActivity();
         m_sess = SessionSingleton.getInstance();
         m_isNewPatient = m_sess.getIsNewPatient();
+        m_imageView = (ImageView) m_activity.findViewById(R.id.headshot_image_main);
         if (m_isNewPatient == false) {
             m_patientId = m_sess.getPatientId();
             m_patientData = m_sess.getPatientData(m_patientId);
         } else {
             m_patientData = m_sess.getNewPatientData();
         }
+
+        boolean displayGenderImage = false;
+
+        String imagePath = m_sess.getPhotoPath();
+        if (imagePath.length() == 0) {
+            displayGenderImage = true;
+        }
+
+        if (displayGenderImage == true) {
+            if (m_patientData.getGender() == "Female") {
+                m_imageView.setImageResource(R.drawable.girlfront);
+            } else {
+                m_imageView.setImageResource(R.drawable.boyfront);
+            }
+        } else {
+            File file = new File(imagePath);
+            Picasso.with(getContext()).load(file).memoryPolicy(MemoryPolicy.NO_CACHE).networkPolicy(NetworkPolicy.NO_CACHE).into(m_imageView);
+        }
+
         TextView t = (TextView) getView().findViewById(R.id.value_summary_name);
         String middle = m_patientData.getMiddle();
         String first = m_patientData.getFirst();
