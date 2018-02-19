@@ -83,7 +83,7 @@ public class RegistrationSummaryFragment extends Fragment {
         }
 
         if (displayGenderImage == true) {
-            if (m_patientData.getGender() == "Female") {
+            if (m_patientData.getGender().equals("Female")) {
                 m_imageView.setImageResource(R.drawable.girlfront);
             } else {
                 m_imageView.setImageResource(R.drawable.boyfront);
