@@ -39,6 +39,7 @@ import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener;
 import com.github.barteksc.pdfviewer.listener.OnPageChangeListener;
 import com.github.barteksc.pdfviewer.listener.OnPageErrorListener;
 import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle;
+import com.github.barteksc.pdfviewer.util.FitPolicy;
 
 public class AppWaiverFragment extends Fragment implements OnPageChangeListener, OnLoadCompleteListener,
         OnPageErrorListener {
@@ -132,7 +133,7 @@ public class AppWaiverFragment extends Fragment implements OnPageChangeListener,
                     .scrollHandle(new DefaultScrollHandle(this.getContext()))
                     .spacing(10) // in dp
                     .onPageError(this)
-                    //.pageFitPolicy(FitPolicy.BOTH)
+                    .pageFitPolicy(FitPolicy.WIDTH)
                     .load();
         }
     }
