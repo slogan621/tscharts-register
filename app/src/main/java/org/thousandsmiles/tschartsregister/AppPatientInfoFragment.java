@@ -280,27 +280,12 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
     }
 
     private void setDirty()
-    {/*
-        View button_bar_item = m_activity.findViewById(R.id.save_button);
-        button_bar_item.setVisibility(View.VISIBLE);
-        button_bar_item.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View arg0) {
-            updateMedicalHistory();
-            }
-
-        });
-        */
+    {
         m_dirty = true;
     }
 
     private void clearDirty()
     {
-        /*
-        View button_bar_item = m_activity.findViewById(R.id.save_button);
-        button_bar_item.setVisibility(View.GONE);
-        */
         m_dirty = false;
     }
 
@@ -837,16 +822,6 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
 
     @Override
     public void onPause() {
-        /*
-        Activity activity = getActivity();
-        if (activity != null) {
-            View button_bar_item = activity.findViewById(R.id.save_button);
-            if (button_bar_item != null) {
-                button_bar_item.setVisibility(View.GONE);
-            }
-        }
-        */
-
         super.onPause();
 
         PatientData pd = this.copyPatientDataFromUI();
@@ -873,10 +848,6 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
             AlertDialog alert = builder.create();
             alert.show();
         }
-/*
-        View button_bar_item = getActivity().findViewById(R.id.save_button);
-        button_bar_item.setVisibility(View.GONE);
-        */
     }
 
     @Override
