@@ -18,7 +18,6 @@
 package org.thousandsmiles.tschartsregister;
 
 import android.app.Activity;
-import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -63,6 +62,7 @@ public class AppPatientPhotoFragment extends Fragment {
     private File m_photo2;
     private File m_photo3;
     static final int REQUEST_TAKE_PHOTO = 1;
+    private int m_whichCamera = 0;
 
     public static AppPatientPhotoFragment newInstance() {
         return new AppPatientPhotoFragment();
@@ -115,8 +115,18 @@ public class AppPatientPhotoFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
             try {
-                //m_buttonImageView.setVisibility(View.VISIBLE);
                 File file = new File(m_clickedPhotoPath);
+                ImageView v;
+                if (m_whichCamera == 1) {
+                    v = (ImageView) m_activity.findViewById(R.id.headshot_image_1);
+                    v.setClickable(true);
+                } else if (m_whichCamera == 2) {
+                    v = (ImageView) m_activity.findViewById(R.id.headshot_image_2);
+                    v.setClickable(true);
+                } else if (m_whichCamera == 3) {
+                    v = (ImageView) m_activity.findViewById(R.id.headshot_image_3);
+                    v.setClickable(true);
+                }
                 Picasso.with(getContext()).load(file).memoryPolicy(MemoryPolicy.NO_CACHE).networkPolicy(NetworkPolicy.NO_CACHE).into(m_buttonImageView);
              } catch (Exception e) {
                 e.printStackTrace();
@@ -133,13 +143,10 @@ public class AppPatientPhotoFragment extends Fragment {
             String photoPath = null;
             if (which == 1) {
                 photoFile = m_photo1;
-                photoPath = m_photo1Path;
             } else if (which == 2) {
                 photoFile = m_photo2;
-                photoPath = m_photo2Path;
             } else {
                 photoFile = m_photo3;
-                photoPath = m_photo3Path;
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
@@ -147,6 +154,7 @@ public class AppPatientPhotoFragment extends Fragment {
                         "com.example.android.fileprovider",
                         photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                m_whichCamera = which; // would pass this as an extra but doesn't work
                 startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
             }
         }
@@ -185,7 +193,6 @@ public class AppPatientPhotoFragment extends Fragment {
         }
 
         if (file != null) {
-            //Picasso.with(getContext()).load("http://sydlogan.com/26354.jpg").into(m_imageView);
             Picasso.with(getContext()).load(file).memoryPolicy(MemoryPolicy.NO_CACHE).networkPolicy(NetworkPolicy.NO_CACHE).into(m_mainImageView);
         }
     }
@@ -203,8 +210,6 @@ public class AppPatientPhotoFragment extends Fragment {
     }
 
     public void handleNextButtonPress(View v) {
-        //startActivity(new Intent(MedicalHistoryActivity.this, PatientInfoActivity.class));
-
         if (m_dirty) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
@@ -255,14 +260,6 @@ public class AppPatientPhotoFragment extends Fragment {
         super.onResume();
 
         m_mainImageView = (ImageView)  m_activity.findViewById(R.id.headshot_image_main);
-        /*
-        ImageView v = (ImageView) m_activity.findViewById(R.id.headshot_image_1);
-        v.setVisibility(View.INVISIBLE);
-        v = (ImageView) m_activity.findViewById(R.id.headshot_image_2);
-        v.setVisibility(View.INVISIBLE);
-        v = (ImageView) m_activity.findViewById(R.id.headshot_image_3);
-        v.setVisibility(View.INVISIBLE);
-        */
     }
 
     @Override
@@ -294,13 +291,25 @@ public class AppPatientPhotoFragment extends Fragment {
     }
 
     @Override
+    public void onViewCreated(View view, Bundle bundle) {
+        super.onViewCreated(view, bundle);
+        ImageView v = (ImageView) m_activity.findViewById(R.id.headshot_image_1);
+        if (v != null) {
+            v.setClickable(false);
+        }
+        v = (ImageView) m_activity.findViewById(R.id.headshot_image_2);
+        if (v != null) {
+            v.setClickable(false);
+        }
+        v = (ImageView) m_activity.findViewById(R.id.headshot_image_3);
+        if (v != null) {
+            v.setClickable(false);
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.app_patient_photo_layout, container, false);
         return view;
     }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-   }
 }
