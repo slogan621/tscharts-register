@@ -100,6 +100,7 @@ public class RegisterDialogFragment extends DialogFragment {
                         public void onClick(DialogInterface dialog, int id) {
                             m_sess.setPatientId(m_patientId);
                             m_sess.setIsNewPatient(false);
+                            m_sess.setPhotoPath(m_sess.getHeadShotPath(m_patientId));
                             Intent i = new Intent(getContext(), CategorySelectorActivity.class);
                             startActivity(i);
                             dialog.dismiss();

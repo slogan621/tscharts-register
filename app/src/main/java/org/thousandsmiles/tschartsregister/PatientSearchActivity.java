@@ -89,6 +89,7 @@ public class PatientSearchActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
+        m_sess.clearHeadShotCache();
         m_sess.setPhotoPath("");
         final ClinicREST clinicREST = new ClinicREST(m_context);
         final Object lock;
@@ -181,12 +182,16 @@ public class PatientSearchActivity extends AppCompatActivity {
         int rightMargin=10;
         int bottomMargin=2;
         parms.setMargins(leftMargin, topMargin, rightMargin, bottomMargin);
+        parms.gravity = (Gravity.CENTER_VERTICAL);
 
         btnLO.setLayoutParams(parms);
         ImageButton button = new ImageButton(getApplicationContext());
 
+        btnLO.setBackgroundColor(getResources().getColor(R.color.lightGray));
+
         button.setBackgroundColor(getResources().getColor(R.color.lightGray));
         button.setImageDrawable(getResources().getDrawable(R.drawable.headshot_plus));
+
 
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -279,26 +284,31 @@ public class PatientSearchActivity extends AppCompatActivity {
             first = value.getFirst();
 
             if (count == 0) {
+                btnLO.setBackgroundColor(getResources().getColor(R.color.lightGray));
                 button.setBackgroundColor(getResources().getColor(R.color.lightGray));
                 button.setImageDrawable(getResources().getDrawable(R.drawable.headshot_plus));
             } else {
 
                 if (girl == true) {
-                    button.setImageDrawable(getResources().getDrawable(R.drawable.imagegirlwhite));
-                    button.setBackgroundColor(getResources().getColor(R.color.girlPink));
+                    button.setImageDrawable(getResources().getDrawable(R.drawable.girlfront));
                 } else {
-                    button.setImageDrawable(getResources().getDrawable(R.drawable.imageboywhite));
-                    button.setBackgroundColor(getResources().getColor(R.color.boyBlue));
+                    button.setImageDrawable(getResources().getDrawable(R.drawable.boyfront));
                 }
             }
             button.setTag(value);
 
+            HeadshotImage headshot  = new HeadshotImage();
+            headshot.setActivity(this);
+            headshot.setImageView(button);
+            headshot.getImage(id);
+            m_sess.addHeadShotPath(id, headshot.getImageFileAbsolutePath());
+
             button.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    RegisterDialogFragment rtc = new RegisterDialogFragment();
-                    PatientData o = (PatientData) v.getTag();
-                    rtc.setPatientId(o.getId());
-                    rtc.show(getSupportFragmentManager(), getApplicationContext().getString(R.string.title_register_dialog));
+                RegisterDialogFragment rtc = new RegisterDialogFragment();
+                PatientData o = (PatientData) v.getTag();
+                rtc.setPatientId(o.getId());
+                rtc.show(getSupportFragmentManager(), getApplicationContext().getString(R.string.title_register_dialog));
                   }
             });
 

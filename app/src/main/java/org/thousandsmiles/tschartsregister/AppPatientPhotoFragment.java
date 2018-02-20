@@ -22,11 +22,6 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Point;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -35,20 +30,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
-import android.telephony.PhoneNumberFormattingTextWatcher;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
-import android.widget.DatePicker;
 import android.widget.ImageView;
-import android.widget.NumberPicker;
-import android.widget.RadioButton;
-import android.widget.Switch;
-import android.widget.TextView;
 
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
@@ -56,10 +41,7 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 
 import static android.app.Activity.RESULT_OK;
@@ -72,6 +54,7 @@ public class AppPatientPhotoFragment extends Fragment {
     private boolean m_dirty = false;
     private ImageView m_mainImageView = null;
     private ImageView m_buttonImageView = null;
+    private String m_currentPhotoPath = "";
     private String m_photo1Path = "";
     private String m_photo2Path = "";
     private String m_photo3Path = "";
@@ -79,9 +62,15 @@ public class AppPatientPhotoFragment extends Fragment {
     private File m_photo1;
     private File m_photo2;
     private File m_photo3;
+    static final int REQUEST_TAKE_PHOTO = 1;
 
     public static AppPatientPhotoFragment newInstance() {
         return new AppPatientPhotoFragment();
+    }
+
+    public void restorePhotoPath()
+    {
+        m_sess.setPhotoPath(m_currentPhotoPath);
     }
 
     @Override
@@ -126,6 +115,7 @@ public class AppPatientPhotoFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
             try {
+                //m_buttonImageView.setVisibility(View.VISIBLE);
                 File file = new File(m_clickedPhotoPath);
                 Picasso.with(getContext()).load(file).memoryPolicy(MemoryPolicy.NO_CACHE).networkPolicy(NetworkPolicy.NO_CACHE).into(m_buttonImageView);
              } catch (Exception e) {
@@ -133,8 +123,6 @@ public class AppPatientPhotoFragment extends Fragment {
             }
         }
     }
-
-    static final int REQUEST_TAKE_PHOTO = 1;
 
     private void dispatchTakePictureIntent(int which) {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -161,10 +149,6 @@ public class AppPatientPhotoFragment extends Fragment {
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
             }
-
-            if (photoPath != null) {
-                m_sess.setPhotoPath(photoPath);
-            }
         }
     }
 
@@ -187,14 +171,17 @@ public class AppPatientPhotoFragment extends Fragment {
     }
 
     private void displayMainImage(int which) {
-        File file;
+        File file = null;
 
         if (which == 1) {
             file = m_photo1;
+            m_sess.setPhotoPath(m_photo1Path);
         } else if (which == 2) {
             file = m_photo2;
-        } else {
+            m_sess.setPhotoPath(m_photo2Path);
+        } else if (which == 3) {
             file = m_photo3;
+            m_sess.setPhotoPath(m_photo3Path);
         }
 
         if (file != null) {
@@ -204,7 +191,7 @@ public class AppPatientPhotoFragment extends Fragment {
     }
 
     public void handleImage1Press(View v) {
-      displayMainImage(1);
+        displayMainImage(1);
     }
 
     public void handleImage2Press(View v) {
@@ -259,14 +246,23 @@ public class AppPatientPhotoFragment extends Fragment {
             createImageFile(2);
             createImageFile(3);
         } catch (IOException e) {
-
         }
+        m_currentPhotoPath = m_sess.getPhotoPath();
     }
 
     @Override
     public void onResume() {
         super.onResume();
+
         m_mainImageView = (ImageView)  m_activity.findViewById(R.id.headshot_image_main);
+        /*
+        ImageView v = (ImageView) m_activity.findViewById(R.id.headshot_image_1);
+        v.setVisibility(View.INVISIBLE);
+        v = (ImageView) m_activity.findViewById(R.id.headshot_image_2);
+        v.setVisibility(View.INVISIBLE);
+        v = (ImageView) m_activity.findViewById(R.id.headshot_image_3);
+        v.setVisibility(View.INVISIBLE);
+        */
     }
 
     @Override

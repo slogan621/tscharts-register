@@ -17,7 +17,9 @@
 
 package org.thousandsmiles.tschartsregister;
 
+import android.app.Activity;
 import android.content.Context;
+import android.os.Environment;
 import android.os.Looper;
 import android.util.DisplayMetrics;
 import android.view.Display;
@@ -27,10 +29,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class SessionSingleton {
     private static SessionSingleton m_instance;
@@ -54,6 +58,38 @@ public class SessionSingleton {
     private int m_patientId;
     private boolean m_isNewPatient = false;
     private String m_photoPath = "";
+    private File m_storageDir = null;
+    private ConcurrentHashMap<Integer, String> m_headshotIdToPath = new ConcurrentHashMap<Integer, String>();
+
+    void setStorageDir(Activity activity) {
+        m_storageDir = activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+    }
+
+    void clearHeadShotCache() {
+        m_headshotIdToPath.clear();
+    }
+
+    void addHeadShotPath(int id, String path) {
+        m_headshotIdToPath.put(id, path);
+    }
+
+    void removeHeadShotPath(int id) {
+        m_headshotIdToPath.remove(id);
+    }
+
+    String getHeadShotPath(int id) {
+        String ret = null;
+
+        try {
+            ret = m_headshotIdToPath.get(id);
+        } catch(Exception e) {
+        }
+        return ret;
+    }
+
+    File getStorageDir() {
+        return m_storageDir;
+    }
 
     public void setPhotoPath(String path)
     {

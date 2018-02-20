@@ -66,6 +66,7 @@ public class PatientPhotoActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        m_patientPhotoFragment.restorePhotoPath();
         startActivity(new Intent(PatientPhotoActivity.this, MedicalHistoryActivity.class));
         finish();
     }

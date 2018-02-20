@@ -70,7 +70,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
                     android:onClick="handleImageButton1Press"
-                    android:src="@mipmap/ic_launcher"
+                    android:src="@drawable/ic_photo_camera_black_48dp"
                     />
 
             </LinearLayout>
@@ -106,7 +106,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
                     android:onClick="handleImageButton2Press"
-                    android:src="@mipmap/ic_launcher"
+                    android:src="@drawable/ic_photo_camera_black_48dp"
                     />
 
             </LinearLayout>
@@ -142,7 +142,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
                     android:onClick="handleImageButton3Press"
-                    android:src="@mipmap/ic_launcher"
+                    android:src="@drawable/ic_photo_camera_black_48dp"
                     />
 
             </LinearLayout>

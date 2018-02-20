@@ -69,6 +69,27 @@
         </TableRow>
 
         <TableRow
+            android:id="@+id/summary_id_row"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dip">
+
+            <TextView
+                android:id="@+id/label_summary_id"
+                android:layout_span="1"
+                android:text="@string/label_summary_id"
+                android:paddingRight="20dp"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <TextView
+                android:id="@+id/value_summary_id"
+                android:layout_span="1"
+                android:text=""
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        </TableRow>
+
+        <TableRow
             android:id="@+id/summary_dob_row"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

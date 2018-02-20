@@ -78,7 +78,7 @@ public class RegistrationSummaryFragment extends Fragment {
         boolean displayGenderImage = false;
 
         String imagePath = m_sess.getPhotoPath();
-        if (imagePath.length() == 0) {
+        if (imagePath == null || imagePath.length() == 0) {
             displayGenderImage = true;
         }
 
@@ -90,7 +90,7 @@ public class RegistrationSummaryFragment extends Fragment {
             }
         } else {
             File file = new File(imagePath);
-            Picasso.with(getContext()).load(file).memoryPolicy(MemoryPolicy.NO_CACHE).networkPolicy(NetworkPolicy.NO_CACHE).into(m_imageView);
+            Picasso.with(getContext()).load(file).into(m_imageView);
         }
 
         TextView t = (TextView) getView().findViewById(R.id.value_summary_name);
@@ -147,6 +147,17 @@ public class RegistrationSummaryFragment extends Fragment {
                 r.setVisibility(View.GONE);
             }
         }
+
+        if (m_isNewPatient) {
+            TableRow r = (TableRow) getView().findViewById(R.id.summary_id_row);
+            if (r != null) {
+                r.setVisibility(View.GONE);
+            }
+        } else {
+            t = (TextView) getView().findViewById(R.id.value_summary_id);
+            t.setText(String.format("%d", m_patientId));
+        }
+
         if (m_activity.getClass() == CategorySelectorActivity.class) {
             TableRow r = (TableRow) getView().findViewById(R.id.summary_category_row);
             if (r != null) {

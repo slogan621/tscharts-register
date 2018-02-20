@@ -55,7 +55,7 @@ public class WaiverActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(WaiverActivity.this, PatientInfoActivity.class));
+        startActivity(new Intent(WaiverActivity.this, PatientPhotoActivity.class));
         finish();
     }
 
