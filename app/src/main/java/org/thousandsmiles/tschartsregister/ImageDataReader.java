@@ -69,8 +69,6 @@ public class ImageDataReader {
         return m_file;
     }
 
-
-
     public void clear() {
         if (m_file != null) {
             m_file.delete();
@@ -105,7 +103,7 @@ public class ImageDataReader {
                 }
             } else if (Looper.myLooper() != Looper.getMainLooper()) {
                 final ImageREST imageData = new ImageREST(m_context);
-                Object lock = imageData.getImageData(id, m_file);
+                Object lock = imageData.getMostRecentPatientImageData(id, m_file);
 
                 synchronized (lock) {
                     // we loop here in case of race conditions or spurious interrupts

@@ -290,9 +290,11 @@ public class PatientSearchActivity extends AppCompatActivity {
             } else {
 
                 if (girl == true) {
-                    button.setImageDrawable(getResources().getDrawable(R.drawable.girlfront));
+                    button.setImageDrawable(getResources().getDrawable(R.drawable.imagegirlwhite));
+                    button.setBackgroundColor(getResources().getColor(R.color.girlPink));
                 } else {
-                    button.setImageDrawable(getResources().getDrawable(R.drawable.boyfront));
+                    button.setImageDrawable(getResources().getDrawable(R.drawable.imageboywhite));
+                    button.setBackgroundColor(getResources().getColor(R.color.boyBlue));
                 }
             }
             button.setTag(value);
@@ -300,8 +302,9 @@ public class PatientSearchActivity extends AppCompatActivity {
             HeadshotImage headshot  = new HeadshotImage();
             headshot.setActivity(this);
             headshot.setImageView(button);
-            headshot.getImage(id);
+            Thread t = headshot.getImage(id);
             m_sess.addHeadShotPath(id, headshot.getImageFileAbsolutePath());
+            t.start();
 
             button.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {

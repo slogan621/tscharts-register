@@ -170,11 +170,31 @@ public class ImageREST extends RESTful {
         return m_lock;
     }
 
-    public Object getAllPatientImages(int patientid, boolean sort) {
+    public Object getMostRecentPatientImageData(int patientid, File file) {
+
+        m_file = file;
+
+        VolleySingleton volley = VolleySingleton.getInstance();
+
+        volley.initQueueIf(getContext());
+
+        RequestQueue queue = volley.getQueue();
+
+        String url = String.format("http://%s:%s/tscharts/v1/image?patient=%d&newest=true", getIP(), getPort(), patientid);
+
+        ImageREST.AuthJSONObjectRequest request = new ImageREST.AuthJSONObjectRequest(Request.Method.GET, url, null, new ImageREST.ResponseListener(), new ImageREST.ErrorListener());
+
+        queue.add((JsonObjectRequest) request);
+
+        return m_lock;
+    }
+
+    public Object getAllPatientImages(int patientid, File file, boolean sort) {
 
         VolleySingleton volley = VolleySingleton.getInstance();
 
         String sortArg = "false";
+        m_file = file;
 
         if (sort == true) {
             sortArg = "true";

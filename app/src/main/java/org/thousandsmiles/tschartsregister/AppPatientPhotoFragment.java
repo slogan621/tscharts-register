@@ -127,7 +127,7 @@ public class AppPatientPhotoFragment extends Fragment {
                     v = (ImageView) m_activity.findViewById(R.id.headshot_image_3);
                     v.setClickable(true);
                 }
-                Picasso.with(getContext()).load(file).memoryPolicy(MemoryPolicy.NO_CACHE).networkPolicy(NetworkPolicy.NO_CACHE).into(m_buttonImageView);
+                Picasso.with(getContext()).load(file).into(m_buttonImageView);
              } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -193,7 +193,7 @@ public class AppPatientPhotoFragment extends Fragment {
         }
 
         if (file != null) {
-            Picasso.with(getContext()).load(file).memoryPolicy(MemoryPolicy.NO_CACHE).networkPolicy(NetworkPolicy.NO_CACHE).into(m_mainImageView);
+            Picasso.with(getContext()).load(file).into(m_mainImageView);
         }
     }
 

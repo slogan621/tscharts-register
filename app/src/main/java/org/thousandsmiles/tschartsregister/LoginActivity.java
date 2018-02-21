@@ -106,6 +106,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         SessionSingleton s = SessionSingleton.getInstance();
         s.setContext(getApplicationContext());
         setContentView(R.layout.activity_login);
+        s.setStorageDir(this);
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         //populateAutoComplete();

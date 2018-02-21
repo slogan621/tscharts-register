@@ -22,8 +22,6 @@ import android.content.Context;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.squareup.picasso.MemoryPolicy;
-import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -34,24 +32,24 @@ public class HeadshotImage implements ImageReadyListener {
     private Context m_context;
     private Activity m_activity;
     private ImageDataReader m_reader = null;
+    private Thread m_thread;
 
     void setImageView(ImageView imageView) {
         m_imageView = imageView;
     }
 
-    void getImage(int id) {
+    Thread getImage(int id) {
         m_id = id;
         if (m_reader == null) {
             m_reader = new ImageDataReader(m_context, m_id);
             m_reader.registerListener(this);
-            Thread thread = new Thread(){
+            m_thread = new Thread(){
                 public void run() {
                     m_reader.read(m_id);
                 }
             };
-            thread.start();
-
         }
+        return m_thread;
     }
 
     String getImageFileAbsolutePath()
@@ -73,7 +71,8 @@ public class HeadshotImage implements ImageReadyListener {
     public void onImageRead(final File file) {
         m_activity.runOnUiThread(new Runnable() {
             public void run() {
-                Picasso.with(m_context).load(file).memoryPolicy(MemoryPolicy.NO_CACHE).networkPolicy(NetworkPolicy.NO_CACHE).into(m_imageView);
+                m_imageView.setBackgroundColor(m_activity.getResources().getColor(R.color.white));
+                Picasso.with(m_context).load(file).fit().centerInside().into(m_imageView);
             }
         });
     }
@@ -81,12 +80,12 @@ public class HeadshotImage implements ImageReadyListener {
     @Override
     public void onImageError(int code) {
         SessionSingleton.getInstance().removeHeadShotPath(m_id);
-        /*
-        m_activity.runOnUiThread(new Runnable() {
-            public void run() {
-                Toast.makeText(m_activity, m_activity.getString(R.string.msg_unable_to_get_patient_headshot), Toast.LENGTH_SHORT).show();
-            }
-        });
-        */
+        if (code != 404) {
+            m_activity.runOnUiThread(new Runnable() {
+                public void run() {
+                    Toast.makeText(m_activity, m_activity.getString(R.string.msg_unable_to_get_patient_headshot), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 }
