@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--
-
 /*
  * (C) Copyright Syd Logan 2018
  * (C) Copyright Thousand Smiles Foundation 2018
@@ -18,7 +17,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"

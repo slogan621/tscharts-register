@@ -290,10 +290,10 @@ public class PatientSearchActivity extends AppCompatActivity {
             } else {
 
                 if (girl == true) {
-                    button.setImageDrawable(getResources().getDrawable(R.drawable.imagegirlwhite));
+                    button.setImageDrawable(getResources().getDrawable(R.drawable.girlfront));
                     button.setBackgroundColor(getResources().getColor(R.color.girlPink));
                 } else {
-                    button.setImageDrawable(getResources().getDrawable(R.drawable.imageboywhite));
+                    button.setImageDrawable(getResources().getDrawable(R.drawable.boyfront));
                     button.setBackgroundColor(getResources().getColor(R.color.boyBlue));
                 }
             }
