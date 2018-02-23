@@ -153,7 +153,6 @@ public class AppWaiverFragment extends Fragment implements OnPageChangeListener,
         // TBD
     }
 
-
     private void setRegisterButtonEnabled(boolean enable)
     {
         Button b = (Button) m_activity.findViewById(R.id.register_button);

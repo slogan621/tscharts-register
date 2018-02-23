@@ -50,6 +50,7 @@ import java.util.GregorianCalendar;
 
 public class AppPatientInfoFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
     private Activity m_activity = null;
+    private View m_view = null;
     private SessionSingleton m_sess = null;
     private PatientData m_patientData;
     private int m_patientId;
@@ -62,7 +63,7 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
 
     private void setDate(final Calendar calendar) {
         final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
-        ((TextView) m_activity.findViewById(R.id.dob)).setText(dateFormat.format(calendar.getTime()));
+        ((TextView) m_view.findViewById(R.id.dob)).setText(dateFormat.format(calendar.getTime()));
     }
 
     public void onDateSet(DatePicker view, int year, int month, int day) {
@@ -88,6 +89,53 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
         }
     }
 
+    void updatePatientData()
+    {
+        boolean ret = false;
+
+        Thread thread = new Thread(){
+            public void run() {
+                // note we use session context because this may be called after onPause()
+                PatientREST rest = new PatientREST(m_sess.getContext());
+                Object lock;
+                int status;
+
+                lock = rest.updatePatient(copyPatientDataFromUI());
+
+                synchronized (lock) {
+                    // we loop here in case of race conditions or spurious interrupts
+                    while (true) {
+                        try {
+                            lock.wait();
+                            break;
+                        } catch (InterruptedException e) {
+                            continue;
+                        }
+                    }
+                }
+                status = rest.getStatus();
+                if (status != 200) {
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.post(new Runnable() {
+                        public void run() {
+                            Toast.makeText(m_activity, m_activity.getString(R.string.msg_unable_to_save_medical_history), Toast.LENGTH_LONG).show();
+                        }
+                    });
+                } else {
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.post(new Runnable() {
+                        public void run() {
+                            clearDirty();
+                            m_patientData = copyPatientDataFromUI();
+                            Toast.makeText(m_activity, m_activity.getString(R.string.msg_successfully_saved_medical_history), Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+            }
+        };
+        thread.start();
+    }
+
     public void handleNextButtonPress(View v) {
         //startActivity(new Intent(MedicalHistoryActivity.this, PatientInfoActivity.class));
 
@@ -103,6 +151,7 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
                     m_sess.updatePatientData(pd);
+                    updatePatientData();
                     startActivity(new Intent(m_activity, MedicalHistoryActivity.class));
                     m_activity.finish();
                 }
@@ -136,49 +185,49 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
             return;
         }
 
-        tx = (TextView) m_activity.findViewById(R.id.paternal_last);
+        tx = (TextView) m_view.findViewById(R.id.paternal_last);
         if (tx != null) {
             tx.setText(m_patientData.getFatherLast());
         }
 
-        tx = (TextView) m_activity.findViewById(R.id.maternal_last);
+        tx = (TextView) m_view.findViewById(R.id.maternal_last);
         if (tx != null) {
             tx.setText(m_patientData.getMotherLast());
         }
 
-        tx = (TextView) m_activity.findViewById(R.id.first_name);
+        tx = (TextView) m_view.findViewById(R.id.first_name);
         if (tx != null) {
             tx.setText(m_patientData.getFirst());
         }
 
-        tx = (TextView) m_activity.findViewById(R.id.middle_name);
+        tx = (TextView) m_view.findViewById(R.id.middle_name);
         if (tx != null) {
             tx.setText(m_patientData.getMiddle());
         }
 
         // Address
 
-        tx = (TextView) m_activity.findViewById(R.id.address_street_1);
+        tx = (TextView) m_view.findViewById(R.id.address_street_1);
         if (tx != null) {
             tx.setText(m_patientData.getStreet1());
         }
 
-        tx = (TextView) m_activity.findViewById(R.id.address_street_2);
+        tx = (TextView) m_view.findViewById(R.id.address_street_2);
         if (tx != null) {
             tx.setText(m_patientData.getStreet2());
         }
 
-        tx = (TextView) m_activity.findViewById(R.id.address_city);
+        tx = (TextView) m_view.findViewById(R.id.address_city);
         if (tx != null) {
             tx.setText(m_patientData.getCity());
         }
 
-        tx = (TextView) m_activity.findViewById(R.id.address_colonia);
+        tx = (TextView) m_view.findViewById(R.id.address_colonia);
         if (tx != null) {
             tx.setText(m_patientData.getColonia());
         }
 
-        final TextView tx1 = (TextView) m_activity.findViewById(R.id.address_state);
+        final TextView tx1 = (TextView) m_view.findViewById(R.id.address_state);
         if (tx1 != null) {
 
             tx1.setText(m_patientData.getState());
@@ -230,50 +279,50 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
             isFemale = false;
         }
 
-        rb = (RadioButton) m_activity.findViewById(R.id.gender_female);
+        rb = (RadioButton) m_view.findViewById(R.id.gender_female);
         if (rb != null) {
             rb.setChecked(isFemale);
         }
-        rb = (RadioButton) m_activity.findViewById(R.id.gender_male);
+        rb = (RadioButton) m_view.findViewById(R.id.gender_male);
         if (rb != null) {
             rb.setChecked(!isFemale);
         }
 
-        tx = (TextView) m_activity.findViewById(R.id.dob);
+        tx = (TextView) m_view.findViewById(R.id.dob);
         if (tx != null) {
             tx.setText(m_patientData.getDob());
         }
 
         // Contact Info
 
-        tx = (TextView) m_activity.findViewById(R.id.phone_1);
+        tx = (TextView) m_view.findViewById(R.id.phone_1);
         if (tx != null) {
             tx.setText(m_patientData.getPhone1());
         }
 
-        tx = (TextView) m_activity.findViewById(R.id.phone_2);
+        tx = (TextView) m_view.findViewById(R.id.phone_2);
         if (tx != null) {
             tx.setText(m_patientData.getPhone2());
         }
 
-        tx = (TextView) m_activity.findViewById(R.id.e_mail);
+        tx = (TextView) m_view.findViewById(R.id.e_mail);
         if (tx != null) {
             tx.setText(m_patientData.getEmail());
         }
 
         // Emergency Contact Info
 
-        tx = (TextView) m_activity.findViewById(R.id.emergency_phone);
+        tx = (TextView) m_view.findViewById(R.id.emergency_phone);
         if (tx != null) {
             tx.setText(m_patientData.getEmergencyPhone());
         }
 
-        tx = (TextView) m_activity.findViewById(R.id.emergency_full_name);
+        tx = (TextView) m_view.findViewById(R.id.emergency_full_name);
         if (tx != null) {
             tx.setText(m_patientData.getEmergencyFullName());
         }
 
-        tx = (TextView) m_activity.findViewById(R.id.emergency_e_mail);
+        tx = (TextView) m_view.findViewById(R.id.emergency_e_mail);
         if (tx != null) {
             tx.setText(m_patientData.getEmergencyEmail());
         }
@@ -297,7 +346,7 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
 
         // name
 
-        tx = (TextView) m_activity.findViewById(R.id.paternal_last);
+        tx = (TextView) m_view.findViewById(R.id.paternal_last);
         if (tx != null) {
             tx.addTextChangedListener(new TextWatcher() {
 
@@ -317,7 +366,7 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
             });
         }
 
-        tx = (TextView) m_activity.findViewById(R.id.maternal_last);
+        tx = (TextView) m_view.findViewById(R.id.maternal_last);
         if (tx != null) {
             tx.addTextChangedListener(new TextWatcher() {
 
@@ -337,7 +386,7 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
             });
         }
 
-        tx = (TextView) m_activity.findViewById(R.id.first_name);
+        tx = (TextView) m_view.findViewById(R.id.first_name);
         if (tx != null) {
             tx.addTextChangedListener(new TextWatcher() {
 
@@ -357,7 +406,7 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
             });
         }
 
-        tx = (TextView) m_activity.findViewById(R.id.middle_name);
+        tx = (TextView) m_view.findViewById(R.id.middle_name);
         if (tx != null) {
             tx.addTextChangedListener(new TextWatcher() {
 
@@ -379,7 +428,7 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
 
         // address
 
-        tx = (TextView) m_activity.findViewById(R.id.address_street_1);
+        tx = (TextView) m_view.findViewById(R.id.address_street_1);
         if (tx != null) {
             tx.addTextChangedListener(new TextWatcher() {
 
@@ -399,7 +448,7 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
             });
         }
 
-        tx = (TextView) m_activity.findViewById(R.id.address_street_2);
+        tx = (TextView) m_view.findViewById(R.id.address_street_2);
         if (tx != null) {
             tx.addTextChangedListener(new TextWatcher() {
 
@@ -419,7 +468,7 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
             });
         }
 
-        tx = (TextView) m_activity.findViewById(R.id.address_colonia);
+        tx = (TextView) m_view.findViewById(R.id.address_colonia);
         if (tx != null) {
             tx.addTextChangedListener(new TextWatcher() {
 
@@ -439,7 +488,7 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
             });
         }
 
-        tx = (TextView) m_activity.findViewById(R.id.address_city);
+        tx = (TextView) m_view.findViewById(R.id.address_city);
         if (tx != null) {
             tx.addTextChangedListener(new TextWatcher() {
 
@@ -459,7 +508,7 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
             });
         }
 
-        tx = (TextView) m_activity.findViewById(R.id.address_state);
+        tx = (TextView) m_view.findViewById(R.id.address_state);
         if (tx != null) {
             tx.addTextChangedListener(new TextWatcher() {
 
@@ -481,7 +530,7 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
 
         // gender and dob
 
-        rb = (RadioButton) m_activity.findViewById(R.id.gender_male);
+        rb = (RadioButton) m_view.findViewById(R.id.gender_male);
         if (rb != null) {
             rb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -490,7 +539,7 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
             });
         }
 
-        rb = (RadioButton) m_activity.findViewById(R.id.gender_female);
+        rb = (RadioButton) m_view.findViewById(R.id.gender_female);
         if (rb != null) {
             rb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -499,7 +548,7 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
             });
         }
 
-        final TextView tx1 = (TextView) m_activity.findViewById(R.id.dob);
+        final TextView tx1 = (TextView) m_view.findViewById(R.id.dob);
         if (tx1 != null) {
             tx1.setShowSoftInputOnFocus(false);
             tx1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -540,7 +589,7 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
 
         // Contact Info
 
-        tx = (TextView) m_activity.findViewById(R.id.phone_1);
+        tx = (TextView) m_view.findViewById(R.id.phone_1);
         if (tx != null) {
             tx.addTextChangedListener(new TextWatcher() {
 
@@ -561,7 +610,7 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
             tx.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
         }
 
-        tx = (TextView) m_activity.findViewById(R.id.phone_2);
+        tx = (TextView) m_view.findViewById(R.id.phone_2);
         if (tx != null) {
             tx.addTextChangedListener(new TextWatcher() {
 
@@ -582,7 +631,7 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
             tx.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
         }
 
-        tx = (TextView) m_activity.findViewById(R.id.e_mail);
+        tx = (TextView) m_view.findViewById(R.id.e_mail);
         if (tx != null) {
             tx.addTextChangedListener(new TextWatcher() {
 
@@ -604,7 +653,7 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
 
         // emergency contact info
 
-        tx = (TextView) m_activity.findViewById(R.id.emergency_full_name);
+        tx = (TextView) m_view.findViewById(R.id.emergency_full_name);
         if (tx != null) {
             tx.addTextChangedListener(new TextWatcher() {
 
@@ -624,7 +673,7 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
             });
         }
 
-        tx = (TextView) m_activity.findViewById(R.id.emergency_phone);
+        tx = (TextView) m_view.findViewById(R.id.emergency_phone);
         if (tx != null) {
             tx.addTextChangedListener(new TextWatcher() {
 
@@ -645,7 +694,7 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
             tx.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
         }
 
-        tx = (TextView) m_activity.findViewById(R.id.emergency_e_mail);
+        tx = (TextView) m_view.findViewById(R.id.emergency_e_mail);
         if (tx != null) {
             tx.addTextChangedListener(new TextWatcher() {
 
@@ -680,56 +729,56 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
 
         // Name
 
-        tx = (TextView) m_activity.findViewById(R.id.paternal_last);
+        tx = (TextView) m_view.findViewById(R.id.paternal_last);
         if (tx != null) {
             pd.setFatherLast(tx.getText().toString());
         }
 
-        tx = (TextView) m_activity.findViewById(R.id.maternal_last);
+        tx = (TextView) m_view.findViewById(R.id.maternal_last);
         if (tx != null) {
             pd.setMotherLast(tx.getText().toString());
         }
 
-        tx = (TextView) m_activity.findViewById(R.id.first_name);
+        tx = (TextView) m_view.findViewById(R.id.first_name);
         if (tx != null) {
             pd.setFirst(tx.getText().toString());
         }
 
-        tx = (TextView) m_activity.findViewById(R.id.middle_name);
+        tx = (TextView) m_view.findViewById(R.id.middle_name);
         if (tx != null) {
             pd.setMiddle(tx.getText().toString());
         }
 
         // Address
 
-        tx = (TextView) m_activity.findViewById(R.id.address_street_1);
+        tx = (TextView) m_view.findViewById(R.id.address_street_1);
         if (tx != null) {
             pd.setStreet1(tx.getText().toString());
         }
 
-        tx = (TextView) m_activity.findViewById(R.id.address_street_2);
+        tx = (TextView) m_view.findViewById(R.id.address_street_2);
         if (tx != null) {
             pd.setStreet2(tx.getText().toString());
         }
 
-        tx = (TextView) m_activity.findViewById(R.id.address_city);
+        tx = (TextView) m_view.findViewById(R.id.address_city);
         if (tx != null) {
             pd.setCity(tx.getText().toString());
         }
 
-        tx = (TextView) m_activity.findViewById(R.id.address_colonia);
+        tx = (TextView) m_view.findViewById(R.id.address_colonia);
         if (tx != null) {
             pd.setColonia(tx.getText().toString());
         }
 
-        tx = (TextView)  m_activity.findViewById(R.id.address_state);
+        tx = (TextView) m_view.findViewById(R.id.address_state);
         if (tx != null) {
             pd.setState(tx.getText().toString());
         }
 
         // gender and dob
 
-        rb = (RadioButton) m_activity.findViewById(R.id.gender_female);
+        rb = (RadioButton) m_view.findViewById(R.id.gender_female);
         if (rb != null) {
             String gender = "Female";
             if (rb.isChecked() == false) {
@@ -738,68 +787,68 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
             pd.setGender(gender);
         }
 
-        tx = (TextView) m_activity.findViewById(R.id.dob);
+        tx = (TextView) m_view.findViewById(R.id.dob);
         if (tx != null) {
             pd.setDob(tx.getText().toString());
         }
 
         // contact info
 
-        tx = (TextView) m_activity.findViewById(R.id.address_street_1);
+        tx = (TextView) m_view.findViewById(R.id.address_street_1);
         if (tx != null) {
             pd.setStreet1(tx.getText().toString());
         }
 
-        tx = (TextView) m_activity.findViewById(R.id.address_street_2);
+        tx = (TextView) m_view.findViewById(R.id.address_street_2);
         if (tx != null) {
             pd.setStreet2(tx.getText().toString());
         }
 
-        tx = (TextView) m_activity.findViewById(R.id.address_city);
+        tx = (TextView) m_view.findViewById(R.id.address_city);
         if (tx != null) {
             pd.setCity(tx.getText().toString());
         }
 
-        tx = (TextView) m_activity.findViewById(R.id.address_colonia);
+        tx = (TextView) m_view.findViewById(R.id.address_colonia);
         if (tx != null) {
             pd.setColonia(tx.getText().toString());
         }
 
-        tx = (TextView) m_activity.findViewById(R.id.address_state);
+        tx = (TextView) m_view.findViewById(R.id.address_state);
         if (tx != null) {
             pd.setState(tx.getText().toString());
         }
 
         // contact info
 
-        tx = (TextView) m_activity.findViewById(R.id.phone_1);
+        tx = (TextView) m_view.findViewById(R.id.phone_1);
         if (tx != null) {
             pd.setPhone1(tx.getText().toString());
         }
 
-        tx = (TextView) m_activity.findViewById(R.id.phone_2);
+        tx = (TextView) m_view.findViewById(R.id.phone_2);
         if (tx != null) {
             pd.setPhone1(tx.getText().toString());
         }
 
-        tx = (TextView) m_activity.findViewById(R.id.e_mail);
+        tx = (TextView) m_view.findViewById(R.id.e_mail);
         if (tx != null) {
             pd.setEmail(tx.getText().toString());
         }
 
         // emergency contact info
 
-        tx = (TextView) m_activity.findViewById(R.id.emergency_full_name);
+        tx = (TextView) m_view.findViewById(R.id.emergency_full_name);
         if (tx != null) {
             pd.setEmergencyFullName(tx.getText().toString());
         }
 
-        tx = (TextView) m_activity.findViewById(R.id.emergency_phone);
+        tx = (TextView) m_view.findViewById(R.id.emergency_phone);
         if (tx != null) {
             pd.setEmergencyPhone(tx.getText().toString());
         }
 
-        tx = (TextView) m_activity.findViewById(R.id.emergency_e_mail);
+        tx = (TextView) m_view.findViewById(R.id.emergency_e_mail);
         if (tx != null) {
             pd.setEmergencyEmail(tx.getText().toString());
         }
@@ -853,7 +902,7 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.app_patient_info_layout, container, false);
-
+        m_view = view;
         return view;
     }
 

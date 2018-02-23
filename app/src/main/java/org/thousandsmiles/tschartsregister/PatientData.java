@@ -146,7 +146,6 @@ public class PatientData {
         m_gender = gender;
     }
 
-
     public String getStreet1() {
         return m_street1;
     }
@@ -238,6 +237,148 @@ public class PatientData {
     public boolean getValid()
     {
         return m_valid;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (!PatientData.class.isAssignableFrom(obj.getClass())) {
+            return false;
+        }
+        final PatientData other = (PatientData) obj;
+
+        m_valid = true;
+
+        if (this.m_fatherLast != other.m_fatherLast) {
+            return false;
+        }
+
+        if (this.m_motherLast != other.m_motherLast) {
+            return false;
+        }
+
+        if (this.m_first != other.m_first) {
+            return false;
+        }
+
+        if (this.m_middle != other.m_middle) {
+            return false;
+        }
+
+        if (this.m_dob != other.m_dob) {
+            return false;
+        }
+
+        if (this.m_gender != other.m_gender) {
+            return false;
+        }
+
+        if (this.m_street1 != other.m_street1) {
+            return false;
+        }
+
+        if (this.m_street2 != other.m_street2) {
+            return false;
+        }
+
+        if (this.m_colonia != other.m_colonia) {
+            return false;
+        }
+
+        if (this.m_city != other.m_city) {
+            return false;
+        }
+
+        if (this.m_state != other.m_state) {
+            return false;
+        }
+
+        if (this.m_phone1 != other.m_phone1) {
+            return false;
+        }
+
+        if (this.m_phone2 != other.m_phone2) {
+            return false;
+        }
+
+        if (this.m_email != other.m_email) {
+            return false;
+        }
+
+        if (this.m_emergencyFullName != other.m_emergencyFullName) {
+            return false;
+        }
+
+        if (this.m_emergencyPhone != other.m_emergencyPhone) {
+            return false;
+        }
+
+        if (this.m_emergencyEmail != other.m_emergencyEmail) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public int fromJSONObject(JSONObject o)
+    {
+        int ret = 0;
+
+        try {
+            setId(o.getInt("id"));
+            setFatherLast(o.getString("paternal_last"));
+            setMotherLast(o.getString("maternal_last"));
+            setFirst(o.getString("first"));
+            setMiddle(o.getString("middle"));
+            setDob(o.getString("dob"));
+            setGender(o.getString("gender"));
+            setStreet1(o.getString("street1"));
+            setStreet2(o.getString("street2"));
+            setColonia(o.getString("colonia"));
+            setCity(o.getString("city"));
+            setState(o.getString("state"));
+            setPhone1(o.getString("phone1"));
+            setPhone2(o.getString("phone2"));
+            setEmail(o.getString("email"));
+            setEmergencyFullName(o.getString("emergencyfullname"));
+            setEmergencyPhone(o.getString("emergencyphone"));
+            setEmergencyEmail(o.getString("emergencyemail"));
+        } catch (JSONException e) {
+            ret = -1;
+        }
+        return ret;
+    }
+
+    public JSONObject toJSONObject()
+    {
+        JSONObject data = new JSONObject();
+        try {
+            data.put("id", getId());
+            data.put("paternal_last", getFatherLast());
+            data.put("maternal_last", getMotherLast());
+            data.put("first", getFirst());
+            data.put("middle", getMiddle());
+            data.put("dob", getDob());
+            data.put("gender", getGender());
+            data.put("street1", getStreet1());
+            data.put("street2", getStreet2());
+            data.put("colonia", getColonia());
+            data.put("city", getCity());
+            data.put("state", getState());
+            data.put("phone1", getPhone1());
+            data.put("phone2", getPhone2());
+            data.put("email", getEmail());
+            data.put("emergencyfullname", getEmergencyFullName());
+            data.put("emergencyphone", getEmergencyPhone());
+            data.put("emergencyemail", getEmergencyEmail());
+        } catch(Exception e) {
+            // not sure this would ever happen, ignore. Continue on with the request with the expectation it fails
+            // because of the bad JSON sent
+            data = null;
+        }
+        return data;
     }
 }
 

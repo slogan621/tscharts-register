@@ -66,6 +66,17 @@ public class PatientREST extends RESTful {
         }
     }
 
+    private class PutResponseListener implements Response.Listener<JSONObject> {
+
+        @Override
+        public void onResponse(JSONObject response) {
+
+            synchronized (m_lock) {
+                setStatus(200);
+                m_lock.notify();
+            }
+        }
+    }
 
     private class ErrorListener implements Response.ErrorListener {
         @Override
@@ -199,6 +210,25 @@ public class PatientREST extends RESTful {
         AuthJSONArrayRequest request = new AuthJSONArrayRequest(url, null, new ArrayResponseListener(), new ErrorListener());
 
         queue.add(request);
+
+        return m_lock;
+    }
+
+    public Object updatePatient(PatientData pd) {
+
+        VolleySingleton volley = VolleySingleton.getInstance();
+
+        volley.initQueueIf(getContext());
+
+        RequestQueue queue = volley.getQueue();
+
+        JSONObject data = pd.toJSONObject();
+
+        String url = String.format("http://%s:%s/tscharts/v1/patient/%d/", getIP(), getPort(), pd.getId());
+
+        AuthJSONObjectRequest request = new AuthJSONObjectRequest(Request.Method.PUT, url, data, new PutResponseListener(), new ErrorListener());
+
+        queue.add((JsonObjectRequest) request);
 
         return m_lock;
     }
