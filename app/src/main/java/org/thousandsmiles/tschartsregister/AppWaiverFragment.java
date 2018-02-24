@@ -41,7 +41,7 @@ import com.github.barteksc.pdfviewer.listener.OnPageErrorListener;
 import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle;
 import com.github.barteksc.pdfviewer.util.FitPolicy;
 
-public class AppWaiverFragment extends Fragment implements OnPageChangeListener, OnLoadCompleteListener,
+public class AppWaiverFragment extends Fragment implements RESTCompletionListener, OnPageChangeListener, OnLoadCompleteListener,
         OnPageErrorListener {
     private Activity m_activity = null;
     private SessionSingleton m_sess = null;
@@ -50,6 +50,8 @@ public class AppWaiverFragment extends Fragment implements OnPageChangeListener,
     String pdfFileName;
     PDFView pdfView;
     int pageNumber;
+    AppWaiverFragment m_this = this;
+    Boolean m_creating = false;
 
     @Override
     public void onPageChanged(int page, int pageCount) {
@@ -58,6 +60,24 @@ public class AppWaiverFragment extends Fragment implements OnPageChangeListener,
 
     @Override
     public void loadComplete(int nbPages) {
+    }
+
+    @Override
+    public void onFail(int code, String msg)
+    {
+        showFailure(code, msg);
+    }
+
+
+    @Override
+    public void onSuccess(int code, String msg)
+    {
+        if (m_creating == true) {
+            m_creating = false;
+            m_sess.createMedicalHistory(this);
+        } else {
+            showSuccess();
+        }
     }
 
     @Override
@@ -87,6 +107,22 @@ public class AppWaiverFragment extends Fragment implements OnPageChangeListener,
             }
         });
 
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    private void showFailure(int code, String msg) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        builder.setTitle(m_activity.getString(R.string.title_failed_registration));
+        String msgStr = String.format("%s\ncode: %d msg: %s", m_activity.getString(R.string.msg_failed_to_register_patient), code, msg);
+        builder.setMessage(msgStr);
+
+        builder.setPositiveButton(m_activity.getString(R.string.button_ok), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
 
         AlertDialog alert = builder.create();
         alert.show();
@@ -99,10 +135,18 @@ public class AppWaiverFragment extends Fragment implements OnPageChangeListener,
             builder.setTitle(m_activity.getString(R.string.title_confirm_registration));
             builder.setMessage(m_activity.getString(R.string.msg_register_patient));
 
+            m_this = this;
+
             builder.setPositiveButton(m_activity.getString(R.string.button_yes), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
+                    if (m_sess.getIsNewPatient() == true) {
+                        m_creating = true;
+                        m_sess.createNewPatient(m_this);
+                    } else {
+                        m_sess.updatePatientData(m_sess.getPatientId()) ;
+                        m_sess.updateMedicalHistory();
+                    }
                     dialog.dismiss();
-                    showSuccess();
                 }
             });
 

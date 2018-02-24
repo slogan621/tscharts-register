@@ -21,9 +21,34 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import java.util.ArrayList;
+
 public abstract class RESTful {
     private Context m_context;
     private int m_status;
+    private ArrayList<RESTCompletionListener> m_listener = new ArrayList<RESTCompletionListener>();
+
+    public void addListener(RESTCompletionListener o) {
+        m_listener.add(o);
+    }
+
+    public void removeListener(RESTCompletionListener o) {
+        m_listener.remove(o);
+    }
+
+    protected void onSuccess(int code, String message)
+    {
+        for (RESTCompletionListener x : m_listener) {
+            x.onSuccess(code, message);
+        }
+    }
+
+    protected void onFail(int code, String message)
+    {
+        for (RESTCompletionListener x : m_listener) {
+            x.onFail(code, message);
+        }
+    }
 
     protected int getStatus() {
         return m_status;

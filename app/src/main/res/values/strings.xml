@@ -160,4 +160,8 @@
     <string name="photo_acknowledgement">Allow Thousand Smiles to take and use photos publically for fund-raising and advertising purposes</string>
     <string name="msg_unable_to_get_patient_headshot">Unable to read patient headshot image</string>
     <string name="label_summary_id">Patient ID</string>
+    <string name="msg_unable_to_create_patient_record">Unable to create patient record</string>
+    <string name="msg_successfully_created_patient_record">Patient record successfully created</string>
+    <string name="title_failed_registration">Registration Failure</string>
+    <string name="msg_failed_to_register_patient">Failed to register patient</string>
 </resources>

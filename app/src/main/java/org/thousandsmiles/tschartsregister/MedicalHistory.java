@@ -25,42 +25,42 @@ public class MedicalHistory {
     private int m_clinic;
     private int m_patient;
     private String m_time;
-    private boolean m_coldCoughFever;
-    private boolean m_hivaids;
-    private boolean m_anemia;
-    private boolean m_athsma;
-    private boolean m_cancer;
-    private boolean m_congenitalHeartDefect;
-    private boolean m_congenitalHeartDefectWorkup;
-    private boolean m_congenitalHeartDefectPlanForCare;
-    private boolean m_diabetes;
-    private boolean m_epilepsy;
-    private boolean m_bleedingProblems;
-    private boolean m_hepititis;
-    private boolean m_tuberculosis;
-    private boolean m_troubleSpeaking;
-    private boolean m_troubleHearing;
-    private boolean m_troubleEating;
-    private int m_pregnancyDuration;
-    private boolean m_pregnancySmoke;
-    private boolean m_birthComplications;
-    private boolean m_pregnancyComplications;
-    private boolean m_motherAlcohol;
-    private boolean m_relativeCleft;
-    private boolean m_parentsCleft;
-    private boolean m_siblingsCleft;
-    private String m_meds;
-    private String m_allergyMeds;
-    private int m_firstCrawl;
-    private int m_firstSit;
-    private int m_firstWalk;
-    private int m_firstWords;
-    private int m_birthWeight;
-    private boolean m_birthWeightMetric;
-    private int m_height;
-    private boolean m_heightMetric;
-    private int m_weight;
-    private boolean m_weightMetric;
+    private boolean m_coldCoughFever = false;
+    private boolean m_hivaids = false;
+    private boolean m_anemia = false;
+    private boolean m_athsma = false;
+    private boolean m_cancer = false;
+    private boolean m_congenitalHeartDefect = false;
+    private boolean m_congenitalHeartDefectWorkup = false;
+    private boolean m_congenitalHeartDefectPlanForCare = false;
+    private boolean m_diabetes = false;
+    private boolean m_epilepsy = false;
+    private boolean m_bleedingProblems = false;
+    private boolean m_hepititis = false;
+    private boolean m_tuberculosis = false;
+    private boolean m_troubleSpeaking = false;
+    private boolean m_troubleHearing = false;
+    private boolean m_troubleEating = false;
+    private int m_pregnancyDuration = 9;
+    private boolean m_pregnancySmoke = false;
+    private boolean m_birthComplications = false;
+    private boolean m_pregnancyComplications = false;
+    private boolean m_motherAlcohol = false;
+    private boolean m_relativeCleft = false;
+    private boolean m_parentsCleft = false;
+    private boolean m_siblingsCleft = false;
+    private String m_meds = "";
+    private String m_allergyMeds = "";
+    private int m_firstCrawl = 7;
+    private int m_firstSit = 4;
+    private int m_firstWalk = 9;
+    private int m_firstWords = 12;
+    private int m_birthWeight = 4;
+    private boolean m_birthWeightMetric = true;
+    private int m_height = 50;
+    private boolean m_heightMetric = true;
+    private int m_weight = 10;
+    private boolean m_weightMetric = true;
 
     public boolean isBirthWeightMetric() {
         return m_birthWeightMetric;
@@ -596,7 +596,9 @@ public class MedicalHistory {
     {
         JSONObject data = new JSONObject();
         try {
-            data.put("id", this.getId());
+            if (SessionSingleton.getInstance().getIsNewPatient() == false) {
+                data.put("id", this.getId());
+            }
             data.put("allergymeds", this.getAllergyMeds());
             data.put("anemia", this.isAnemia());
             data.put("athsma", this.isAthsma());
@@ -605,7 +607,7 @@ public class MedicalHistory {
             data.put("birth_weight_metric", this.isBirthWeightMetric());
             data.put("bleeding_problems", this.isBleedingProblems());
             data.put("cancer", this.isCancer());
-            data.put("clinic", this.getClinic());
+            data.put("clinic", SessionSingleton.getInstance().getClinicId());
             data.put("congenitalheartdefect", this.isCongenitalHeartDefect());
             data.put("congenitalheartdefect_planforcare", this.isCongenitalHeartDefectPlanForCare());
             data.put("congenitalheartdefect_workup", this.isCongenitalHeartDefectWorkup());

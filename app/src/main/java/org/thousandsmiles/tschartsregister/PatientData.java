@@ -355,7 +355,9 @@ public class PatientData {
     {
         JSONObject data = new JSONObject();
         try {
-            data.put("id", getId());
+            if (SessionSingleton.getInstance().getIsNewPatient() == false) {
+                data.put("id", getId());
+            }
             data.put("paternal_last", getFatherLast());
             data.put("maternal_last", getMotherLast());
             data.put("first", getFirst());
@@ -373,6 +375,11 @@ public class PatientData {
             data.put("emergencyfullname", getEmergencyFullName());
             data.put("emergencyphone", getEmergencyPhone());
             data.put("emergencyemail", getEmergencyEmail());
+
+            // we don't current support the following but the backend requires them
+
+            data.put("prefix", "");
+            data.put("suffix", "");
         } catch(Exception e) {
             // not sure this would ever happen, ignore. Continue on with the request with the expectation it fails
             // because of the bad JSON sent

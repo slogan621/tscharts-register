@@ -28,6 +28,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Calendar;
@@ -42,11 +43,32 @@ public class PatientREST extends RESTful {
 
         @Override
         public void onResponse(JSONObject response) {
-
             synchronized (m_lock) {
                 SessionSingleton sess = SessionSingleton.getInstance();
                 setStatus(200);
+                onSuccess(200, "");
                 sess.addPatientData(response);
+                m_lock.notify();
+            }
+        }
+    }
+
+    private class PostResponseListener implements Response.Listener<JSONObject> {
+
+        @Override
+        public void onResponse(JSONObject response) {
+
+            synchronized (m_lock) {
+                SessionSingleton sess = SessionSingleton.getInstance();
+                try {
+                    int id = response.getInt("id");
+                    sess.setPatientId(id);
+                    setStatus(200);
+                    onSuccess(200, "");
+                } catch (JSONException e) {
+                    setStatus(500);
+                    onFail(500, "");
+                }
                 m_lock.notify();
             }
         }
@@ -60,6 +82,7 @@ public class PatientREST extends RESTful {
             synchronized (m_lock) {
                 SessionSingleton sess = SessionSingleton.getInstance();
                 setStatus(200);
+                onSuccess(200, "");
                 sess.setPatientSearchResults(response);
                 m_lock.notify();
             }
@@ -73,6 +96,7 @@ public class PatientREST extends RESTful {
 
             synchronized (m_lock) {
                 setStatus(200);
+                onSuccess(200, "");
                 m_lock.notify();
             }
         }
@@ -86,11 +110,14 @@ public class PatientREST extends RESTful {
                 if (error.networkResponse == null) {
                     if (error.getCause() instanceof java.net.ConnectException || error.getCause() instanceof java.net.UnknownHostException) {
                         setStatus(101);
+                        onFail(101, error.getMessage());
                     } else {
                         setStatus(-1);
+                        onFail(-1, error.getMessage());
                     }
                 } else {
                     setStatus(error.networkResponse.statusCode);
+                    onFail(error.networkResponse.statusCode, error.networkResponse.toString());
                 }
                 m_lock.notify();
             }
@@ -152,6 +179,25 @@ public class PatientREST extends RESTful {
         AuthJSONArrayRequest request = new AuthJSONArrayRequest(url, null, new ArrayResponseListener(), new ErrorListener());
 
         queue.add(request);
+
+        return m_lock;
+    }
+
+    public Object createPatient(PatientData pd) {
+
+        VolleySingleton volley = VolleySingleton.getInstance();
+
+        volley.initQueueIf(getContext());
+
+        RequestQueue queue = volley.getQueue();
+
+        JSONObject data = pd.toJSONObject();
+
+        String url = String.format("http://%s:%s/tscharts/v1/patient/", getIP(), getPort());
+
+        AuthJSONObjectRequest request = new AuthJSONObjectRequest(Request.Method.POST, url, data, new PostResponseListener(), new ErrorListener());
+
+        queue.add((JsonObjectRequest) request);
 
         return m_lock;
     }

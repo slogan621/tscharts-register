@@ -20,10 +20,12 @@ package org.thousandsmiles.tschartsregister;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Environment;
+import android.os.Handler;
 import android.os.Looper;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -275,6 +277,96 @@ public class SessionSingleton {
         return o;
     }
 
+    void updatePatientData(final int patientId)
+    {
+        boolean ret = false;
+
+        Thread thread = new Thread(){
+            public void run() {
+                // note we use session context because this may be called after onPause()
+                PatientREST rest = new PatientREST(getContext());
+                Object lock;
+                int status;
+
+                lock = rest.updatePatient(m_patientData.get(patientId));
+
+                synchronized (lock) {
+                    // we loop here in case of race conditions or spurious interrupts
+                    while (true) {
+                        try {
+                            lock.wait();
+                            break;
+                        } catch (InterruptedException e) {
+                            continue;
+                        }
+                    }
+                }
+                status = rest.getStatus();
+                if (status != 200) {
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.post(new Runnable() {
+                        public void run() {
+                            Toast.makeText(getContext(), getContext().getString(R.string.msg_unable_to_save_medical_history), Toast.LENGTH_LONG).show();
+                        }
+                    });
+                } else {
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.post(new Runnable() {
+                        public void run() {
+                            Toast.makeText(getContext(), getContext().getString(R.string.msg_successfully_saved_medical_history), Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+            }
+        };
+        thread.start();
+    }
+
+    void createNewPatient(final RESTCompletionListener listener) {
+        boolean ret = false;
+
+        Thread thread = new Thread() {
+            public void run() {
+            // note we use session context because this may be called after onPause()
+            PatientREST rest = new PatientREST(getContext());
+            rest.addListener(listener);
+            Object lock;
+            int status;
+
+            lock = rest.createPatient(m_newPatientData);
+
+            synchronized (lock) {
+                // we loop here in case of race conditions or spurious interrupts
+                while (true) {
+                    try {
+                        lock.wait();
+                        break;
+                    } catch (InterruptedException e) {
+                        continue;
+                    }
+                }
+            }
+            status = rest.getStatus();
+            if (status != 200) {
+                Handler handler = new Handler(Looper.getMainLooper());
+                handler.post(new Runnable() {
+                    public void run() {
+                        Toast.makeText(getContext(), getContext().getString(R.string.msg_unable_to_create_patient_record), Toast.LENGTH_LONG).show();
+                    }
+                });
+            } else {
+                Handler handler = new Handler(Looper.getMainLooper());
+                handler.post(new Runnable() {
+                    public void run() {
+                        Toast.makeText(getContext(), getContext().getString(R.string.msg_successfully_created_patient_record), Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+            }
+        };
+        thread.start();
+    }
+
     public int getClinicId() {
         return m_clinicId;
     }
@@ -288,6 +380,52 @@ public class SessionSingleton {
             return;
         }
         m_patientData.put(id, new PatientData(data));
+    }
+
+    void createMedicalHistory(final RESTCompletionListener listener) {
+        boolean ret = false;
+
+        Thread thread = new Thread() {
+            public void run() {
+                // note we use session context because this may be called after onPause()
+            MedicalHistoryREST rest = new MedicalHistoryREST(getContext());
+            rest.addListener(listener);
+            Object lock;
+            int status;
+
+            m_patientMedicalHistory.setPatient(getPatientId());
+            lock = rest.createMedicalHistory(m_patientMedicalHistory);
+
+            synchronized (lock) {
+                // we loop here in case of race conditions or spurious interrupts
+                while (true) {
+                    try {
+                        lock.wait();
+                        break;
+                    } catch (InterruptedException e) {
+                        continue;
+                    }
+                }
+            }
+            status = rest.getStatus();
+            if (status != 200) {
+                Handler handler = new Handler(Looper.getMainLooper());
+                handler.post(new Runnable() {
+                    public void run() {
+                        Toast.makeText(getContext(), getContext().getString(R.string.msg_unable_to_save_medical_history), Toast.LENGTH_LONG).show();
+                    }
+                });
+            } else {
+                Handler handler = new Handler(Looper.getMainLooper());
+                handler.post(new Runnable() {
+                    public void run() {
+                        Toast.makeText(getContext(), getContext().getString(R.string.msg_successfully_saved_medical_history), Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+            }
+        };
+        thread.start();
     }
 
     public MedicalHistory getMedicalHistory(int clinicid, int patientid)
@@ -317,6 +455,51 @@ public class SessionSingleton {
             }
         }
         return mh;
+    }
+
+    void updateMedicalHistory()
+    {
+        boolean ret = false;
+
+        Thread thread = new Thread(){
+            public void run() {
+                // note we use session context because this may be called after onPause()
+                MedicalHistoryREST rest = new MedicalHistoryREST(getContext());
+                Object lock;
+                int status;
+
+                lock = rest.updateMedicalHistory(m_patientMedicalHistory);
+
+                synchronized (lock) {
+                    // we loop here in case of race conditions or spurious interrupts
+                    while (true) {
+                        try {
+                            lock.wait();
+                            break;
+                        } catch (InterruptedException e) {
+                            continue;
+                        }
+                    }
+                }
+                status = rest.getStatus();
+                if (status != 200) {
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.post(new Runnable() {
+                        public void run() {
+                            Toast.makeText(getContext(), getContext().getString(R.string.msg_unable_to_save_medical_history), Toast.LENGTH_LONG).show();
+                        }
+                    });
+                } else {
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.post(new Runnable() {
+                        public void run() {
+                            Toast.makeText(getContext(), getContext().getString(R.string.msg_successfully_saved_medical_history), Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+            }
+        };
+        thread.start();
     }
 
     public void initCategoryNameToSelectorMap()

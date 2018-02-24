@@ -44,7 +44,22 @@ public class MedicalHistoryREST extends RESTful {
             synchronized (m_lock) {
                 SessionSingleton sess = SessionSingleton.getInstance();
                 setStatus(200);
+                onSuccess(200, "");
                 sess.setPatientMedicalHistory(response);
+                m_lock.notify();
+            }
+        }
+    }
+
+    private class PostResponseListener implements Response.Listener<JSONObject> {
+
+        @Override
+        public void onResponse(JSONObject response) {
+
+            synchronized (m_lock) {
+                SessionSingleton sess = SessionSingleton.getInstance();
+                setStatus(200);
+                onSuccess(200, "");
                 m_lock.notify();
             }
         }
@@ -58,8 +73,10 @@ public class MedicalHistoryREST extends RESTful {
                  if (error.networkResponse == null) {
                     if (error.getCause() instanceof java.net.ConnectException || error.getCause() instanceof  java.net.UnknownHostException) {
                         setStatus(101);
+                        onFail(101, error.getMessage());
                     } else {
                         setStatus(-1);
+                        onFail(-1, error.getMessage());
                     }
                 } else {
                    setStatus(error.networkResponse.statusCode);
@@ -76,6 +93,7 @@ public class MedicalHistoryREST extends RESTful {
 
             synchronized (m_lock) {
                 setStatus(200);
+                onSuccess(200, "");
                 m_lock.notify();
             }
         }
@@ -122,6 +140,25 @@ public class MedicalHistoryREST extends RESTful {
 
     public MedicalHistoryREST(Context context) {
         setContext(context);
+    }
+
+    public Object createMedicalHistory(MedicalHistory mh) {
+
+        VolleySingleton volley = VolleySingleton.getInstance();
+
+        volley.initQueueIf(getContext());
+
+        RequestQueue queue = volley.getQueue();
+
+        JSONObject data = mh.toJSONObject();
+
+        String url = String.format("http://%s:%s/tscharts/v1/medicalhistory/", getIP(), getPort());
+
+        MedicalHistoryREST.AuthJSONObjectRequest request = new MedicalHistoryREST.AuthJSONObjectRequest(Request.Method.POST, url, data, new PostResponseListener(), new ErrorListener());
+
+        queue.add((JsonObjectRequest) request);
+
+        return m_lock;
     }
 
     public Object getMedicalHistoryData(int historyid) {

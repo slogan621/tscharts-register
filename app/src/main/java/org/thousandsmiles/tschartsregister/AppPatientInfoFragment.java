@@ -62,8 +62,13 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
     }
 
     private void setDate(final Calendar calendar) {
-        final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
-        ((TextView) m_view.findViewById(R.id.dob)).setText(dateFormat.format(calendar.getTime()));
+
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH) + 1;
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        String dateString = String.format("%02d-%02d-%d", month, day, year);
+        ((TextView) m_view.findViewById(R.id.dob)).setText(dateString);
     }
 
     public void onDateSet(DatePicker view, int year, int month, int day) {
@@ -89,53 +94,6 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
         }
     }
 
-    void updatePatientData()
-    {
-        boolean ret = false;
-
-        Thread thread = new Thread(){
-            public void run() {
-                // note we use session context because this may be called after onPause()
-                PatientREST rest = new PatientREST(m_sess.getContext());
-                Object lock;
-                int status;
-
-                lock = rest.updatePatient(copyPatientDataFromUI());
-
-                synchronized (lock) {
-                    // we loop here in case of race conditions or spurious interrupts
-                    while (true) {
-                        try {
-                            lock.wait();
-                            break;
-                        } catch (InterruptedException e) {
-                            continue;
-                        }
-                    }
-                }
-                status = rest.getStatus();
-                if (status != 200) {
-                    Handler handler = new Handler(Looper.getMainLooper());
-                    handler.post(new Runnable() {
-                        public void run() {
-                            Toast.makeText(m_activity, m_activity.getString(R.string.msg_unable_to_save_medical_history), Toast.LENGTH_LONG).show();
-                        }
-                    });
-                } else {
-                    Handler handler = new Handler(Looper.getMainLooper());
-                    handler.post(new Runnable() {
-                        public void run() {
-                            clearDirty();
-                            m_patientData = copyPatientDataFromUI();
-                            Toast.makeText(m_activity, m_activity.getString(R.string.msg_successfully_saved_medical_history), Toast.LENGTH_LONG).show();
-                        }
-                    });
-                }
-            }
-        };
-        thread.start();
-    }
-
     public void handleNextButtonPress(View v) {
         //startActivity(new Intent(MedicalHistoryActivity.this, PatientInfoActivity.class));
 
@@ -151,7 +109,6 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
                     m_sess.updatePatientData(pd);
-                    updatePatientData();
                     startActivity(new Intent(m_activity, MedicalHistoryActivity.class));
                     m_activity.finish();
                 }

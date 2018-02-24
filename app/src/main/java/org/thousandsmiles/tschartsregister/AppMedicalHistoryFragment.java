@@ -70,7 +70,6 @@ public class AppMedicalHistoryFragment extends Fragment {
             builder.setPositiveButton(m_activity.getString(R.string.button_yes), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     m_sess.updatePatientMedicalHistory(mh);
-                    updateMedicalHistory();
                     dialog.dismiss();
                     startActivity(new Intent(m_activity, PatientPhotoActivity.class));
                     m_activity.finish();
@@ -1078,53 +1077,6 @@ public class AppMedicalHistoryFragment extends Fragment {
             thread.start();
             }
         }).start();
-    }
-
-    void updateMedicalHistory()
-    {
-        boolean ret = false;
-
-        Thread thread = new Thread(){
-            public void run() {
-                // note we use session context because this may be called after onPause()
-                MedicalHistoryREST rest = new MedicalHistoryREST(m_sess.getContext());
-                Object lock;
-                int status;
-
-                lock = rest.updateMedicalHistory(copyMedicalHistoryDataFromUI());
-
-                synchronized (lock) {
-                    // we loop here in case of race conditions or spurious interrupts
-                    while (true) {
-                        try {
-                            lock.wait();
-                            break;
-                        } catch (InterruptedException e) {
-                            continue;
-                        }
-                    }
-                }
-                status = rest.getStatus();
-                if (status != 200) {
-                    Handler handler = new Handler(Looper.getMainLooper());
-                    handler.post(new Runnable() {
-                        public void run() {
-                            Toast.makeText(m_activity, m_activity.getString(R.string.msg_unable_to_save_medical_history), Toast.LENGTH_LONG).show();
-                        }
-                    });
-                } else {
-                    Handler handler = new Handler(Looper.getMainLooper());
-                    handler.post(new Runnable() {
-                        public void run() {
-                            clearDirty();
-                            m_medicalHistory = copyMedicalHistoryDataFromUI();
-                            Toast.makeText(m_activity, m_activity.getString(R.string.msg_successfully_saved_medical_history), Toast.LENGTH_LONG).show();
-                        }
-                    });
-                }
-           }
-        };
-        thread.start();
     }
 
     @Override
