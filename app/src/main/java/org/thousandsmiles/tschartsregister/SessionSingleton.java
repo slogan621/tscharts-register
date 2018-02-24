@@ -429,6 +429,53 @@ public class SessionSingleton {
         thread.start();
     }
 
+    void createHeadshot(final RESTCompletionListener listener) {
+        boolean ret = false;
+
+        Thread thread = new Thread() {
+            public void run() {
+                // note we use session context because this may be called after onPause()
+                ImageREST rest = new ImageREST(getContext());
+                rest.addListener(listener);
+                Object lock;
+                int status;
+
+                File file = new File(getPhotoPath());
+
+                lock = rest.createImage(file);
+
+                synchronized (lock) {
+                    // we loop here in case of race conditions or spurious interrupts
+                    while (true) {
+                        try {
+                            lock.wait();
+                            break;
+                        } catch (InterruptedException e) {
+                            continue;
+                        }
+                    }
+                }
+                status = rest.getStatus();
+                if (status != 200) {
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.post(new Runnable() {
+                        public void run() {
+                            Toast.makeText(getContext(), getContext().getString(R.string.msg_unable_to_save_headshot_photo), Toast.LENGTH_LONG).show();
+                        }
+                    });
+                } else {
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.post(new Runnable() {
+                        public void run() {
+                            Toast.makeText(getContext(), getContext().getString(R.string.msg_successfully_saved_headshot_photo), Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+            }
+        };
+        thread.start();
+    }
+
     public MedicalHistory getMedicalHistory(int clinicid, int patientid)
     {
         boolean ret = false;

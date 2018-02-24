@@ -32,9 +32,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,6 +55,7 @@ public class ImageREST extends RESTful {
                 SessionSingleton sess = SessionSingleton.getInstance();
                 if (m_file == null) {
                     setStatus(500);
+                    onFail(500, "");
                 } else {
                     try {
                         String data = response.getString("data");
@@ -64,10 +69,13 @@ public class ImageREST extends RESTful {
                             }
                         } catch (IOException e) {
                             setStatus(500);
+                            onFail(500, "");
                         }
                         setStatus(200);
+                        onSuccess(200, "");
                     } catch (JSONException e) {
                         setStatus(500);
+                        onFail(500, "");
                     }
                 }
                 m_lock.notify();
@@ -83,6 +91,20 @@ public class ImageREST extends RESTful {
             synchronized (m_lock) {
                 SessionSingleton sess = SessionSingleton.getInstance();
                 setStatus(200);
+                onSuccess(200, "");
+                m_lock.notify();
+            }
+        }
+    }
+
+    private class PostResponseListener implements Response.Listener<JSONObject> {
+        @Override
+        public void onResponse(JSONObject response) {
+
+            synchronized (m_lock) {
+                SessionSingleton sess = SessionSingleton.getInstance();
+                setStatus(200);
+                onSuccess(200, "");
                 m_lock.notify();
             }
         }
@@ -96,8 +118,10 @@ public class ImageREST extends RESTful {
                 if (error.networkResponse == null) {
                     if (error.getCause() instanceof java.net.ConnectException || error.getCause() instanceof java.net.UnknownHostException) {
                         setStatus(101);
+                        onFail(101, error.networkResponse.toString());
                     } else {
                         setStatus(-1);
+                        onFail(-1, error.networkResponse.toString());
                     }
                 } else {
                     setStatus(error.networkResponse.statusCode);
@@ -142,7 +166,6 @@ public class ImageREST extends RESTful {
             headers.put("Authorization", SessionSingleton.getInstance().getToken());
             return headers;
         }
-
     }
 
     public ImageREST(Context context) {
@@ -186,6 +209,57 @@ public class ImageREST extends RESTful {
 
         return m_lock;
     }
+
+    public Object createImage(File file) {
+
+        VolleySingleton volley = VolleySingleton.getInstance();
+
+        volley.initQueueIf(getContext());
+
+        RequestQueue queue = volley.getQueue();
+
+        SessionSingleton sess = SessionSingleton.getInstance();
+
+        JSONObject data = new JSONObject();
+
+        ByteArrayOutputStream ous = null;
+        InputStream ios = null;
+        try {
+            byte[] buffer = new byte[(int) file.length()];
+            ous = new ByteArrayOutputStream();
+            ios = new FileInputStream(file);
+            int read = 0;
+            read = ios.read(buffer);
+            if (read == file.length()) {
+                byte[] encoded = Base64.encode(buffer, Base64.DEFAULT);
+                try {
+                    data.put("patient", sess.getActivePatientId());
+                    data.put("clinic", sess.getClinicId());
+                    data.put("type", "Headshot");
+                    data.put("data", encoded);
+                } catch (JSONException e) {
+                }
+            } else {
+                // fail
+            }
+            try {
+                if (ous != null)
+                    ous.close();
+            } catch (IOException e) {
+            }
+        } catch (IOException e) {
+            // fail
+        }
+
+        String url = String.format("http://%s:%s/tscharts/v1/image/", getIP(), getPort());
+
+        ImageREST.AuthJSONObjectRequest request = new ImageREST.AuthJSONObjectRequest(Request.Method.POST, url, data, new PostResponseListener(), new ErrorListener());
+
+        queue.add((JsonObjectRequest) request);
+
+        return m_lock;
+    }
+
 
     public Object getAllPatientImages(int patientid, File file, boolean sort) {
 

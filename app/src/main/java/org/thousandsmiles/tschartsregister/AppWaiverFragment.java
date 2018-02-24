@@ -51,7 +51,9 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
     PDFView pdfView;
     int pageNumber;
     AppWaiverFragment m_this = this;
-    Boolean m_creating = false;
+    Boolean m_patientData = false;
+    Boolean m_medicalHistory = false;
+    Boolean m_photo = false;
 
     @Override
     public void onPageChanged(int page, int pageCount) {
@@ -72,14 +74,18 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
     @Override
     public void onSuccess(int code, String msg)
     {
-        if (m_creating == true) {
-            m_creating = false;
+        if (m_patientData == false) {
+            m_patientData = true;
             if (m_sess.getIsNewPatient()) {
                 m_sess.createMedicalHistory(this);
             } else {
                 m_sess.updateMedicalHistory(this);
             }
-        } else {
+        } else if (m_medicalHistory == false) {
+            m_medicalHistory = true;
+            m_sess.createHeadshot(this);
+        }
+        else {
             showSuccess();
         }
     }
@@ -144,10 +150,14 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
             builder.setPositiveButton(m_activity.getString(R.string.button_yes), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     if (m_sess.getIsNewPatient() == true) {
-                        m_creating = true;
+                        m_patientData = false;
+                        m_medicalHistory = false;
+                        m_photo = false;
                         m_sess.createNewPatient(m_this);
                     } else {
-                        m_creating = true;
+                        m_patientData = false;
+                        m_medicalHistory = false;
+                        m_photo = false;
                         m_sess.updatePatientData(m_this, m_sess.getPatientId());
                     }
                     dialog.dismiss();
