@@ -277,7 +277,7 @@ public class SessionSingleton {
         return o;
     }
 
-    void updatePatientData(final int patientId)
+    void updatePatientData(final RESTCompletionListener listener, final int patientId)
     {
         boolean ret = false;
 
@@ -285,6 +285,7 @@ public class SessionSingleton {
             public void run() {
                 // note we use session context because this may be called after onPause()
                 PatientREST rest = new PatientREST(getContext());
+                rest.addListener(listener);
                 Object lock;
                 int status;
 
@@ -457,7 +458,7 @@ public class SessionSingleton {
         return mh;
     }
 
-    void updateMedicalHistory()
+    void updateMedicalHistory(final RESTCompletionListener listener)
     {
         boolean ret = false;
 
@@ -465,6 +466,7 @@ public class SessionSingleton {
             public void run() {
                 // note we use session context because this may be called after onPause()
                 MedicalHistoryREST rest = new MedicalHistoryREST(getContext());
+                rest.addListener(listener);
                 Object lock;
                 int status;
 

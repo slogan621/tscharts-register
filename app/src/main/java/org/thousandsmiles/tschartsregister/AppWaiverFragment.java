@@ -74,7 +74,11 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
     {
         if (m_creating == true) {
             m_creating = false;
-            m_sess.createMedicalHistory(this);
+            if (m_sess.getIsNewPatient()) {
+                m_sess.createMedicalHistory(this);
+            } else {
+                m_sess.updateMedicalHistory(this);
+            }
         } else {
             showSuccess();
         }
@@ -143,8 +147,8 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
                         m_creating = true;
                         m_sess.createNewPatient(m_this);
                     } else {
-                        m_sess.updatePatientData(m_sess.getPatientId()) ;
-                        m_sess.updateMedicalHistory();
+                        m_creating = true;
+                        m_sess.updatePatientData(m_this, m_sess.getPatientId());
                     }
                     dialog.dismiss();
                 }
