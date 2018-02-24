@@ -35,7 +35,6 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -226,12 +225,11 @@ public class ImageREST extends RESTful {
         InputStream ios = null;
         try {
             byte[] buffer = new byte[(int) file.length()];
-            ous = new ByteArrayOutputStream();
             ios = new FileInputStream(file);
             int read = 0;
             read = ios.read(buffer);
             if (read == file.length()) {
-                byte[] encoded = Base64.encode(buffer, Base64.DEFAULT);
+                String encoded = Base64.encodeToString(buffer, 0, read, Base64.NO_WRAP);
                 try {
                     data.put("patient", sess.getActivePatientId());
                     data.put("clinic", sess.getClinicId());
@@ -243,8 +241,8 @@ public class ImageREST extends RESTful {
                 // fail
             }
             try {
-                if (ous != null)
-                    ous.close();
+                if (ios != null)
+                    ios.close();
             } catch (IOException e) {
             }
         } catch (IOException e) {
