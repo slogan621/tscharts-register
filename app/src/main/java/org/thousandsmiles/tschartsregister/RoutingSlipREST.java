@@ -28,35 +28,22 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class ReturnToClinicREST extends RESTful {
+public class RoutingSlipREST extends RESTful {
     private final Object m_lock = new Object();
 
-    private class ReturnToClinicResponseListener implements Response.Listener<JSONObject> {
+    private class GetRoutingSlipResponseListener implements Response.Listener<JSONObject> {
 
         @Override
         public void onResponse(JSONObject response) {
             synchronized (m_lock) {
-                setStatus(200);
                 SessionSingleton sess = SessionSingleton.getInstance();
-                sess.addReturnToClinic(response);
-                m_lock.notify();
-            }
-        }
-    }
-
-    private class ReturnToClinicArrayResponseListener implements Response.Listener<JSONArray> {
-
-        @Override
-        public void onResponse(JSONArray response) {
-            synchronized (m_lock) {
                 setStatus(200);
-                SessionSingleton sess = SessionSingleton.getInstance();
-                sess.addReturnToClinics(response);
                 m_lock.notify();
             }
         }
@@ -74,45 +61,17 @@ public class ReturnToClinicREST extends RESTful {
                         setStatus(-1);
                     }
                 } else {
-                    setStatus(error.networkResponse.statusCode);
+                   setStatus(error.networkResponse.statusCode);
                 }
-
                 m_lock.notify();
             }
         }
     }
 
-    public ReturnToClinicREST(Context context)  {
-        setContext(context);
-    }
-
-    public class AuthJSONArrayRequest extends JsonArrayRequest {
-
-        public AuthJSONArrayRequest(String url, JSONArray jsonRequest,
-                                    Response.Listener<JSONArray> listener, ReturnToClinicREST.ErrorListener errorListener) {
-            super(url, listener, errorListener);
-        }
-
-        public AuthJSONArrayRequest(String url, Response.Listener<JSONArray> listener,
-                                    Response.ErrorListener errorListener, String username, String password) {
-            super(url, listener, errorListener);
-
-        }
-
-        private Map<String, String> headers = new HashMap<String, String>();
-
-        @Override
-        public Map<String, String> getHeaders() throws AuthFailureError {
-            //return headers;
-            Map headers = new HashMap();
-            headers.put("Authorization", SessionSingleton.getInstance().getToken());
-            return headers;
-        }
-
-    }
-
-    public class AuthJSONObjectRequest extends JsonObjectRequest {
-        public AuthJSONObjectRequest(int method, String url, JSONObject jsonRequest, Response.Listener listener, ReturnToClinicREST.ErrorListener errorListener) {
+    public class AuthJSONObjectRequest extends JsonObjectRequest
+    {
+        public AuthJSONObjectRequest(int method, String url, JSONObject jsonRequest, Response.Listener listener, ErrorListener errorListener)
+        {
             super(method, url, jsonRequest, listener, errorListener);
         }
 
@@ -124,7 +83,56 @@ public class ReturnToClinicREST extends RESTful {
         }
     }
 
-    public Object returnToClinic(int clinic, int station, int patient, int interval, String comment) {
+    public class AuthJSONArrayRequest extends JsonArrayRequest {
+
+        public AuthJSONArrayRequest(String url, JSONArray jsonRequest,
+                                    Response.Listener<JSONArray> listener, ErrorListener errorListener) {
+            super(url, listener, errorListener);
+        }
+
+        public AuthJSONArrayRequest(String url, Response.Listener<JSONArray> listener,
+                                    Response.ErrorListener errorListener, String username, String password) {
+            super(url, listener, errorListener);
+
+        }
+
+        private Map<String, String> headers = new HashMap<String, String>();
+        @Override
+        public Map<String, String> getHeaders() throws AuthFailureError {
+            //return headers;
+            Map headers = new HashMap();
+            headers.put("Authorization", SessionSingleton.getInstance().getToken());
+            return headers;
+        }
+
+    }
+
+    private class PostResponseListener implements Response.Listener<JSONObject> {
+
+        @Override
+        public void onResponse(JSONObject response) {
+
+            synchronized (m_lock) {
+                SessionSingleton sess = SessionSingleton.getInstance();
+                try {
+                    sess.setPatientRoutingSlipId(response.getInt("id"));
+                    setStatus(200);
+                    onSuccess(200, "");
+                } catch (JSONException e) {
+                    setStatus(500);
+                    onFail(500, "");
+                }
+
+                m_lock.notify();
+            }
+        }
+    }
+
+    public RoutingSlipREST(Context context) {
+        setContext(context);
+    }
+
+    public Object getRoutingSlip(int clinicId, int patientId) {
 
         VolleySingleton volley = VolleySingleton.getInstance();
 
@@ -132,29 +140,16 @@ public class ReturnToClinicREST extends RESTful {
 
         RequestQueue queue = volley.getQueue();
 
-        String url = String.format("http://%s:%s/tscharts/v1/returntoclinic/", getIP(), getPort());
+        String url = String.format("http://%s:%s/tscharts/v1/routingslip?patient=%d&clinic=%d", getIP(), getPort(), patientId, clinicId);
 
-        JSONObject data = new JSONObject();
-
-        try {
-            data.put("comment", comment);
-            data.put("clinic", clinic);
-            data.put("station", station);
-            data.put("patient", patient);
-            data.put("interval", interval);
-        } catch(Exception e) {
-            // not sure this would ever happen, ignore. Continue on with the request with the expectation it fails
-            // because of the bad JSON sent
-        }
-
-        AuthJSONObjectRequest request = new AuthJSONObjectRequest(Request.Method.POST, url, data, new ReturnToClinicResponseListener(), new ErrorListener());
+        RoutingSlipREST.AuthJSONObjectRequest request = new RoutingSlipREST.AuthJSONObjectRequest(Request.Method.GET, url, null,  new RoutingSlipREST.GetRoutingSlipResponseListener(), new RoutingSlipREST.ErrorListener());
 
         queue.add((JsonObjectRequest) request);
 
         return m_lock;
     }
 
-    public Object getReturnToClinicsForPatient(int patientid) {
+    public Object createRoutingSlip(int patientId, int clinicId, String category) {
 
         VolleySingleton volley = VolleySingleton.getInstance();
 
@@ -162,26 +157,20 @@ public class ReturnToClinicREST extends RESTful {
 
         RequestQueue queue = volley.getQueue();
 
-        String url = String.format("http://%s:%s/tscharts/v1/returntoclinic/?patient=%d", getIP(), getPort(), patientid);
+        SessionSingleton sess = SessionSingleton.getInstance();
 
-        AuthJSONArrayRequest request = new AuthJSONArrayRequest(url, null, new ReturnToClinicArrayResponseListener(), new ErrorListener());
+        JSONObject data = new JSONObject();
 
-        queue.add((JsonArrayRequest) request);
+        try {
+            data.put("patient", patientId);
+            data.put("clinic", clinicId);
+            data.put("category", category);
+        } catch (JSONException e) {
+        }
 
-        return m_lock;
-    }
+        String url = String.format("http://%s:%s/tscharts/v1/routingslip/", getIP(), getPort());
 
-    public Object getReturnToClinic(int id) {
-
-        VolleySingleton volley = VolleySingleton.getInstance();
-
-        volley.initQueueIf(getContext());
-
-        RequestQueue queue = volley.getQueue();
-
-        String url = String.format("http://%s:%s/tscharts/v1/returntoclinic/%d/", getIP(), getPort(), id);
-
-        AuthJSONObjectRequest request = new AuthJSONObjectRequest(Request.Method.GET, url, null, new ReturnToClinicResponseListener(), new ErrorListener());
+        RoutingSlipREST.AuthJSONObjectRequest request = new RoutingSlipREST.AuthJSONObjectRequest(Request.Method.POST, url, data, new PostResponseListener(), new ErrorListener());
 
         queue.add((JsonObjectRequest) request);
 

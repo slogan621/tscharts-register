@@ -166,4 +166,8 @@
     <string name="msg_failed_to_register_patient">Failed to register patient</string>
     <string name="msg_unable_to_save_headshot_photo">Unable to save headshot photo</string>
     <string name="msg_successfully_saved_headshot_photo">Successfully saved headshot photo</string>
+    <string name="msg_unable_to_create_routing_slip">Unable to create routing slip</string>
+    <string name="msg_successfully_created_routing_slip">Successfully created routing slip</string>
+    <string name="msg_unable_to_create_routing_slip_entry">Unable to create routing slip entry</string>
+    <string name="msg_successfully_created_routing_slip_entry">Successfully created routing slip entry</string>
 </resources>

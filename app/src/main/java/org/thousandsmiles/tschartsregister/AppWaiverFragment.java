@@ -41,6 +41,8 @@ import com.github.barteksc.pdfviewer.listener.OnPageErrorListener;
 import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle;
 import com.github.barteksc.pdfviewer.util.FitPolicy;
 
+import java.util.ArrayList;
+
 public class AppWaiverFragment extends Fragment implements RESTCompletionListener, OnPageChangeListener, OnLoadCompleteListener,
         OnPageErrorListener {
     private Activity m_activity = null;
@@ -50,10 +52,19 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
     String pdfFileName;
     PDFView pdfView;
     int pageNumber;
-    AppWaiverFragment m_this = this;
-    Boolean m_patientData = false;
-    Boolean m_medicalHistory = false;
-    Boolean m_photo = false;
+    private AppWaiverFragment m_this = this;
+    ArrayList<Integer> m_stations = null;
+
+    public enum RegistrationState {
+        UPDATED_NOTHING,
+        UPDATED_PATIENT,
+        UPDATED_MEDICAL_HISTORY,
+        UPDATED_PHOTO,
+        UPDATED_ROUTING_SLIP,
+        UPDATED_ROUTING_SLIP_ENTRIES
+    };
+
+    private RegistrationState m_state = RegistrationState.UPDATED_NOTHING;
 
     @Override
     public void onPageChanged(int page, int pageCount) {
@@ -70,23 +81,50 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
         showFailure(code, msg);
     }
 
+    private ArrayList<Integer> mergeStations(ArrayList<Integer> list1, ArrayList<Integer> list2)
+    {
+        ArrayList<Integer> ret = list1;
+
+        for (int i = 0; i < list2.size(); i++) {
+            if (ret.contains(list2.get(i)) == false) {
+                ret.add(list2.get(i));
+            }
+        }
+
+        return ret;
+    }
 
     @Override
     public void onSuccess(int code, String msg)
     {
-        if (m_patientData == false) {
-            m_patientData = true;
+        if (m_state == RegistrationState.UPDATED_NOTHING) {
+            m_state = RegistrationState.UPDATED_PATIENT;
             if (m_sess.getIsNewPatient()) {
                 m_sess.createMedicalHistory(this);
             } else {
                 m_sess.updateMedicalHistory(this);
             }
-        } else if (m_medicalHistory == false) {
-            m_medicalHistory = true;
+        } else if (m_state == RegistrationState.UPDATED_PATIENT) {
+            m_state = RegistrationState.UPDATED_MEDICAL_HISTORY;
             m_sess.createHeadshot(this);
-        }
-        else {
-            showSuccess();
+        } else if (m_state == RegistrationState.UPDATED_MEDICAL_HISTORY) {
+            m_state = RegistrationState.UPDATED_PHOTO;
+            m_sess.createRoutingSlip(this);
+        } else if (m_state == RegistrationState.UPDATED_PHOTO) {
+            ArrayList<Integer> catStations = m_sess.getStationsForCategory(m_sess.getCategoryName());
+            ArrayList<Integer> rtcStations = m_sess.getReturnToClinicStations();
+            ArrayList<Integer> stations = mergeStations(catStations, rtcStations);
+            m_stations = stations;
+            while (m_stations.size() > 0) {
+                m_sess.createRoutingSlipEntry(this, m_stations.get(0));
+                m_stations.remove(m_stations.get(0));
+            }
+            m_state = RegistrationState.UPDATED_ROUTING_SLIP;
+        } else {
+            if (m_stations == null || m_stations.size() == 0) {
+                m_state = RegistrationState.UPDATED_ROUTING_SLIP_ENTRIES;
+                showSuccess();
+            }
         }
     }
 
@@ -149,15 +187,10 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
 
             builder.setPositiveButton(m_activity.getString(R.string.button_yes), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
+                    m_state = RegistrationState.UPDATED_NOTHING;
                     if (m_sess.getIsNewPatient() == true) {
-                        m_patientData = false;
-                        m_medicalHistory = false;
-                        m_photo = false;
                         m_sess.createNewPatient(m_this);
                     } else {
-                        m_patientData = false;
-                        m_medicalHistory = false;
-                        m_photo = false;
                         m_sess.updatePatientData(m_this, m_sess.getPatientId());
                     }
                     dialog.dismiss();

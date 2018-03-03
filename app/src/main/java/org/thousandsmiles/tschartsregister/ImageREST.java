@@ -258,7 +258,6 @@ public class ImageREST extends RESTful {
         return m_lock;
     }
 
-
     public Object getAllPatientImages(int patientid, File file, boolean sort) {
 
         VolleySingleton volley = VolleySingleton.getInstance();

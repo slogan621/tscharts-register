@@ -187,6 +187,22 @@ public class CategorySelectorActivity extends AppCompatActivity {
         }).start();
     }
 
+    private void getStations() {
+        new Thread(new Runnable() {
+            public void run() {
+                m_sess.updateStationData();
+            };
+        }).start();
+    }
+
+    private void getReturnToClinicData() {
+        new Thread(new Runnable() {
+            public void run() {
+                m_sess.getReturnToClinics();
+            };
+        }).start();
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -234,6 +250,11 @@ public class CategorySelectorActivity extends AppCompatActivity {
                     });
                     /* go get the list of Mexican States for later use */
                     getMexicanStates();
+                    /* and clinic stations too */
+                    getStations();
+                    if (m_sess.getIsNewPatient() == false) {
+                        getReturnToClinicData();
+                    }
                 }
 
                 return;

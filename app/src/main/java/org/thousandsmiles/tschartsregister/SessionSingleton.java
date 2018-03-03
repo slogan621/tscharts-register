@@ -42,20 +42,24 @@ public class SessionSingleton {
     private static SessionSingleton m_instance;
     private static String m_token = "";
     private static Context m_ctx;
-    private JSONObject m_patientRoutingSlip = null;
+    private int m_patientRoutingSlipId;
     private MedicalHistory m_patientMedicalHistory = null;
     private JSONObject m_routingSlipEntryResponse = null;
     private JSONArray m_patientSearchResults = null;
     private int m_clinicId;
     private PatientData m_newPatientData = null; // only if m_isNewPatient is true
     private HashMap<Integer, PatientData> m_patientData = new HashMap<Integer, PatientData>();
+    private HashMap<Integer, ReturnToClinic> m_returnToClinicData = new HashMap<Integer, ReturnToClinic>();
     private static HashMap<String, Integer> m_categoryToSelector = new HashMap<String, Integer>();
     private static ArrayList<JSONObject> m_categoryData = new ArrayList<JSONObject>();
+    private static HashMap<Integer, String> m_stationIdToName = new HashMap<Integer, String>();
+    private static HashMap<String, Integer> m_stationNameToId = new HashMap<String, Integer>();
     private int m_selectorNumColumns;
     private int m_width = -1;
     private int m_height = -1;
     private ArrayList<String> m_medicationsList = new ArrayList<String>();
     private ArrayList<String> m_mexicanStates = new ArrayList<String>();
+    private ArrayList<Integer> m_returnToClinics = new ArrayList<Integer>();
     private Registration m_registration = new Registration();
     private int m_patientId;
     private boolean m_isNewPatient = false;
@@ -169,9 +173,14 @@ public class SessionSingleton {
         return m_patientMedicalHistory;
     }
 
-    public JSONObject getPatientRoutingSlip()
+    public void setPatientRoutingSlipId(int id)
     {
-        return m_patientRoutingSlip;
+        m_patientRoutingSlipId = id;
+    }
+
+    public int getPatientRoutingSlipId()
+    {
+        return m_patientRoutingSlipId;
     }
 
     public void setPatientSearchResults(JSONArray results)
@@ -283,41 +292,41 @@ public class SessionSingleton {
 
         Thread thread = new Thread(){
             public void run() {
-                // note we use session context because this may be called after onPause()
-                PatientREST rest = new PatientREST(getContext());
-                rest.addListener(listener);
-                Object lock;
-                int status;
+            // note we use session context because this may be called after onPause()
+            PatientREST rest = new PatientREST(getContext());
+            rest.addListener(listener);
+            Object lock;
+            int status;
 
-                lock = rest.updatePatient(m_patientData.get(patientId));
+            lock = rest.updatePatient(m_patientData.get(patientId));
 
-                synchronized (lock) {
-                    // we loop here in case of race conditions or spurious interrupts
-                    while (true) {
-                        try {
-                            lock.wait();
-                            break;
-                        } catch (InterruptedException e) {
-                            continue;
-                        }
+            synchronized (lock) {
+                // we loop here in case of race conditions or spurious interrupts
+                while (true) {
+                    try {
+                        lock.wait();
+                        break;
+                    } catch (InterruptedException e) {
+                        continue;
                     }
                 }
-                status = rest.getStatus();
-                if (status != 200) {
-                    Handler handler = new Handler(Looper.getMainLooper());
-                    handler.post(new Runnable() {
-                        public void run() {
-                            Toast.makeText(getContext(), getContext().getString(R.string.msg_unable_to_save_medical_history), Toast.LENGTH_LONG).show();
-                        }
-                    });
-                } else {
-                    Handler handler = new Handler(Looper.getMainLooper());
-                    handler.post(new Runnable() {
-                        public void run() {
-                            Toast.makeText(getContext(), getContext().getString(R.string.msg_successfully_saved_medical_history), Toast.LENGTH_LONG).show();
-                        }
-                    });
-                }
+            }
+            status = rest.getStatus();
+            if (status != 200) {
+                Handler handler = new Handler(Looper.getMainLooper());
+                handler.post(new Runnable() {
+                    public void run() {
+                        Toast.makeText(getContext(), getContext().getString(R.string.msg_unable_to_save_medical_history), Toast.LENGTH_LONG).show();
+                    }
+                });
+            } else {
+                Handler handler = new Handler(Looper.getMainLooper());
+                handler.post(new Runnable() {
+                    public void run() {
+                        Toast.makeText(getContext(), getContext().getString(R.string.msg_successfully_saved_medical_history), Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
             }
         };
         thread.start();
@@ -381,6 +390,17 @@ public class SessionSingleton {
             return;
         }
         m_patientData.put(id, new PatientData(data));
+    }
+
+    public void addReturnToClinic(JSONObject data) {
+        int id;
+
+        try {
+            id = data.getInt("id");
+        } catch (JSONException e) {
+            return;
+        }
+        m_returnToClinicData.put(id, new ReturnToClinic(data));
     }
 
     void createMedicalHistory(final RESTCompletionListener listener) {
@@ -474,6 +494,162 @@ public class SessionSingleton {
             }
         };
         thread.start();
+    }
+
+    void createRoutingSlip(final RESTCompletionListener listener) {
+        boolean ret = false;
+
+        Thread thread = new Thread() {
+            public void run() {
+                // note we use session context because this may be called after onPause()
+                RoutingSlipREST rest = new RoutingSlipREST(getContext());
+                rest.addListener(listener);
+                Object lock;
+                int status;
+
+                lock = rest.createRoutingSlip(getPatientId(), getClinicId(), getCategoryName());
+
+                synchronized (lock) {
+                    // we loop here in case of race conditions or spurious interrupts
+                    while (true) {
+                        try {
+                            lock.wait();
+                            break;
+                        } catch (InterruptedException e) {
+                            continue;
+                        }
+                    }
+                }
+                status = rest.getStatus();
+                if (status != 200) {
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.post(new Runnable() {
+                        public void run() {
+                            Toast.makeText(getContext(), getContext().getString(R.string.msg_unable_to_create_routing_slip), Toast.LENGTH_LONG).show();
+                        }
+                    });
+                } else {
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.post(new Runnable() {
+                        public void run() {
+                            Toast.makeText(getContext(), getContext().getString(R.string.msg_successfully_created_routing_slip), Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+            }
+        };
+        thread.start();
+    }
+
+    void createRoutingSlipEntry(final RESTCompletionListener listener, final int station) {
+        boolean ret = false;
+
+        Thread thread = new Thread() {
+            public void run() {
+                // note we use session context because this may be called after onPause()
+                RoutingSlipEntryREST rest = new RoutingSlipEntryREST(getContext());
+                rest.addListener(listener);
+                Object lock;
+                int status;
+
+                lock = rest.createRoutingSlipEntry(getPatientRoutingSlipId(), station);
+
+                synchronized (lock) {
+                    // we loop here in case of race conditions or spurious interrupts
+                    while (true) {
+                        try {
+                            lock.wait();
+                            break;
+                        } catch (InterruptedException e) {
+                            continue;
+                        }
+                    }
+                }
+                status = rest.getStatus();
+                if (status != 200) {
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.post(new Runnable() {
+                        public void run() {
+                            Toast.makeText(getContext(), getContext().getString(R.string.msg_unable_to_create_routing_slip_entry), Toast.LENGTH_LONG).show();
+                        }
+                    });
+                } else {
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.post(new Runnable() {
+                        public void run() {
+                            Toast.makeText(getContext(), getContext().getString(R.string.msg_successfully_created_routing_slip_entry), Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+            }
+        };
+        thread.start();
+    }
+
+    ArrayList<Integer> getStationsForCategory(String category)
+    {
+        ArrayList<Integer> ret = new ArrayList<Integer>();
+
+        if (category.equals("New Cleft")) {
+            ret.add(m_stationNameToId.get("ENT"));
+            ret.add(m_stationNameToId.get("Speech"));
+            ret.add(m_stationNameToId.get("Audiology"));
+            ret.add(m_stationNameToId.get("Surgery Screening"));
+        } else if (category.equals("Returning Cleft")) {
+            ret.add(m_stationNameToId.get("ENT"));
+            ret.add(m_stationNameToId.get("Speech"));
+            ret.add(m_stationNameToId.get("Audiology"));
+            ret.add(m_stationNameToId.get("Surgery Screening"));
+        } else if (category.equals("Dental")) {
+            ret.add(m_stationNameToId.get("Dental"));
+        } else if (category.equals("Ortho")) {
+            ret.add(m_stationNameToId.get("Ortho"));
+        } else if (category.equals("Other")) {
+            ret.add(m_stationNameToId.get("Surgery Screening"));
+        }
+        return ret;
+    }
+
+    public boolean updateStationData() {
+        boolean ret = false;
+
+        if (Looper.myLooper() != Looper.getMainLooper()) {
+            final StationREST stationData = new StationREST(getContext());
+            Object lock = stationData.getStationData();
+
+            synchronized (lock) {
+                // we loop here in case of race conditions or spurious interrupts
+                while (true) {
+                    try {
+                        lock.wait();
+                        break;
+                    } catch (InterruptedException e) {
+                        continue;
+                    }
+                }
+            }
+
+            int status = stationData.getStatus();
+            if (status == 200) {
+                ret = true;
+            }
+        }
+        return ret;
+    }
+
+    public void addStationData(JSONArray data) {
+        int i;
+        JSONObject stationdata;
+
+        for (i = 0; i < data.length(); i++)  {
+            try {
+                stationdata = data.getJSONObject(i);
+                m_stationIdToName.put(stationdata.getInt("id"), stationdata.getString("name"));
+                m_stationNameToId.put(stationdata.getString("name"), stationdata.getInt("id"));
+            } catch (JSONException e) {
+                return;
+            }
+        }
     }
 
     public MedicalHistory getMedicalHistory(int clinicid, int patientid)
@@ -687,6 +863,83 @@ public class SessionSingleton {
             }
         }
         return ret;
+    }
+
+    public void addReturnToClinics(JSONArray response) {
+        m_returnToClinics.clear();
+        for (int i = 0; i < response.length(); i++) {
+            try {
+                JSONObject o = response.getJSONObject(i);
+                m_returnToClinics.add(o.getInt("id"));
+            } catch (JSONException e) {
+            }
+        }
+    }
+
+    public ArrayList<Integer> getReturnToClinicStations()
+    {
+        ArrayList<Integer> ret = new ArrayList<Integer>();
+
+        for (int i = 0; i < m_returnToClinics.size(); i++) {
+            int clinicDataId = m_returnToClinics.get(i);
+            ReturnToClinic rtc = m_returnToClinicData.get(clinicDataId);
+            ret.add(rtc.getStation());
+        }
+        return ret;
+    }
+
+    public boolean getReturnToClinics() {
+        boolean ret = false;
+
+        m_returnToClinics .clear();
+        if (m_isNewPatient == true) {
+            ret = true;
+        } else {
+            int patientId = getPatientId();
+            if (Looper.myLooper() != Looper.getMainLooper()) {
+                final ReturnToClinicREST rtc = new ReturnToClinicREST(getContext());
+                Object lock = rtc.getReturnToClinicsForPatient(patientId);
+
+                synchronized (lock) {
+                    // we loop here in case of race conditions or spurious interrupts
+                    while (true) {
+                        try {
+                            lock.wait();
+                            break;
+                        } catch (InterruptedException e) {
+                            continue;
+                        }
+                    }
+                }
+
+                int status = rtc.getStatus();
+                if (status == 200) {
+                    getReturnToClinicObjects();
+                    ret = true;
+                }
+            }
+        }
+        return ret;
+    }
+
+    private void getReturnToClinicObjects() {
+        for (int i = 0; i < m_returnToClinics.size(); i++) {
+            int item = m_returnToClinics.get(i);
+            final ReturnToClinicREST rtc = new ReturnToClinicREST(getContext());
+            Object lock = rtc.getReturnToClinic(item);
+
+            synchronized (lock) {
+                // we loop here in case of race conditions or spurious interrupts
+                while (true) {
+                    try {
+                        lock.wait();
+                        break;
+                    } catch (InterruptedException e) {
+                        continue;
+                    }
+                }
+            }
+        }
     }
 
     public void setMedicationsList(JSONArray a)

@@ -65,28 +65,7 @@ public class PatientData {
     public PatientData(JSONObject o) {
         m_valid = false;
         if (o != null) {
-            try {
-                m_id = o.getInt("id");
-                m_fatherLast = o.getString("paternal_last");
-                m_motherLast = o.getString("maternal_last");
-                m_first = o.getString("first");
-                m_middle = o.getString("middle");
-                m_dob = o.getString("dob");
-                m_gender = o.getString("gender");
-                m_street1 = o.getString("street1");
-                m_street2 = o.getString("street2");
-                m_colonia = o.getString("colonia");
-                m_city = o.getString("city");
-                m_state = o.getString("state");
-                m_phone1 = o.getString("phone1");
-                m_phone2 = o.getString("phone2");
-                m_email = o.getString("email");
-                m_emergencyFullName = o.getString("emergencyfullname");
-                m_emergencyPhone = o.getString("emergencyphone");
-                m_emergencyEmail = o.getString("emergencyemail");
-                m_valid = true;
-            } catch (JSONException e) {
-            }
+            fromJSONObject(o);
         }
     }
 
@@ -345,6 +324,7 @@ public class PatientData {
             setEmergencyFullName(o.getString("emergencyfullname"));
             setEmergencyPhone(o.getString("emergencyphone"));
             setEmergencyEmail(o.getString("emergencyemail"));
+            m_valid = true;
         } catch (JSONException e) {
             ret = -1;
         }
