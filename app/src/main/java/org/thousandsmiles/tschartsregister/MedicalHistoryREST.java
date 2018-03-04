@@ -28,6 +28,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -58,8 +59,14 @@ public class MedicalHistoryREST extends RESTful {
 
             synchronized (m_lock) {
                 SessionSingleton sess = SessionSingleton.getInstance();
-                setStatus(200);
-                onSuccess(200, "");
+                try {
+                    sess.setMedicalHistoryId(response.getInt("id"));
+                    setStatus(200);
+                    onSuccess(200, "");
+                } catch (JSONException e) {
+                    setStatus(500);
+                    onFail(500, "");
+                }
                 m_lock.notify();
             }
         }

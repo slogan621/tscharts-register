@@ -221,6 +221,10 @@ public class SessionSingleton {
         return m_registration.getCategoryName();
     }
 
+    public void setMedicalHistoryId(int id) {
+        m_patientMedicalHistory.setId(id);
+    }
+
     public void setPatientMedicalHistory(JSONObject o)
     {
         if (m_patientMedicalHistory == null) {
