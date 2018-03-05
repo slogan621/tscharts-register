@@ -84,18 +84,18 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"/>
+
                 <EditText
                     android:id="@+id/paternal_last"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:maxLines="1"
-                    android:scrollHorizontally="true"
-                    android:ellipsize="end"
-                    android:layout_weight="1"
                     android:layout_marginTop="2dp"
+                    android:layout_weight="1"
                     android:drawablePadding="10dp"
-                    android:paddingLeft="15dp">
-                </EditText>
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:paddingLeft="15dp"
+                    android:scrollHorizontally="true"></EditText>
             </LinearLayout>
 
             <LinearLayout
@@ -118,18 +118,18 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"/>
+
                 <EditText
                     android:id="@+id/maternal_last"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:maxLines="1"
-                    android:scrollHorizontally="true"
-                    android:ellipsize="end"
-                    android:layout_weight="1"
                     android:layout_marginTop="2dp"
+                    android:layout_weight="1"
                     android:drawablePadding="10dp"
-                    android:paddingLeft="15dp">
-                </EditText>
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:paddingLeft="15dp"
+                    android:scrollHorizontally="true"></EditText>
             </LinearLayout>
 
             <LinearLayout
@@ -155,7 +155,7 @@
 
                 <EditText
                     android:id="@+id/first_name"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
                     android:layout_weight="1"
@@ -188,7 +188,7 @@
                     android:layout_weight="1"/>
                 <EditText
                     android:id="@+id/middle_name"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
                     android:scrollHorizontally="true"
@@ -240,7 +240,7 @@
                     android:layout_weight="1"/>
                 <EditText
                     android:id="@+id/address_street_1"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
                     android:scrollHorizontally="true"
@@ -274,7 +274,7 @@
                     android:layout_weight="1"/>
                 <EditText
                     android:id="@+id/address_street_2"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
                     android:scrollHorizontally="true"
@@ -308,7 +308,7 @@
                     android:layout_weight="1"/>
                 <EditText
                     android:id="@+id/address_colonia"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
                     android:scrollHorizontally="true"
@@ -342,7 +342,7 @@
                     android:layout_weight="1"/>
                 <EditText
                     android:id="@+id/address_city"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
                     android:scrollHorizontally="true"
@@ -464,7 +464,7 @@
                     android:layout_weight="1"/>
                 <EditText
                     android:id="@+id/dob"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
                     android:scrollHorizontally="true"
@@ -516,7 +516,7 @@
                     android:layout_weight="1"/>
                 <EditText
                     android:id="@+id/phone_1"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
                     android:inputType="phone"
@@ -552,7 +552,7 @@
                     android:layout_weight="1"/>
                 <EditText
                     android:id="@+id/phone_2"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
                     android:scrollHorizontally="true"
@@ -588,7 +588,7 @@
                     android:layout_weight="1"/>
                 <EditText
                     android:id="@+id/e_mail"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
                     android:scrollHorizontally="true"
@@ -641,7 +641,7 @@
                     android:layout_weight="1"/>
                 <EditText
                     android:id="@+id/emergency_full_name"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
                     android:scrollHorizontally="true"
@@ -675,7 +675,7 @@
                     android:layout_weight="1"/>
                 <EditText
                     android:id="@+id/emergency_phone"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
                     android:scrollHorizontally="true"
@@ -711,7 +711,7 @@
                     android:layout_weight="1"/>
                 <EditText
                     android:id="@+id/emergency_e_mail"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
                     android:scrollHorizontally="true"

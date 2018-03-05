@@ -23,8 +23,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -37,16 +35,11 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.NumberPicker;
 import android.widget.RadioButton;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 public class AppPatientInfoFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
     private Activity m_activity = null;
@@ -81,8 +74,8 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        if (context instanceof Activity){
-            m_activity=(Activity) context;
+        if (context instanceof Activity) {
+            m_activity = (Activity) context;
             m_sess = SessionSingleton.getInstance();
             if ((m_isNewPatient = m_sess.getIsNewPatient()) == false) {
                 m_patientId = m_sess.getPatientId();
@@ -95,11 +88,26 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
     }
 
     public void handleNextButtonPress(View v) {
-        //startActivity(new Intent(MedicalHistoryActivity.this, PatientInfoActivity.class));
 
         final PatientData pd = this.copyPatientDataFromUI();
+        boolean valid;
 
-        if (m_dirty || pd.equals(m_patientData) == false) {
+        valid = validateFields();
+        if (valid == false) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+            builder.setTitle(m_activity.getString(R.string.title_missing_patient_data));
+            builder.setMessage(m_activity.getString(R.string.msg_please_enter_required_patient_data));
+
+            builder.setPositiveButton(m_activity.getString(R.string.button_ok), new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                }
+            });
+
+            AlertDialog alert = builder.create();
+            alert.show();
+        } else if (m_dirty || pd.equals(m_patientData) == false) {
+
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
             builder.setTitle(m_activity.getString(R.string.title_unsaved_patient_data));
@@ -131,8 +139,7 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
         }
     }
 
-    private void copyPatientDataToUI()
-    {
+    private void copyPatientDataToUI() {
         TextView tx;
         RadioButton rb;
 
@@ -192,27 +199,28 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
             tx1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View view, boolean hasFocus) {
-                if (hasFocus) {
-                    MexicanStateDialogFragment mld = new MexicanStateDialogFragment();
-                    mld.setPatientId(m_sess.getActivePatientId());
-                    mld.setTextField(tx1);
-                    mld.show(getFragmentManager(), m_activity.getString(R.string.title_mexican_state_dialog));
-                }
+                    if (hasFocus) {
+                        MexicanStateDialogFragment mld = new MexicanStateDialogFragment();
+                        mld.setPatientId(m_sess.getActivePatientId());
+                        mld.setTextField(tx1);
+                        mld.show(getFragmentManager(), m_activity.getString(R.string.title_mexican_state_dialog));
+                    }
                 }
             });
             tx1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                MexicanStateDialogFragment mld = new MexicanStateDialogFragment();
-                mld.setPatientId(m_sess.getActivePatientId());
-                mld.setTextField(tx1);
-                mld.show(getFragmentManager(), m_activity.getString(R.string.title_mexican_state_dialog));
+                    MexicanStateDialogFragment mld = new MexicanStateDialogFragment();
+                    mld.setPatientId(m_sess.getActivePatientId());
+                    mld.setTextField(tx1);
+                    mld.show(getFragmentManager(), m_activity.getString(R.string.title_mexican_state_dialog));
                 }
             });
             tx1.addTextChangedListener(new TextWatcher() {
 
                 @Override
-                public void afterTextChanged(Editable s) {}
+                public void afterTextChanged(Editable s) {
+                }
 
                 @Override
                 public void beforeTextChanged(CharSequence s, int start,
@@ -285,18 +293,15 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
         }
     }
 
-    private void setDirty()
-    {
+    private void setDirty() {
         m_dirty = true;
     }
 
-    private void clearDirty()
-    {
+    private void clearDirty() {
         m_dirty = false;
     }
 
-    private void setViewDirtyListeners()
-    {
+    private void setViewDirtyListeners() {
         Switch sw;
         TextView tx;
         RadioButton rb;
@@ -308,7 +313,8 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
             tx.addTextChangedListener(new TextWatcher() {
 
                 @Override
-                public void afterTextChanged(Editable s) {}
+                public void afterTextChanged(Editable s) {
+                }
 
                 @Override
                 public void beforeTextChanged(CharSequence s, int start,
@@ -328,7 +334,8 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
             tx.addTextChangedListener(new TextWatcher() {
 
                 @Override
-                public void afterTextChanged(Editable s) {}
+                public void afterTextChanged(Editable s) {
+                }
 
                 @Override
                 public void beforeTextChanged(CharSequence s, int start,
@@ -348,7 +355,8 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
             tx.addTextChangedListener(new TextWatcher() {
 
                 @Override
-                public void afterTextChanged(Editable s) {}
+                public void afterTextChanged(Editable s) {
+                }
 
                 @Override
                 public void beforeTextChanged(CharSequence s, int start,
@@ -368,7 +376,8 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
             tx.addTextChangedListener(new TextWatcher() {
 
                 @Override
-                public void afterTextChanged(Editable s) {}
+                public void afterTextChanged(Editable s) {
+                }
 
                 @Override
                 public void beforeTextChanged(CharSequence s, int start,
@@ -390,7 +399,8 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
             tx.addTextChangedListener(new TextWatcher() {
 
                 @Override
-                public void afterTextChanged(Editable s) {}
+                public void afterTextChanged(Editable s) {
+                }
 
                 @Override
                 public void beforeTextChanged(CharSequence s, int start,
@@ -410,7 +420,8 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
             tx.addTextChangedListener(new TextWatcher() {
 
                 @Override
-                public void afterTextChanged(Editable s) {}
+                public void afterTextChanged(Editable s) {
+                }
 
                 @Override
                 public void beforeTextChanged(CharSequence s, int start,
@@ -430,7 +441,8 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
             tx.addTextChangedListener(new TextWatcher() {
 
                 @Override
-                public void afterTextChanged(Editable s) {}
+                public void afterTextChanged(Editable s) {
+                }
 
                 @Override
                 public void beforeTextChanged(CharSequence s, int start,
@@ -450,7 +462,8 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
             tx.addTextChangedListener(new TextWatcher() {
 
                 @Override
-                public void afterTextChanged(Editable s) {}
+                public void afterTextChanged(Editable s) {
+                }
 
                 @Override
                 public void beforeTextChanged(CharSequence s, int start,
@@ -470,7 +483,8 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
             tx.addTextChangedListener(new TextWatcher() {
 
                 @Override
-                public void afterTextChanged(Editable s) {}
+                public void afterTextChanged(Editable s) {
+                }
 
                 @Override
                 public void beforeTextChanged(CharSequence s, int start,
@@ -529,7 +543,8 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
             tx1.addTextChangedListener(new TextWatcher() {
 
                 @Override
-                public void afterTextChanged(Editable s) {}
+                public void afterTextChanged(Editable s) {
+                }
 
                 @Override
                 public void beforeTextChanged(CharSequence s, int start,
@@ -551,7 +566,8 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
             tx.addTextChangedListener(new TextWatcher() {
 
                 @Override
-                public void afterTextChanged(Editable s) {}
+                public void afterTextChanged(Editable s) {
+                }
 
                 @Override
                 public void beforeTextChanged(CharSequence s, int start,
@@ -572,7 +588,8 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
             tx.addTextChangedListener(new TextWatcher() {
 
                 @Override
-                public void afterTextChanged(Editable s) {}
+                public void afterTextChanged(Editable s) {
+                }
 
                 @Override
                 public void beforeTextChanged(CharSequence s, int start,
@@ -593,7 +610,8 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
             tx.addTextChangedListener(new TextWatcher() {
 
                 @Override
-                public void afterTextChanged(Editable s) {}
+                public void afterTextChanged(Editable s) {
+                }
 
                 @Override
                 public void beforeTextChanged(CharSequence s, int start,
@@ -615,7 +633,8 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
             tx.addTextChangedListener(new TextWatcher() {
 
                 @Override
-                public void afterTextChanged(Editable s) {}
+                public void afterTextChanged(Editable s) {
+                }
 
                 @Override
                 public void beforeTextChanged(CharSequence s, int start,
@@ -635,7 +654,8 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
             tx.addTextChangedListener(new TextWatcher() {
 
                 @Override
-                public void afterTextChanged(Editable s) {}
+                public void afterTextChanged(Editable s) {
+                }
 
                 @Override
                 public void beforeTextChanged(CharSequence s, int start,
@@ -656,7 +676,8 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
             tx.addTextChangedListener(new TextWatcher() {
 
                 @Override
-                public void afterTextChanged(Editable s) {}
+                public void afterTextChanged(Editable s) {
+                }
 
                 @Override
                 public void beforeTextChanged(CharSequence s, int start,
@@ -672,8 +693,7 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
         }
     }
 
-    private PatientData copyPatientDataFromUI()
-    {
+    private PatientData copyPatientDataFromUI() {
         Switch sw;
         TextView tx;
         RadioButton rb;
@@ -785,7 +805,7 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
 
         tx = (TextView) m_view.findViewById(R.id.phone_2);
         if (tx != null) {
-            pd.setPhone1(tx.getText().toString());
+            pd.setPhone2(tx.getText().toString());
         }
 
         tx = (TextView) m_view.findViewById(R.id.e_mail);
@@ -813,6 +833,159 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
         return pd;
     }
 
+    private boolean isValidEmail(CharSequence target) {
+        if (target == null)
+            return false;
+
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
+    }
+
+    private boolean validateFields()
+    {
+        boolean ret = true;
+        TextView tx1;
+        TextView tx2;
+        TextView tx3;
+        ArrayList<Integer> list = new ArrayList();
+
+        tx1 =(TextView)m_view.findViewById(R.id.paternal_last);
+        tx2 = (TextView)m_view.findViewById(R.id.maternal_last);
+
+        if(tx1.getText().toString().equals("") && tx2.getText().toString().equals(""))
+        {
+            ret = false;
+            if (tx1.getText().toString().equals("")) {
+                list.add(R.id.paternal_last);
+            }
+            if (tx2.getText().toString().equals("")) {
+                list.add(R.id.maternal_last);
+            }
+        }
+
+        tx1 =(TextView)m_view.findViewById(R.id.first_name);
+        if (tx1.getText().toString().equals("")) {
+            ret = false;
+            list.add(R.id.first_name);
+        }
+
+        // Address
+
+        tx1 =(TextView)m_view.findViewById(R.id.address_street_1);
+        tx2 =(TextView)m_view.findViewById(R.id.address_street_2);
+        if(tx1.getText().toString().equals("") && tx2.getText().toString().equals(""))
+        {
+            ret = false;
+            if (tx1.getText().toString().equals("")) {
+                list.add(R.id.address_street_1);
+            }
+            if (tx2.getText().toString().equals("")) {
+                list.add(R.id.address_street_2);
+            }
+        }
+
+        tx1 =(TextView)m_view.findViewById(R.id.address_city);
+        if(tx1.getText().toString().equals(""))
+        {
+            ret = false;
+            list.add(R.id.address_city);
+        }
+
+        tx1 =(TextView)m_view.findViewById(R.id.address_state);
+        if(tx1.getText().toString().equals(""))
+        {
+            ret = false;
+            list.add(R.id.address_state);
+        }
+
+        tx1 =(TextView)m_view.findViewById(R.id.dob);
+        if(tx1.getText().toString().equals(""))
+        {
+            ret = false;
+            list.add(R.id.dob);
+        }
+
+        // contact info
+
+        tx1 =(TextView)m_view.findViewById(R.id.address_street_1);
+        tx2 =(TextView)m_view.findViewById(R.id.address_street_2);
+
+        if(tx1.getText().toString().equals("") && tx2.getText().toString().equals(""))
+        {
+            ret = false;
+            if (tx1.getText().toString().equals("")) {
+                list.add(R.id.address_street_1);
+            }
+            if (tx2.getText().toString().equals("")) {
+                list.add(R.id.address_street_2);
+            }
+        }
+
+        tx1 =(TextView)m_view.findViewById(R.id.address_city);
+        if(tx1.getText().toString().equals(""))
+        {
+            ret = false;
+            list.add(R.id.address_city);
+        }
+
+        tx1 =(TextView)m_view.findViewById(R.id.address_state);
+        if(tx1.getText().toString().equals(""))
+        {
+            ret = false;
+            list.add(R.id.address_state);
+        }
+
+        // contact info
+
+        tx1 =(TextView)m_view.findViewById(R.id.phone_1);
+        tx2 =(TextView)m_view.findViewById(R.id.phone_2);
+        tx3 =(TextView)m_view.findViewById(R.id.e_mail);
+        if(tx1.getText().toString().equals("") && tx2.getText().toString().equals("") && tx3.getText().toString().equals(""))
+        {
+            ret = false;
+            if (tx1.getText().toString().equals("")) {
+                list.add(R.id.phone_1);
+            }
+            if (tx2.getText().toString().equals("")) {
+                list.add(R.id.phone_2);
+            }
+            if (tx3.getText().toString().equals("")) {
+                list.add(R.id.e_mail);
+            } else if (isValidEmail(tx3.getText().toString()) == false) {
+                list.add(R.id.e_mail);
+            }
+        }
+
+        tx1 =(TextView)m_view.findViewById(R.id.emergency_full_name);
+        if(tx1.getText().toString().equals(""))
+        {
+            ret = false;
+            list.add(R.id.emergency_full_name);
+        }
+
+        tx1 =(TextView)m_view.findViewById(R.id.emergency_phone);
+        tx2 =(TextView)m_view.findViewById(R.id.emergency_e_mail);
+        if(tx1.getText().toString().equals("") && tx2.getText().toString().equals("") && tx3.getText().toString().equals(""))
+        {
+            ret = false;
+            if (tx1.getText().toString().equals("")) {
+                list.add(R.id.emergency_phone);
+            }
+            if (tx2.getText().toString().equals("")) {
+                list.add(R.id.emergency_e_mail);
+            } else if (isValidEmail(tx3.getText().toString()) == false) {
+                list.add(R.id.emergency_e_mail);
+            }
+        }
+
+        for (int i = 0; i < list.size(); i++) {
+            EditText v = (EditText) m_view.findViewById(list.get(i));
+            if (v != null) {
+                v.setError(m_activity.getString(R.string.msg_this_field_is_required));
+            }
+        }
+        return ret;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -829,31 +1002,6 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
     @Override
     public void onPause() {
         super.onPause();
-
-        PatientData pd = this.copyPatientDataFromUI();
-
-        if (m_dirty || pd.equals(m_patientData) == false) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
-            builder.setTitle(m_activity.getString(R.string.title_unsaved_patient_data));
-            builder.setMessage(m_activity.getString(R.string.msg_save_patient_data));
-
-            builder.setPositiveButton(m_activity.getString(R.string.button_yes), new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
-
-            builder.setNegativeButton(m_activity.getString(R.string.button_no), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
-
-            AlertDialog alert = builder.create();
-            alert.show();
-        }
     }
 
     @Override
