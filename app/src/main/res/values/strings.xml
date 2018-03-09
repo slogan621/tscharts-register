@@ -55,8 +55,8 @@
     <string name="birth_complications">Were there complications during birth?</string>
     <string name="birth_weight">Birth weight</string>
     <string name="congenitalheartdefect">Does the child have a congenital heart defect?</string>
-    <string name="congenitalheartdefect_workup">If the child has a congenital heart defect, was a workup done at birth?</string>
-    <string name="congenitalheartdefect_planforcare">If the child has a congenital heart defect, was a plan for care created?</string>
+    <string name="congenitalheartdefect_workup">If has a congenital heart defect, was a workup done at birth?</string>
+    <string name="congenitalheartdefect_planforcare">If has a congenital heart defect, was a plan for care created?</string>
     <string name="growth_stages">Growth Stages</string>
     <string name="first_crawl">Month child first started to crawl</string>
     <string name="first_sit">Month child first started to sit</string>

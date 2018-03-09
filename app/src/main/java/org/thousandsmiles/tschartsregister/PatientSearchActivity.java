@@ -174,7 +174,6 @@ public class PatientSearchActivity extends AppCompatActivity {
                 LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         btnLO.setOrientation(LinearLayout.VERTICAL);
 
-        //btnLO.setLayoutParams(new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT));
         TableRow.LayoutParams parms = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT);
 
         int leftMargin=10;
@@ -191,7 +190,6 @@ public class PatientSearchActivity extends AppCompatActivity {
 
         button.setBackgroundColor(getResources().getColor(R.color.lightGray));
         button.setImageDrawable(getResources().getDrawable(R.drawable.headshot_plus));
-
 
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -222,7 +220,6 @@ public class PatientSearchActivity extends AppCompatActivity {
             }
         });
 
-
         btnLO.addView(button);
 
         boolean newRow = true;
@@ -248,9 +245,9 @@ public class PatientSearchActivity extends AppCompatActivity {
         HashMap<Integer, PatientData> map = m_sess.getPatientHashMap();
 
         count = 1;
-        int extraCells = (map.size() + 1) % 5;
+        int extraCells = (map.size() + 1) % 3;
         if (extraCells != 0) {
-            extraCells = 5 - extraCells;
+            extraCells = 3 - extraCells;
         }
 
         for (Map.Entry<Integer, PatientData> entry : map.entrySet()) {
@@ -258,7 +255,7 @@ public class PatientSearchActivity extends AppCompatActivity {
             PatientData value = entry.getValue();
 
             newRow = false;
-            if ((count % 5) == 0) {
+            if ((count % 3) == 0) {
                 newRow = true;
                 row = new TableRow(getApplicationContext());
                 row.setWeightSum((float)1.0);

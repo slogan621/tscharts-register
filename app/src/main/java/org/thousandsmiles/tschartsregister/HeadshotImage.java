@@ -22,6 +22,7 @@ import android.content.Context;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.squareup.picasso.LruCache;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -71,8 +72,11 @@ public class HeadshotImage implements ImageReadyListener {
     public void onImageRead(final File file) {
         m_activity.runOnUiThread(new Runnable() {
             public void run() {
+                int maxSize = 1024 * 1024 * 10;
+                Picasso p = new Picasso.Builder(m_context).memoryCache(new LruCache(maxSize)).build();
                 m_imageView.setBackgroundColor(m_activity.getResources().getColor(R.color.white));
-                Picasso.with(m_context).load(file).fit().centerInside().into(m_imageView);
+                //Picasso.with(m_context).load(file).fit().centerInside().into(m_imageView);
+                p.with(m_context).load(file).fit().centerInside().into(m_imageView);
             }
         });
     }

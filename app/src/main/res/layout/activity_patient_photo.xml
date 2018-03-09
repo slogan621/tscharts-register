@@ -62,8 +62,8 @@
         android:paddingRight="20dp" >
 
         <FrameLayout
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
             android:layout_weight="1">
         </FrameLayout>
 
@@ -73,8 +73,8 @@
             android:layout_width="wrap_content"
             android:text="@string/button_next"
             android:onClick='handleNextButtonPress'
-            android:textSize="36sp"
-            android:padding="20sp"
+            android:textSize="18sp"
+            android:padding="8sp"
             android:background="@drawable/button_custom" />
     </LinearLayout>
 </LinearLayout>

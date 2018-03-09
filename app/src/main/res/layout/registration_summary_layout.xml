@@ -129,6 +129,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_span="1"
+                android:layout_gravity="center_horizontal"
                 android:orientation="horizontal" >
 
                 <TextView
@@ -142,8 +143,8 @@
                 <ImageView
                     android:id="@+id/value_summary_category"
                     android:layout_gravity="center_horizontal"
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:src="@drawable/surgery" />
             </LinearLayout>
         </TableRow>
