@@ -157,7 +157,7 @@
     <string name="select_state_select">Select</string>
     <string name="select_state_cancel">Cancel</string>
     <string name="title_select_state_dialog">Select State</string>
-    <string name="photo_acknowledgement">Allow Thousand Smiles to take and use photos publically for fund-raising and advertising purposes</string>
+    <string name="photo_acknowledgement">Allow Thousand Smiles to take and use photos for fund-raising and advertising purposes</string>
     <string name="msg_unable_to_get_patient_headshot">Unable to read patient headshot image</string>
     <string name="label_summary_id">Patient ID</string>
     <string name="msg_unable_to_create_patient_record">Unable to create patient record</string>
