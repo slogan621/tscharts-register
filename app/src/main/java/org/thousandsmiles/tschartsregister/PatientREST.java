@@ -243,7 +243,7 @@ public class PatientREST extends RESTful {
         return m_lock;
     }
 
-    public Object findPatientsByLast(String name) {
+    public Object findPatientsByName(String name) {
 
         VolleySingleton volley = VolleySingleton.getInstance();
 
@@ -251,7 +251,7 @@ public class PatientREST extends RESTful {
 
         RequestQueue queue = volley.getQueue();
 
-        String url = String.format("http://%s:%s/tscharts/v1/patient?paternal_last=%s", getIP(), getPort(), name);
+        String url = String.format("http://%s:%s/tscharts/v1/patient?name=%s", getIP(), getPort(), name);
 
         AuthJSONArrayRequest request = new AuthJSONArrayRequest(url, null, new ArrayResponseListener(), new ErrorListener());
 

@@ -387,7 +387,7 @@ public class PatientSearchActivity extends AppCompatActivity {
                 if (d != null) {
                     lock = x.findPatientsByDOB(d);
                 } else if (searchTerm.length() > 0) {
-                    lock = x.findPatientsByLast(searchTerm);
+                    lock = x.findPatientsByName(searchTerm);
                 } else {
                     lock = x.getAllPatientData();
                 }
