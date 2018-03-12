@@ -236,7 +236,7 @@ public class AppPatientPhotoFragment extends Fragment {
 
             AlertDialog alert = builder.create();
             alert.show();
-        } else if (m_sess.getPhotoPath().equals("")) {
+        } else if (m_sess.getPhotoPath() == null || m_sess.getPhotoPath().equals("")) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
             builder.setTitle(m_activity.getString(R.string.title_missing_photo));
