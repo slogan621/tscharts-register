@@ -54,6 +54,7 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
     int pageNumber;
     private AppWaiverFragment m_this = this;
     ArrayList<Integer> m_stations = null;
+    boolean m_showSuccess = false;
 
     public enum RegistrationState {
         UPDATED_NOTHING,
@@ -123,7 +124,10 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
         } else {
             if (m_stations == null || m_stations.size() == 0) {
                 m_state = RegistrationState.UPDATED_ROUTING_SLIP_ENTRIES;
-                showSuccess();
+                if (m_showSuccess == false) {
+                    showSuccess();
+                    m_showSuccess = true;
+                }
             }
         }
     }
@@ -248,53 +252,6 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
     {
         Button b = (Button) m_activity.findViewById(R.id.register_button);
         b.setEnabled(enable);
-    }
-
-    void updatePhoto()
-    {
-        /*
-        boolean ret = false;
-
-        Thread thread = new Thread(){
-            public void run() {
-                // note we use session context because this may be called after onPause()
-                MedicalHistoryREST rest = new MedicalHistoryREST(m_sess.getContext());
-                Object lock = null;
-                int status;
-
-                lock = rest.updateMedicalHistory(copyMedicalHistoryDataFromUI());
-
-                synchronized (lock) {
-                    // we loop here in case of race conditions or spurious interrupts
-                    while (true) {
-                        try {
-                            lock.wait();
-                            break;
-                        } catch (InterruptedException e) {
-                            continue;
-                        }
-                    }
-                }
-                status = rest.getStatus();
-                if (status != 200) {
-                    Handler handler = new Handler(Looper.getMainLooper());
-                    handler.post(new Runnable() {
-                        public void run() {
-                            Toast.makeText(m_activity, m_activity.getString(R.string.msg_unable_to_save_medical_history), Toast.LENGTH_LONG).show();
-                        }
-                    });
-                } else {
-                    Handler handler = new Handler(Looper.getMainLooper());
-                    handler.post(new Runnable() {
-                        public void run() {
-                            Toast.makeText(m_activity, m_activity.getString(R.string.msg_successfully_saved_medical_history), Toast.LENGTH_LONG).show();
-                        }
-                    });
-                }
-           }
-        };
-        thread.start();
-        */
     }
 
     @Override
