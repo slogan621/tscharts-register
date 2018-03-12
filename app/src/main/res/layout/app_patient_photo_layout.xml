@@ -26,126 +26,120 @@
     android:layout_height="match_parent"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
+    android:paddingTop="16dp"
     android:paddingBottom="16dp"
-    android:orientation="vertical" >
+    android:orientation="horizontal" >
+
+    <View
+        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_weight="1"/>
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:orientation="horizontal" >
+        android:orientation="vertical" >
+
+        <View
+            android:layout_height="0dp"
+            android:layout_width="match_parent"
+            android:layout_weight="1"/>
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="16dp"
-            android:layout_weight="3"
-            android:layout_gravity="right"
-            android:orientation="vertical" >
+            android:paddingRight="16dp"
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal" >
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <ImageView
+                android:id="@+id/headshot_image_1"
+                android:layout_width="192dp"
+                android:layout_height="192dp"
+                android:clickable="true"
+                android:src="@drawable/girlfront"
+                android:onClick="handleImage1Press"
+                />
+
+            <ImageButton
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:orientation="horizontal" >
+                android:layout_gravity="bottom"
+                android:onClick="handleImageButton1Press"
+                android:src="@drawable/ic_photo_camera_black_48dp"
+                />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"/>
-
-                <ImageView
-                    android:id="@+id/headshot_image_1"
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
-                    android:clickable="true"
-                    android:src="@drawable/girlfront"
-                    android:onClick="handleImage1Press"
-                    />
-
-                <ImageButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:onClick="handleImageButton1Press"
-                    android:src="@drawable/ic_photo_camera_black_48dp"
-                    />
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:orientation="horizontal" >
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"/>
-
-                <ImageView
-                    android:id="@+id/headshot_image_2"
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
-                    android:clickable="true"
-                    android:src="@drawable/girlfront"
-                    android:onClick="handleImage2Press"
-                    />
-
-                <ImageButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:onClick="handleImageButton2Press"
-                    android:src="@drawable/ic_photo_camera_black_48dp"
-                    />
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:orientation="horizontal" >
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"/>
-
-                <ImageView
-                    android:id="@+id/headshot_image_3"
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
-                    android:clickable="true"
-                    android:src="@drawable/girlfront"
-                    android:onClick="handleImage3Press"
-                    />
-
-                <ImageButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:onClick="handleImageButton3Press"
-                    android:src="@drawable/ic_photo_camera_black_48dp"
-                    />
-
-            </LinearLayout>
         </LinearLayout>
+
+        <View
+            android:layout_height="0dp"
+            android:layout_width="match_parent"
+            android:layout_weight="1"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:id="@+id/headshot_image_2"
+                android:layout_width="192dp"
+                android:layout_height="192dp"
+                android:clickable="true"
+                android:src="@drawable/girlfront"
+                android:onClick="handleImage2Press"
+                />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:onClick="handleImageButton2Press"
+                android:src="@drawable/ic_photo_camera_black_48dp"
+                />
+
+        </LinearLayout>
+
+        <View
+            android:layout_height="0dp"
+            android:layout_width="match_parent"
+            android:layout_weight="1"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:id="@+id/headshot_image_3"
+                android:layout_width="192dp"
+                android:layout_height="192dp"
+                android:clickable="true"
+                android:src="@drawable/girlfront"
+                android:onClick="handleImage3Press"
+                />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:onClick="handleImageButton3Press"
+                android:src="@drawable/ic_photo_camera_black_48dp"
+                />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+
     </LinearLayout>
 </LinearLayout>
