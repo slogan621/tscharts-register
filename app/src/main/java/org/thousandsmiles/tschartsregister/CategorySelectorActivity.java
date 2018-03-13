@@ -91,6 +91,7 @@ public class CategorySelectorActivity extends AppCompatActivity {
     private void LayoutCategoryGrid() {
         TableLayout layout = (TableLayout) findViewById(R.id.namestablelayout);
 
+        layout.removeAllViews();
         int numCategories = m_sess.getCategoryCount();
 
         TableRow row = null;
