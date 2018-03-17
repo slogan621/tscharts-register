@@ -24,7 +24,6 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 import java.io.File;
 
-
 public class HeadshotImage implements ImageReadyListener {
     private int m_id;
     private ImageView m_imageView;

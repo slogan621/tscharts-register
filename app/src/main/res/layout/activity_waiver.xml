@@ -63,6 +63,16 @@
         android:paddingBottom="20dp"
         android:paddingRight="20dp" >
 
+        <Button
+            android:id="@+id/back_button"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/button_back"
+            android:onClick='handleBackButtonPress'
+            android:textSize="18sp"
+            android:padding="8sp"
+            android:background="@drawable/button_custom" />
+
         <FrameLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"

@@ -24,6 +24,7 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.ViewTreeObserver;
 
 public class WaiverActivity extends AppCompatActivity {
 
@@ -36,7 +37,14 @@ public class WaiverActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-   }
+        final View root = getWindow().getDecorView().getRootView();
+        root.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                goImmersive();
+            }
+        });
+    }
 
     public void handleRegisterButtonPress(View v)
     {
@@ -51,6 +59,10 @@ public class WaiverActivity extends AppCompatActivity {
     public void onWaiverPhotoClicked(View v)
     {
         m_fragment.onWaiverPhotoClicked(v);
+    }
+
+    public void handleBackButtonPress(View v) {
+        onBackPressed();
     }
 
     @Override
@@ -77,6 +89,26 @@ public class WaiverActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.registration_summary_panel, m_registrationSummaryFragment)
                 .commit();
+    }
+
+    /* see also  https://stackoverflow.com/questions/24187728/sticky-immersive-mode-disabled-after-soft-keyboard-shown */
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) {
+            goImmersive();
+        }
+    }
+
+    public void goImmersive() {
+        View v1 = getWindow().getDecorView().getRootView();
+        v1.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
     }
 }
 

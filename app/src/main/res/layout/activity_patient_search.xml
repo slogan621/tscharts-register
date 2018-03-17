@@ -45,7 +45,8 @@
 
             <EditText
                 android:id="@+id/patient_search"
-                android:layout_width="500dp"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:hint="@string/patient_search_hint"
                 android:singleLine="true"
                 android:layout_height="wrap_content"/>

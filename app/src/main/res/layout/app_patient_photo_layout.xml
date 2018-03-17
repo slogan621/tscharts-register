@@ -55,8 +55,8 @@
 
             <ImageView
                 android:id="@+id/headshot_image_1"
-                android:layout_width="192dp"
-                android:layout_height="192dp"
+                android:layout_width="116dp"
+                android:layout_height="116dp"
                 android:clickable="true"
                 android:src="@drawable/girlfront"
                 android:onClick="handleImage1Press"
@@ -87,8 +87,8 @@
 
             <ImageView
                 android:id="@+id/headshot_image_2"
-                android:layout_width="192dp"
-                android:layout_height="192dp"
+                android:layout_width="116dp"
+                android:layout_height="116dp"
                 android:clickable="true"
                 android:src="@drawable/girlfront"
                 android:onClick="handleImage2Press"
@@ -119,8 +119,8 @@
 
             <ImageView
                 android:id="@+id/headshot_image_3"
-                android:layout_width="192dp"
-                android:layout_height="192dp"
+                android:layout_width="116dp"
+                android:layout_height="116dp"
                 android:clickable="true"
                 android:src="@drawable/girlfront"
                 android:onClick="handleImage3Press"

@@ -44,6 +44,7 @@
         </activity>
         <activity
             android:name=".PatientInfoActivity"
+            android:windowSoftInputMode="stateHidden"
             android:screenOrientation="landscape"
             android:label="@string/title_patient_info">
         </activity>
@@ -64,6 +65,7 @@
         </activity>
         <activity
             android:name=".PatientSearchActivity"
+            android:windowSoftInputMode="stateHidden"
             android:screenOrientation="landscape"
             android:label="@string/title_activity_patient_search">
         </activity>

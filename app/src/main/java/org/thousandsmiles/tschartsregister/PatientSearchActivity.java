@@ -28,6 +28,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -88,6 +89,14 @@ public class PatientSearchActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        final View root = getWindow().getDecorView().getRootView();
+        root.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                goImmersive();
+            }
+        });
 
         m_sess.clearHeadShotCache();
         m_sess.setPhotoPath("");
@@ -462,16 +471,37 @@ public class PatientSearchActivity extends AppCompatActivity {
         Button button = (Button) findViewById(R.id.patient_search_button);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-            EditText t = (EditText) findViewById(R.id.patient_search);
-            String searchTerm = t.getText().toString();
-            getMatchingPatients(searchTerm);
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.RESULT_UNCHANGED_SHOWN);
+                EditText t = (EditText) findViewById(R.id.patient_search);
+                String searchTerm = t.getText().toString();
+                getMatchingPatients(searchTerm);
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.RESULT_UNCHANGED_SHOWN);
+                goImmersive();
             }
 
         });
         m_context = this;
         m_activity = this;
+    }
+
+    /* see also  https://stackoverflow.com/questions/24187728/sticky-immersive-mode-disabled-after-soft-keyboard-shown */
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) {
+            goImmersive();
+        }
+    }
+
+    public void goImmersive() {
+        View v1 = getWindow().getDecorView().getRootView();
+        v1.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
     }
 }
 
