@@ -20,6 +20,7 @@ package org.thousandsmiles.tschartsregister;
 import android.content.Context;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -135,6 +136,7 @@ public class MedicationsREST extends RESTful {
         String url = String.format("http://%s:%s/tscharts/v1/medications/", getIP(), getPort());
 
         AuthJSONArrayRequest request = new AuthJSONArrayRequest(url, null, new GetMedicationsResponseListener(), new ErrorListener());
+        request.setRetryPolicy(new DefaultRetryPolicy(getTimeoutInMillis(), getRetries(), DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         queue.add((JsonArrayRequest) request);
 

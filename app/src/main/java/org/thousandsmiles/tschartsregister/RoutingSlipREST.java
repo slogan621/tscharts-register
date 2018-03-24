@@ -20,6 +20,7 @@ package org.thousandsmiles.tschartsregister;
 import android.content.Context;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -143,6 +144,7 @@ public class RoutingSlipREST extends RESTful {
         String url = String.format("http://%s:%s/tscharts/v1/routingslip?patient=%d&clinic=%d", getIP(), getPort(), patientId, clinicId);
 
         RoutingSlipREST.AuthJSONObjectRequest request = new RoutingSlipREST.AuthJSONObjectRequest(Request.Method.GET, url, null,  new RoutingSlipREST.GetRoutingSlipResponseListener(), new RoutingSlipREST.ErrorListener());
+        request.setRetryPolicy(new DefaultRetryPolicy(getTimeoutInMillis(), getRetries(), DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         queue.add((JsonObjectRequest) request);
 
@@ -171,6 +173,7 @@ public class RoutingSlipREST extends RESTful {
         String url = String.format("http://%s:%s/tscharts/v1/routingslip/", getIP(), getPort());
 
         RoutingSlipREST.AuthJSONObjectRequest request = new RoutingSlipREST.AuthJSONObjectRequest(Request.Method.POST, url, data, new PostResponseListener(), new ErrorListener());
+        request.setRetryPolicy(new DefaultRetryPolicy(getTimeoutInMillis(), getRetries(), DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         queue.add((JsonObjectRequest) request);
 

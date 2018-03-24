@@ -46,7 +46,7 @@ public class SessionSingleton {
     private MedicalHistory m_patientMedicalHistory = null;
     private JSONObject m_routingSlipEntryResponse = null;
     private JSONArray m_patientSearchResults = null;
-    private int m_clinicId;
+    private int m_clinicId = -1;
     private PatientData m_newPatientData = null; // only if m_isNewPatient is true
     private HashMap<Integer, PatientData> m_patientData = new HashMap<Integer, PatientData>();
     private HashMap<Integer, ReturnToClinic> m_returnToClinicData = new HashMap<Integer, ReturnToClinic>();
@@ -60,15 +60,37 @@ public class SessionSingleton {
     private ArrayList<String> m_medicationsList = new ArrayList<String>();
     private ArrayList<String> m_mexicanStates = new ArrayList<String>();
     private ArrayList<Integer> m_returnToClinics = new ArrayList<Integer>();
+    private ArrayList<HeadshotImage> m_headshotImages = new ArrayList<HeadshotImage>();
     private Registration m_registration = new Registration();
     private int m_patientId;
     private boolean m_isNewPatient = false;
     private String m_photoPath = "";
     private File m_storageDir = null;
+    private int m_headshotTag = 676;
+    private ArrayList<HeadshotImage> m_headshotJobs = new ArrayList<HeadshotImage>();
     private ConcurrentHashMap<Integer, String> m_headshotIdToPath = new ConcurrentHashMap<Integer, String>();
+
+    int getHeadshotTag()
+    {
+        return m_headshotTag;
+    }
 
     void setStorageDir(Activity activity) {
         m_storageDir = activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+    }
+
+    void addHeadshotJob(HeadshotImage hs)
+    {
+        m_headshotJobs.add(hs);
+    }
+
+    void startNextHeadshotJob()
+    {
+        HeadshotImage hs;
+        if (m_headshotJobs.size() > 0) {
+            hs = m_headshotJobs.remove(0);
+            hs.start();
+        }
     }
 
     void clearHeadShotCache() {
@@ -77,6 +99,20 @@ public class SessionSingleton {
 
     void addHeadShotPath(int id, String path) {
         m_headshotIdToPath.put(id, path);
+    }
+
+    void addHeadshotImage(HeadshotImage o)
+    {
+      m_headshotImages.add(o);
+    }
+
+    void cancelHeadshotImages()
+    {
+        m_headshotJobs.clear();
+        for (int i = 0; i < m_headshotImages.size(); i++) {
+            m_headshotImages.get(i).cancelPendingRequest(SessionSingleton.getInstance().getHeadshotTag());
+        }
+        m_headshotImages.clear();
     }
 
     void removeHeadShotPath(int id) {

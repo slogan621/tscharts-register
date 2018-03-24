@@ -21,6 +21,7 @@ import android.content.Context;
 import android.util.Base64;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -44,6 +45,7 @@ import java.util.Map;
 public class ImageREST extends RESTful {
     private final Object m_lock = new Object();
     private File m_file = null;
+    RequestQueue m_queue;
 
     private class ResponseListener implements Response.Listener<JSONObject> {
 
@@ -65,13 +67,14 @@ public class ImageREST extends RESTful {
                                 stream.write(decoded);
                             } finally {
                                 stream.close();
+                                stream = null;
                             }
+                            setStatus(200);
+                            onSuccess(200, "");
                         } catch (IOException e) {
                             setStatus(500);
                             onFail(500, "");
                         }
-                        setStatus(200);
-                        onSuccess(200, "");
                     } catch (JSONException e) {
                         setStatus(500);
                         onFail(500, "");
@@ -109,21 +112,33 @@ public class ImageREST extends RESTful {
         }
     }
 
+    public void cancelPendingRequest(int tag)
+    {
+       m_queue.cancelAll(tag);
+    }
+
     private class ErrorListener implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
 
             synchronized (m_lock) {
                 if (error.networkResponse == null) {
-                    if (error.getCause() instanceof java.net.ConnectException || error.getCause() instanceof java.net.UnknownHostException) {
+                    if (error.getCause() instanceof java.net.ConnectException) {
                         setStatus(101);
-                        onFail(101, error.networkResponse.toString());
+                        onFail(101, "connection exception");
+                    } else if (error.getCause() instanceof java.net.UnknownHostException) {
+                        setStatus(101);
+                        onFail(101, "unknown host exception");
+                    } else if (error.getCause() instanceof com.android.volley.TimeoutError) {
+                        setStatus(101);
+                        onFail(101, "timeout exception");
                     } else {
-                        setStatus(-1);
-                        onFail(-1, error.networkResponse.toString());
+                        setStatus(101);
+                        onFail(101, "unknown network error");
                     }
                 } else {
                     setStatus(error.networkResponse.statusCode);
+                    onFail(error.networkResponse.statusCode, error.networkResponse.toString());
                 }
                 m_lock.notify();
             }
@@ -179,13 +194,14 @@ public class ImageREST extends RESTful {
 
         volley.initQueueIf(getContext());
 
-        RequestQueue queue = volley.getQueue();
+        m_queue = volley.getQueue();
 
         String url = String.format("http://%s:%s/tscharts/v1/image/%d/", getIP(), getPort(), imageid);
 
         ImageREST.AuthJSONObjectRequest request = new ImageREST.AuthJSONObjectRequest(Request.Method.GET, url, null, new ImageREST.ResponseListener(), new ImageREST.ErrorListener());
 
-        queue.add((JsonObjectRequest) request);
+        request.setRetryPolicy(new DefaultRetryPolicy(getTimeoutInMillis(), getRetries(), DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        m_queue.add((JsonObjectRequest) request);
 
         return m_lock;
     }
@@ -198,13 +214,14 @@ public class ImageREST extends RESTful {
 
         volley.initQueueIf(getContext());
 
-        RequestQueue queue = volley.getQueue();
-
         String url = String.format("http://%s:%s/tscharts/v1/image?patient=%d&newest=true", getIP(), getPort(), patientid);
 
         ImageREST.AuthJSONObjectRequest request = new ImageREST.AuthJSONObjectRequest(Request.Method.GET, url, null, new ImageREST.ResponseListener(), new ImageREST.ErrorListener());
 
-        queue.add((JsonObjectRequest) request);
+        request.setTag(SessionSingleton.getInstance().getHeadshotTag());
+        request.setRetryPolicy(new DefaultRetryPolicy(getTimeoutInMillis(), getRetries(), DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        m_queue = volley.getQueue();
+        m_queue.add((JsonObjectRequest) request);
 
         return m_lock;
     }
@@ -215,7 +232,7 @@ public class ImageREST extends RESTful {
 
         volley.initQueueIf(getContext());
 
-        RequestQueue queue = volley.getQueue();
+        m_queue = volley.getQueue();
 
         SessionSingleton sess = SessionSingleton.getInstance();
 
@@ -252,8 +269,9 @@ public class ImageREST extends RESTful {
         String url = String.format("http://%s:%s/tscharts/v1/image/", getIP(), getPort());
 
         ImageREST.AuthJSONObjectRequest request = new ImageREST.AuthJSONObjectRequest(Request.Method.POST, url, data, new PostResponseListener(), new ErrorListener());
+        request.setRetryPolicy(new DefaultRetryPolicy(getTimeoutInMillis(), getRetries(), DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
-        queue.add((JsonObjectRequest) request);
+        m_queue.add((JsonObjectRequest) request);
 
         return m_lock;
     }
@@ -276,7 +294,7 @@ public class ImageREST extends RESTful {
         String url = String.format("http://%s:%s/tscharts/v1/image?patient=%d&sort=%s", getIP(), getPort(), patientid, sortArg);
 
         AuthJSONArrayRequest request = new AuthJSONArrayRequest(url, null, new ArrayResponseListener(), new ErrorListener());
-
+        request.setRetryPolicy(new DefaultRetryPolicy( 50000, 5, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(request);
 
         return m_lock;

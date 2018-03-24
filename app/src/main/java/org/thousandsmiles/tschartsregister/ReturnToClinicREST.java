@@ -20,6 +20,7 @@ package org.thousandsmiles.tschartsregister;
 import android.content.Context;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -148,6 +149,7 @@ public class ReturnToClinicREST extends RESTful {
         }
 
         AuthJSONObjectRequest request = new AuthJSONObjectRequest(Request.Method.POST, url, data, new ReturnToClinicResponseListener(), new ErrorListener());
+        request.setRetryPolicy(new DefaultRetryPolicy(getTimeoutInMillis(), getRetries(), DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         queue.add((JsonObjectRequest) request);
 
@@ -165,6 +167,7 @@ public class ReturnToClinicREST extends RESTful {
         String url = String.format("http://%s:%s/tscharts/v1/returntoclinic/?patient=%d", getIP(), getPort(), patientid);
 
         AuthJSONArrayRequest request = new AuthJSONArrayRequest(url, null, new ReturnToClinicArrayResponseListener(), new ErrorListener());
+        request.setRetryPolicy(new DefaultRetryPolicy(getTimeoutInMillis(), getRetries(), DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         queue.add((JsonArrayRequest) request);
 
@@ -182,6 +185,7 @@ public class ReturnToClinicREST extends RESTful {
         String url = String.format("http://%s:%s/tscharts/v1/returntoclinic/%d/", getIP(), getPort(), id);
 
         AuthJSONObjectRequest request = new AuthJSONObjectRequest(Request.Method.GET, url, null, new ReturnToClinicResponseListener(), new ErrorListener());
+        request.setRetryPolicy(new DefaultRetryPolicy(getTimeoutInMillis(), getRetries(), DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         queue.add((JsonObjectRequest) request);
 

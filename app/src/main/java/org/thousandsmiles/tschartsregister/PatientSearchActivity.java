@@ -97,85 +97,61 @@ public class PatientSearchActivity extends AppCompatActivity {
                 goImmersive();
             }
         });
+    }
 
-        m_sess.clearHeadShotCache();
-        m_sess.setPhotoPath("");
-        final ClinicREST clinicREST = new ClinicREST(m_context);
-        final Object lock;
+    private void ClearSearchResultTable()
+    {
+        TableLayout layout = (TableLayout) findViewById(R.id.namestablelayout);
 
-        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH) + 1;
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        if (layout != null) {
+            int count = layout.getChildCount();
+            for (int i = 0; i < count; i++) {
+                View child = layout.getChildAt(i);
+                if (child instanceof TableRow) ((ViewGroup) child).removeAllViews();
+            }
+        }
+    }
 
-        lock = clinicREST.getClinicData(year, month, day);
-
-        final Thread thread = new Thread() {
+    private void getMexicanStates() {
+        new Thread(new Runnable() {
             public void run() {
-            synchronized (lock) {
-                // we loop here in case of race conditions or spurious interrupts
-                while (true) {
-                    try {
-                        lock.wait();
-                        break;
-                    } catch (InterruptedException e) {
-                        continue;
-                    }
-                }
-            }
+                m_sess.getMexicanStates();
+            };
+        }).start();
+    }
 
-            SessionSingleton data = SessionSingleton.getInstance();
-            int status = clinicREST.getStatus();
-            if (status == 101) {
-                PatientSearchActivity.this.runOnUiThread(new Runnable() {
-                    public void run() {
-                        Toast.makeText(getApplicationContext(), R.string.error_unable_to_connect, Toast.LENGTH_LONG).show();
-                    }
-                });
+    private void getStations() {
+        new Thread(new Runnable() {
+            public void run() {
+                m_sess.updateStationData();
+            };
+        }).start();
+    }
 
-            } else if (status == 400) {
-                PatientSearchActivity.this.runOnUiThread(new Runnable() {
-                    public void run() {
-                        Toast.makeText(getApplicationContext(), R.string.error_internal_bad_request, Toast.LENGTH_LONG).show();
-                    }
-                });
-            } else if (status == 404) {
-                PatientSearchActivity.this.runOnUiThread(new Runnable() {
-                    public void run() {
-                        Toast.makeText(getApplicationContext(), R.string.error_clinic_not_found_date, Toast.LENGTH_LONG).show();
-                    }
-                });
-            } else if (status == 500) {
-                PatientSearchActivity.this.runOnUiThread(new Runnable() {
-                    public void run() {
-                        Toast.makeText(getApplicationContext(), R.string.error_internal_error, Toast.LENGTH_LONG).show();
-                    }
-                });
-            } else if (status != 200){
-                PatientSearchActivity.this.runOnUiThread(new Runnable() {
-                    public void run() {
-                        Toast.makeText(getApplicationContext(), R.string.error_unknown, Toast.LENGTH_LONG).show();
-                    }
-                });
-            }
-            if (status != 200) {
-                finish();
-            }
-            }
-        };
-        thread.start();
 
+    private void HideSearchResultTable()
+    {
+       View v = (View) findViewById(R.id.namestablelayout);
+       if (v != null) {
+           v.setVisibility(View.GONE);
+       }
+    }
+
+    private void ShowSearchResultTable()
+    {
+        View v = (View) findViewById(R.id.namestablelayout);
+        if (v != null) {
+            v.setVisibility(View.VISIBLE);
+        }
     }
 
     private void LayoutSearchResults() {
         TableLayout layout = (TableLayout) findViewById(R.id.namestablelayout);
         TableRow row = null;
+        int count;
 
-        int count = layout.getChildCount();
-        for (int i = 0; i < count; i++) {
-            View child = layout.getChildAt(i);
-            if (child instanceof TableRow) ((ViewGroup) child).removeAllViews();
-        }
+        ClearSearchResultTable();
+        ShowSearchResultTable();
 
         LinearLayout btnLO = new LinearLayout(this);
 
@@ -202,30 +178,29 @@ public class PatientSearchActivity extends AppCompatActivity {
 
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(m_context);
-                alertDialogBuilder.setMessage(m_activity.getString(R.string.question_register_new_patient));
-                alertDialogBuilder.setPositiveButton(R.string.button_yes,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface arg0, int arg1) {
-                                m_sess.setIsNewPatient(true);
-                                m_sess.resetNewPatientObjects();
-                                Intent intent = new Intent(m_activity, CategorySelectorActivity.class);
-                                startActivity(intent);
-                                finish();
-                            }
-                        });
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(m_context);
+            alertDialogBuilder.setMessage(m_activity.getString(R.string.question_register_new_patient));
+            alertDialogBuilder.setPositiveButton(R.string.button_yes,
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface arg0, int arg1) {
+                            m_sess.setIsNewPatient(true);
+                            m_sess.resetNewPatientObjects();
+                            Intent intent = new Intent(m_activity, CategorySelectorActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                    });
 
-                alertDialogBuilder.setNegativeButton(R.string.button_no,new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        //Toast.makeText(PatientSearchActivity.this, R.string.msg_select_another_category,Toast.LENGTH_LONG).show();
-                    }
-                });
+            alertDialogBuilder.setNegativeButton(R.string.button_no,new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    //Toast.makeText(PatientSearchActivity.this, R.string.msg_select_another_category,Toast.LENGTH_LONG).show();
+                }
+            });
 
-                AlertDialog alertDialog = alertDialogBuilder.create();
-                alertDialog.show();
-
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
             }
         });
 
@@ -306,11 +281,13 @@ public class PatientSearchActivity extends AppCompatActivity {
             button.setTag(value);
 
             HeadshotImage headshot  = new HeadshotImage();
+            m_sess.addHeadshotImage(headshot);
             headshot.setActivity(this);
             headshot.setImageView(button);
             Thread t = headshot.getImage(id);
-            m_sess.addHeadShotPath(id, headshot.getImageFileAbsolutePath());
-            t.start();
+            m_sess.addHeadshotJob(headshot);
+            //m_sess.addHeadShotPath(id, headshot.getImageFileAbsolutePath());
+            //t.start();
 
             button.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
@@ -349,6 +326,7 @@ public class PatientSearchActivity extends AppCompatActivity {
                 row.addView(btnLO);
             }
         }
+        m_sess.startNextHeadshotJob();
     }
 
     private Date isDateString(String s) {
@@ -379,30 +357,136 @@ public class PatientSearchActivity extends AppCompatActivity {
 
     private void getMatchingPatients(final String searchTerm)
     {
-        // analyze search term, looking for DOB string, gender, or name. Then, search on
-        // each until a non-zero match is returned
+        // analyze search term, looking for DOB string, gender, or name. Then, search.
 
         ArrayList<Integer> ret = new ArrayList<Integer>();
 
         m_sess.clearSearchResultData();
+        m_sess.setIsNewPatient(false);
 
         final Date d = isDateString(searchTerm);
         new Thread(new Runnable() {
             public void run() {
-                final PatientREST x = new PatientREST(getApplicationContext());
+            final PatientREST x = new PatientREST(getApplicationContext());
 
-                final Object lock;
+            final Object lock;
 
-                if (d != null) {
-                    lock = x.findPatientsByDOB(d);
-                } else if (searchTerm.length() > 0) {
-                    lock = x.findPatientsByName(searchTerm);
-                } else {
-                    lock = x.getAllPatientData();
+            if (d != null) {
+                lock = x.findPatientsByDOB(d);
+            } else if (searchTerm.length() > 0) {
+                lock = x.findPatientsByName(searchTerm);
+            } else {
+                lock = x.getAllPatientData();
+            }
+
+            Thread thread = new Thread(){
+                public void run() {
+                synchronized (lock) {
+                    // we loop here in case of race conditions or spurious interrupts
+                    while (true) {
+                        try {
+                            lock.wait();
+                            break;
+                        } catch (InterruptedException e) {
+                            continue;
+                        }
+                    }
                 }
 
-                Thread thread = new Thread(){
+                if (x.getStatus() == 200) {
+                    m_sess.getPatientSearchResultData();
+                    PatientSearchActivity.this.runOnUiThread(new Runnable() {
+                        public void run() {
+                        LayoutSearchResults();
+                        Button button = (Button) findViewById(R.id.patient_search_button);
+                        button.setEnabled(true);
+                        }
+                    });
+                    return;
+                } else if (x.getStatus() == 101) {
+                    PatientSearchActivity.this.runOnUiThread(new Runnable() {
+                        public void run() {
+                        Toast.makeText(getApplicationContext(), R.string.error_unable_to_connect, Toast.LENGTH_LONG).show();
+                        }
+                    });
+                } else if (x.getStatus() == 400) {
+                    PatientSearchActivity.this.runOnUiThread(new Runnable() {
+                        public void run() {
+                        Toast.makeText(getApplicationContext(), R.string.error_internal_bad_request, Toast.LENGTH_LONG).show();
+                        }
+                    });
+                } else if (x.getStatus() == 500) {
+                    PatientSearchActivity.this.runOnUiThread(new Runnable() {
+                        public void run() {
+                        Toast.makeText(getApplicationContext(), R.string.error_internal_error, Toast.LENGTH_LONG).show();
+                        }
+                    });
+                } else if (x.getStatus() == 404) {
+                    PatientSearchActivity.this.runOnUiThread(new Runnable() {
+                        public void run() {
+                        LayoutSearchResults();
+                        Toast.makeText(getApplicationContext(), R.string.error_no_matching_patients_found, Toast.LENGTH_LONG).show();
+                        }
+                    });
+                } else {
+                    PatientSearchActivity.this.runOnUiThread(new Runnable() {
+                        public void run() {
+                        Toast.makeText(getApplicationContext(), R.string.error_unknown, Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+                PatientSearchActivity.this.runOnUiThread(new Runnable() {
                     public void run() {
+                        Button button = (Button) findViewById(R.id.patient_search_button);
+                        button.setEnabled(true);
+                    }
+                });
+                }
+            };
+            thread.start();
+            }
+        }).start();
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        setContentView(R.layout.activity_patient_search);
+
+        final Button button = (Button) findViewById(R.id.patient_search_button);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                EditText t = (EditText) findViewById(R.id.patient_search);
+                String searchTerm = t.getText().toString();
+                button.setEnabled(false);
+                m_sess.cancelHeadshotImages();
+                HideSearchResultTable();
+                getMatchingPatients(searchTerm);
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.RESULT_UNCHANGED_SHOWN);
+                goImmersive();
+            }
+
+        });
+        m_context = this;
+        m_activity = this;
+        m_sess.clearHeadShotCache();
+        m_sess.setPhotoPath("");
+
+        if (m_sess.getClinicId() == -1) {
+            final ClinicREST clinicREST = new ClinicREST(m_context);
+            final Object lock;
+
+            Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH) + 1;
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+            lock = clinicREST.getClinicData(year, month, day);
+
+            final Thread thread = new Thread() {
+                public void run() {
                     synchronized (lock) {
                         // we loop here in case of race conditions or spurious interrupts
                         while (true) {
@@ -415,73 +499,56 @@ public class PatientSearchActivity extends AppCompatActivity {
                         }
                     }
 
-                    if (x.getStatus() == 200) {
-                        m_sess.getPatientSearchResultData();
-                        PatientSearchActivity.this.runOnUiThread(new Runnable() {
-                            public void run() {
-                                LayoutSearchResults();
-                            }
-                        });
-                        return;
-                    } else if (x.getStatus() == 101) {
+                    SessionSingleton data = SessionSingleton.getInstance();
+                    int status = clinicREST.getStatus();
+                    if (status == 101) {
                         PatientSearchActivity.this.runOnUiThread(new Runnable() {
                             public void run() {
                                 Toast.makeText(getApplicationContext(), R.string.error_unable_to_connect, Toast.LENGTH_LONG).show();
                             }
                         });
-                    } else if (x.getStatus() == 400) {
+
+                    } else if (status == 400) {
                         PatientSearchActivity.this.runOnUiThread(new Runnable() {
                             public void run() {
                                 Toast.makeText(getApplicationContext(), R.string.error_internal_bad_request, Toast.LENGTH_LONG).show();
                             }
                         });
-                    } else if (x.getStatus() == 500) {
+                    } else if (status == 404) {
+                        PatientSearchActivity.this.runOnUiThread(new Runnable() {
+                            public void run() {
+                                Toast.makeText(getApplicationContext(), R.string.error_clinic_not_found_date, Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    } else if (status == 500) {
                         PatientSearchActivity.this.runOnUiThread(new Runnable() {
                             public void run() {
                                 Toast.makeText(getApplicationContext(), R.string.error_internal_error, Toast.LENGTH_LONG).show();
                             }
                         });
-                    } else if (x.getStatus() == 404) {
-                        PatientSearchActivity.this.runOnUiThread(new Runnable() {
-                            public void run() {
-                                LayoutSearchResults();
-                                Toast.makeText(getApplicationContext(), R.string.error_no_matching_patients_found, Toast.LENGTH_LONG).show();
-                            }
-                        });
-                    } else {
+                    } else if (status != 200) {
                         PatientSearchActivity.this.runOnUiThread(new Runnable() {
                             public void run() {
                                 Toast.makeText(getApplicationContext(), R.string.error_unknown, Toast.LENGTH_LONG).show();
                             }
                         });
+                    } else {
+                        getMexicanStates();
+                        getStations();
+                        if (m_sess.updateCategoryData() == false) {
+                            PatientSearchActivity.this.runOnUiThread(new Runnable() {
+                                public void run() {
+                                    Toast.makeText(getApplicationContext(), R.string.error_unable_to_get_category_data, Toast.LENGTH_LONG).show();
+                                }
+                            });
+                        } else {
+                            m_sess.initCategoryNameToSelectorMap();
+                        }
                     }
-                    }
-                };
-                thread.start();
-            }
-        }).start();
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        setContentView(R.layout.activity_patient_search);
-
-        Button button = (Button) findViewById(R.id.patient_search_button);
-        button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                EditText t = (EditText) findViewById(R.id.patient_search);
-                String searchTerm = t.getText().toString();
-                getMatchingPatients(searchTerm);
-                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.RESULT_UNCHANGED_SHOWN);
-                goImmersive();
-            }
-
-        });
-        m_context = this;
-        m_activity = this;
+                }
+            };
+            thread.start();
+        }
     }
 
     /* see also  https://stackoverflow.com/questions/24187728/sticky-immersive-mode-disabled-after-soft-keyboard-shown */

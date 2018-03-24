@@ -20,6 +20,7 @@ package org.thousandsmiles.tschartsregister;
 import android.content.Context;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -143,6 +144,7 @@ public class RoutingSlipEntryREST extends RESTful {
         }
 
         RoutingSlipEntryREST.AuthJSONObjectRequest request = new RoutingSlipEntryREST.AuthJSONObjectRequest(Request.Method.PUT, url, data,  new RoutingSlipEntryREST.UpdateRoutingSlipEntryResponseListener(), new RoutingSlipEntryREST.ErrorListener());
+        request.setRetryPolicy(new DefaultRetryPolicy(getTimeoutInMillis(), getRetries(), DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         queue.add((JsonObjectRequest) request);
 
@@ -169,6 +171,7 @@ public class RoutingSlipEntryREST extends RESTful {
         }
 
         RoutingSlipEntryREST.AuthJSONObjectRequest request = new RoutingSlipEntryREST.AuthJSONObjectRequest(Request.Method.PUT, url, data,  new RoutingSlipEntryREST.UpdateRoutingSlipEntryResponseListener(), new RoutingSlipEntryREST.ErrorListener());
+        request.setRetryPolicy(new DefaultRetryPolicy(getTimeoutInMillis(), getRetries(), DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         queue.add((JsonObjectRequest) request);
 
@@ -185,8 +188,8 @@ public class RoutingSlipEntryREST extends RESTful {
 
         String url = String.format("http://%s:%s/tscharts/v1/routingslipentry/%d/", getIP(), getPort(), entryId);
 
-
         RoutingSlipEntryREST.AuthJSONObjectRequest request = new RoutingSlipEntryREST.AuthJSONObjectRequest(Request.Method.DELETE, url, null,  new RoutingSlipEntryREST.UpdateRoutingSlipEntryResponseListener(), new RoutingSlipEntryREST.ErrorListener());
+        request.setRetryPolicy(new DefaultRetryPolicy(getTimeoutInMillis(), getRetries(), DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         queue.add((JsonObjectRequest) request);
 
@@ -203,8 +206,8 @@ public class RoutingSlipEntryREST extends RESTful {
 
         String url = String.format("http://%s:%s/tscharts/v1/routingslipentry/%d/", getIP(), getPort(), entryId);
 
-
         RoutingSlipEntryREST.AuthJSONObjectRequest request = new RoutingSlipEntryREST.AuthJSONObjectRequest(Request.Method.GET, url, null,  new RoutingSlipEntryREST.GetRoutingSlipEntryResponseListener(), new RoutingSlipEntryREST.ErrorListener());
+        request.setRetryPolicy(new DefaultRetryPolicy(getTimeoutInMillis(), getRetries(), DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         queue.add((JsonObjectRequest) request);
 
@@ -232,6 +235,7 @@ public class RoutingSlipEntryREST extends RESTful {
         }
 
         RoutingSlipEntryREST.AuthJSONObjectRequest request = new RoutingSlipEntryREST.AuthJSONObjectRequest(Request.Method.POST, url, data,  new RoutingSlipEntryREST.UpdateRoutingSlipEntryResponseListener(), new RoutingSlipEntryREST.ErrorListener());
+        request.setRetryPolicy(new DefaultRetryPolicy(getTimeoutInMillis(), getRetries(), DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         queue.add((JsonObjectRequest) request);
 

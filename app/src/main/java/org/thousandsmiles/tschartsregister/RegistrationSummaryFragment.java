@@ -90,7 +90,7 @@ public class RegistrationSummaryFragment extends Fragment {
             }
         } else {
             File file = new File(imagePath);
-            Picasso.with(getContext()).load(file).into(m_imageView);
+            Picasso.with(getContext()).load(file).memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).into(m_imageView);
         }
 
         TextView t = (TextView) getView().findViewById(R.id.value_summary_name);
@@ -164,11 +164,11 @@ public class RegistrationSummaryFragment extends Fragment {
                 r.setVisibility(View.GONE);
             }
         } else {
-                String name = m_sess.getCategoryName();
-                ImageView v  = (ImageView) getView().findViewById(R.id.value_summary_category);
-                v.setImageResource(m_sess.getCategorySelector(name));
-                t = (TextView) getView().findViewById(R.id.value_summary_category_name);
-                t.setText(name);
+            String name = m_sess.getCategoryName();
+            ImageView v  = (ImageView) getView().findViewById(R.id.value_summary_category);
+            v.setImageResource(m_sess.getCategorySelector(name));
+            t = (TextView) getView().findViewById(R.id.value_summary_category_name);
+            t.setText(name);
         }
     }
 

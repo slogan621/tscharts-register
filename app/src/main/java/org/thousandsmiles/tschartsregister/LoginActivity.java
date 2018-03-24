@@ -248,7 +248,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                             }
 
                             if (x.getStatus() == 200) {
-
                                 Intent i = new Intent(LoginActivity.this, PatientSearchActivity.class);
                                 startActivity(i);
                                 finish();
@@ -373,7 +372,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
-
     }
 
     private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
@@ -418,7 +416,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             try {
                 LoginREST api = new LoginREST(getApplicationContext());
                 api.signIn(mEmail, mPassword);
-                // Simulate network access.
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
                 return false;

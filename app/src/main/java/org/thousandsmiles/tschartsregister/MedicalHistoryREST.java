@@ -20,6 +20,7 @@ package org.thousandsmiles.tschartsregister;
 import android.content.Context;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -162,6 +163,7 @@ public class MedicalHistoryREST extends RESTful {
         String url = String.format("http://%s:%s/tscharts/v1/medicalhistory/", getIP(), getPort());
 
         MedicalHistoryREST.AuthJSONObjectRequest request = new MedicalHistoryREST.AuthJSONObjectRequest(Request.Method.POST, url, data, new PostResponseListener(), new ErrorListener());
+        request.setRetryPolicy(new DefaultRetryPolicy(getTimeoutInMillis(), getRetries(), DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         queue.add((JsonObjectRequest) request);
 
@@ -179,6 +181,7 @@ public class MedicalHistoryREST extends RESTful {
         String url = String.format("http://%s:%s/tscharts/v1/medicalhistory/%d/", getIP(), getPort(), historyid);
 
         AuthJSONObjectRequest request = new AuthJSONObjectRequest(Request.Method.GET, url, null, new ResponseListener(), new ErrorListener());
+        request.setRetryPolicy(new DefaultRetryPolicy(getTimeoutInMillis(), getRetries(), DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         queue.add((JsonObjectRequest) request);
 
@@ -197,6 +200,7 @@ public class MedicalHistoryREST extends RESTful {
                                    getIP(), getPort(), clinicid, patientid);
 
         AuthJSONObjectRequest request = new AuthJSONObjectRequest(Request.Method.GET, url, null, new ResponseListener(), new ErrorListener());
+        request.setRetryPolicy(new DefaultRetryPolicy(getTimeoutInMillis(), getRetries(), DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         queue.add((JsonObjectRequest) request);
 
@@ -216,6 +220,7 @@ public class MedicalHistoryREST extends RESTful {
         String url = String.format("http://%s:%s/tscharts/v1/medicalhistory/%d/", getIP(), getPort(), mh.getId());
 
         AuthJSONObjectRequest request = new AuthJSONObjectRequest(Request.Method.PUT, url, data, new PutResponseListener(), new ErrorListener());
+        request.setRetryPolicy(new DefaultRetryPolicy(getTimeoutInMillis(), getRetries(), DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         queue.add((JsonObjectRequest) request);
 

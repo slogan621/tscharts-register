@@ -34,10 +34,19 @@ public class ImageDataReader {
     private int m_id;                               // id of resource in DB, e.g., patient ID
     private ImageReadyListener m_listener = null;   // callback on success or error
     private boolean m_isCached = false;             // image data is already cached in file
+    private ImageREST m_imageData;
 
     public ImageDataReader(Context context, int id) {
         m_context = context;
         m_id = id;
+    }
+
+    public void cancelPendingRequest(int tag)
+    {
+        if (m_imageData != null)
+        {
+            m_imageData.cancelPendingRequest(tag);
+        }
     }
 
     public String getImageFileAbsolutePath() {
@@ -69,14 +78,6 @@ public class ImageDataReader {
         return m_file;
     }
 
-    public void clear() {
-        if (m_file != null) {
-            m_file.delete();
-            m_file = null;
-        }
-        m_isCached = false;
-    }
-
     public void read(int id)
     {
         if (m_isCached && m_file != null) {
@@ -102,8 +103,8 @@ public class ImageDataReader {
                     m_listener.onImageError(500);
                 }
             } else if (Looper.myLooper() != Looper.getMainLooper()) {
-                final ImageREST imageData = new ImageREST(m_context);
-                Object lock = imageData.getMostRecentPatientImageData(id, m_file);
+                m_imageData = new ImageREST(m_context);
+                Object lock = m_imageData.getMostRecentPatientImageData(id, m_file);
 
                 synchronized (lock) {
                     // we loop here in case of race conditions or spurious interrupts
@@ -117,7 +118,7 @@ public class ImageDataReader {
                     }
                 }
 
-                int status = imageData.getStatus();
+                int status = m_imageData.getStatus();
                 if (status == 200) {
                     if (m_listener != null) {
                         m_listener.onImageRead(m_file);

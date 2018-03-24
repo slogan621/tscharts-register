@@ -20,6 +20,7 @@ package org.thousandsmiles.tschartsregister;
 import android.content.Context;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -127,6 +128,7 @@ public class LoginREST extends RESTful {
         }
 
         AuthJSONObjectRequest request = new AuthJSONObjectRequest(Request.Method.POST, url, data,  new SignonResponseListener(), new ErrorListener());
+        request.setRetryPolicy(new DefaultRetryPolicy(getTimeoutInMillis(), getRetries(), DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         queue.add((JsonObjectRequest) request);
 
@@ -146,6 +148,7 @@ public class LoginREST extends RESTful {
         JSONObject data = new JSONObject();
 
         AuthJSONObjectRequest request = new AuthJSONObjectRequest(Request.Method.POST, url, data,  new SignoffResponseListener(), new ErrorListener());
+        request.setRetryPolicy(new DefaultRetryPolicy(getTimeoutInMillis(), getRetries(), DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         queue.add((JsonObjectRequest) request);
 

@@ -1,6 +1,6 @@
 /*
- * (C) Copyright Syd Logan 2017
- * (C) Copyright Thousand Smiles Foundation 2017
+ * (C) Copyright Syd Logan 2017-2018
+ * (C) Copyright Thousand Smiles Foundation 2017-2018
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,8 @@ import java.util.ArrayList;
 public abstract class RESTful {
     private Context m_context;
     private int m_status;
+    private int m_timeout = 60000;  // Milliseconds
+    private int m_retries = 5;
     private ArrayList<RESTCompletionListener> m_listener = new ArrayList<RESTCompletionListener>();
 
     public void addListener(RESTCompletionListener o) {
@@ -42,6 +44,18 @@ public abstract class RESTful {
             x.onSuccess(code, message);
         }
     }
+
+    protected int getTimeoutInMillis()
+    {
+        return m_timeout;
+    }
+
+    protected int getRetries()
+    {
+        return m_retries;
+    }
+
+
 
     protected void onFail(int code, String message)
     {

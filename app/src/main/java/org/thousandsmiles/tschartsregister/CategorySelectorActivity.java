@@ -185,30 +185,6 @@ public class CategorySelectorActivity extends AppCompatActivity {
                 .commit();
     }
 
-    private void getMexicanStates() {
-        new Thread(new Runnable() {
-            public void run() {
-                m_sess.getMexicanStates();
-            };
-        }).start();
-    }
-
-    private void getStations() {
-        new Thread(new Runnable() {
-            public void run() {
-                m_sess.updateStationData();
-            };
-        }).start();
-    }
-
-    private void getReturnToClinicData() {
-        new Thread(new Runnable() {
-            public void run() {
-                m_sess.getReturnToClinics();
-            };
-        }).start();
-    }
-
     @Override
     protected void onResume() {
 
@@ -221,93 +197,7 @@ public class CategorySelectorActivity extends AppCompatActivity {
         });
 
         super.onResume();
-
-        final ClinicREST clinicREST = new ClinicREST(m_context);
-
-        final Object lock;
-
-        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH) + 1;
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-        lock = clinicREST.getClinicData(year, month, day);
-
-        final Thread thread = new Thread() {
-            public void run() {
-            synchronized (lock) {
-                // we loop here in case of race conditions or spurious interrupts
-                while (true) {
-                    try {
-                        lock.wait();
-                        break;
-                    } catch (InterruptedException e) {
-                        continue;
-                    }
-                }
-            }
-
-            SessionSingleton data = SessionSingleton.getInstance();
-            int status = clinicREST.getStatus();
-            if (status == 200) {
-                if (m_sess.updateCategoryData() == false) {
-                    CategorySelectorActivity.this.runOnUiThread(new Runnable() {
-                        public void run() {
-                            Toast.makeText(getApplicationContext(), R.string.error_unable_to_get_category_data, Toast.LENGTH_LONG).show();
-                        }
-                    });
-                } else {
-                    m_sess.initCategoryNameToSelectorMap();
-                    CategorySelectorActivity.this.runOnUiThread(new Runnable() {
-                        public void run() {
-                            LayoutCategoryGrid();
-                        }
-                    });
-                    /* go get the list of Mexican States for later use */
-                    getMexicanStates();
-                    /* and clinic stations too */
-                    getStations();
-                    if (m_sess.getIsNewPatient() == false) {
-                        getReturnToClinicData();
-                    }
-                }
-
-                return;
-            } else if (status == 101) {
-                CategorySelectorActivity.this.runOnUiThread(new Runnable() {
-                    public void run() {
-                    Toast.makeText(getApplicationContext(), R.string.error_unable_to_connect, Toast.LENGTH_LONG).show();
-                    }
-                });
-
-            } else if (status == 400) {
-                CategorySelectorActivity.this.runOnUiThread(new Runnable() {
-                    public void run() {
-                    Toast.makeText(getApplicationContext(), R.string.error_internal_bad_request, Toast.LENGTH_LONG).show();
-                    }
-                });
-            } else if (status == 404) {
-                CategorySelectorActivity.this.runOnUiThread(new Runnable() {
-                    public void run() {
-                    Toast.makeText(getApplicationContext(), R.string.error_clinic_not_found_date, Toast.LENGTH_LONG).show();
-                    }
-                });
-            } else if (status == 500) {
-                CategorySelectorActivity.this.runOnUiThread(new Runnable() {
-                    public void run() {
-                    Toast.makeText(getApplicationContext(), R.string.error_internal_error, Toast.LENGTH_LONG).show();
-                    }
-                });
-            } else {
-                CategorySelectorActivity.this.runOnUiThread(new Runnable() {
-                    public void run() {
-                    Toast.makeText(getApplicationContext(), R.string.error_unknown, Toast.LENGTH_LONG).show();
-                    }
-                });
-            }
-            }
-        };
-        thread.start();
+        LayoutCategoryGrid();
     }
 
     @Override

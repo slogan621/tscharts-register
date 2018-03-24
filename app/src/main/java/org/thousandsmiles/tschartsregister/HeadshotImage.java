@@ -21,6 +21,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 import java.io.File;
 
@@ -30,7 +32,7 @@ public class HeadshotImage implements ImageReadyListener {
     private Context m_context;
     private Activity m_activity;
     private ImageDataReader m_reader = null;
-    private Thread m_thread;
+    private Thread m_thread = null;
 
     void setImageView(ImageView imageView) {
         m_imageView = imageView;
@@ -50,6 +52,11 @@ public class HeadshotImage implements ImageReadyListener {
         return m_thread;
     }
 
+    void start()
+    {
+        m_thread.start();
+    }
+
     String getImageFileAbsolutePath()
     {
         String ret = null;
@@ -58,6 +65,14 @@ public class HeadshotImage implements ImageReadyListener {
             ret = m_reader.getImageFileAbsolutePath();
         }
         return ret;
+    }
+
+    public void cancelPendingRequest(int tag)
+    {
+        if (m_reader != null)
+        {
+            m_reader.cancelPendingRequest(tag);
+        }
     }
 
     void setActivity(Activity activity) {
@@ -75,7 +90,10 @@ public class HeadshotImage implements ImageReadyListener {
                 m_imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
                 m_imageView.setBackground(null);
                 m_imageView.setAdjustViewBounds(true);
-                Picasso.with(m_context).load(file).into(m_imageView);
+                Picasso.with(m_context).load(file).memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).into(m_imageView);
+                SessionSingleton sess = SessionSingleton.getInstance();
+                sess.addHeadShotPath(m_id, getImageFileAbsolutePath());
+                sess.startNextHeadshotJob();
 
                 //Picasso.with(m_context).load(file).fit().centerInside().into(m_imageView);
                 //p.with(m_context).load(file).into(m_imageView);
@@ -93,5 +111,7 @@ public class HeadshotImage implements ImageReadyListener {
                 }
             });
         }
+        SessionSingleton sess = SessionSingleton.getInstance();
+        sess.startNextHeadshotJob();
     }
 }

@@ -20,6 +20,7 @@ package org.thousandsmiles.tschartsregister;
 import android.content.Context;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -177,6 +178,7 @@ public class PatientREST extends RESTful {
         String url = String.format("http://%s:%s/tscharts/v1/patient/", getIP(), getPort());
 
         AuthJSONArrayRequest request = new AuthJSONArrayRequest(url, null, new ArrayResponseListener(), new ErrorListener());
+        request.setRetryPolicy(new DefaultRetryPolicy(getTimeoutInMillis(), getRetries(), DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         queue.add(request);
 
@@ -196,6 +198,7 @@ public class PatientREST extends RESTful {
         String url = String.format("http://%s:%s/tscharts/v1/patient/", getIP(), getPort());
 
         AuthJSONObjectRequest request = new AuthJSONObjectRequest(Request.Method.POST, url, data, new PostResponseListener(), new ErrorListener());
+        request.setRetryPolicy(new DefaultRetryPolicy(getTimeoutInMillis(), getRetries(), DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         queue.add((JsonObjectRequest) request);
 
@@ -213,6 +216,7 @@ public class PatientREST extends RESTful {
         String url = String.format("http://%s:%s/tscharts/v1/patient/%d/", getIP(), getPort(), patientid);
 
         AuthJSONObjectRequest request = new AuthJSONObjectRequest(Request.Method.GET, url, null, new ResponseListener(), new ErrorListener());
+        request.setRetryPolicy(new DefaultRetryPolicy(getTimeoutInMillis(), getRetries(), DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         queue.add((JsonObjectRequest) request);
 
@@ -237,6 +241,7 @@ public class PatientREST extends RESTful {
                 month, day, year);
 
         AuthJSONArrayRequest request = new AuthJSONArrayRequest(url, null, new ArrayResponseListener(), new ErrorListener());
+        request.setRetryPolicy(new DefaultRetryPolicy(getTimeoutInMillis(), getRetries(), DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         queue.add(request);
 
@@ -254,6 +259,7 @@ public class PatientREST extends RESTful {
         String url = String.format("http://%s:%s/tscharts/v1/patient?name=%s", getIP(), getPort(), name);
 
         AuthJSONArrayRequest request = new AuthJSONArrayRequest(url, null, new ArrayResponseListener(), new ErrorListener());
+        request.setRetryPolicy(new DefaultRetryPolicy(getTimeoutInMillis(), getRetries(), DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         queue.add(request);
 
@@ -273,6 +279,7 @@ public class PatientREST extends RESTful {
         String url = String.format("http://%s:%s/tscharts/v1/patient/%d/", getIP(), getPort(), pd.getId());
 
         AuthJSONObjectRequest request = new AuthJSONObjectRequest(Request.Method.PUT, url, data, new PutResponseListener(), new ErrorListener());
+        request.setRetryPolicy(new DefaultRetryPolicy(getTimeoutInMillis(), getRetries(), DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         queue.add((JsonObjectRequest) request);
 

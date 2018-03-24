@@ -42,6 +42,14 @@ public class RegisterDialogFragment extends DialogFragment {
         m_patientId = id;
     }
 
+    private void getReturnToClinicData() {
+        new Thread(new Runnable() {
+            public void run() {
+                m_sess.getReturnToClinics();
+            };
+        }).start();
+    }
+
     @Override
     public void onResume()
     {
@@ -98,11 +106,13 @@ public class RegisterDialogFragment extends DialogFragment {
                     .setPositiveButton(R.string.register_yes, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int id) {
+                            m_sess.cancelHeadshotImages();
                             m_sess.setPatientId(m_patientId);
-                            m_sess.setIsNewPatient(false);
+                            getReturnToClinicData();
                             m_sess.setPhotoPath(m_sess.getHeadShotPath(m_patientId));
                             Intent i = new Intent(getContext(), CategorySelectorActivity.class);
                             startActivity(i);
+                            getActivity().finish();
                             dialog.dismiss();
                         }
                     })
