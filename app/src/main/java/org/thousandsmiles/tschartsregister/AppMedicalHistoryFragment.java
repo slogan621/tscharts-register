@@ -968,6 +968,11 @@ public class AppMedicalHistoryFragment extends Fragment {
 
         mh = m_medicalHistory;
 
+        if (mh == null) {
+            mh = new MedicalHistory();
+            m_medicalHistory = mh;
+        }
+
         // Pregnancy
 
         sw = (Switch) m_view.findViewById(R.id.mother_alcohol);

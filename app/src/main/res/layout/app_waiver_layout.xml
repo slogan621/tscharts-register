@@ -34,6 +34,15 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"/>
 
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -77,6 +86,5 @@
             android:layout_gravity="left"
             android:text="@string/photo_acknowledgement"
             android:onClick="onWaiverPhotoClicked"/>
-
     </LinearLayout>
 </LinearLayout>

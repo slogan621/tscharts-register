@@ -17,10 +17,14 @@
 
 package org.thousandsmiles.tschartsregister;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -55,6 +59,8 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
     private AppWaiverFragment m_this = this;
     ArrayList<Integer> m_stations = null;
     boolean m_showSuccess = false;
+    private View m_view;
+    private View m_progressView;
 
     public enum RegistrationState {
         UPDATED_NOTHING,
@@ -146,6 +152,8 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
     }
 
     private void showSuccess() {
+
+        showProgress(false);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         builder.setTitle(m_activity.getString(R.string.title_successful_registration));
@@ -163,6 +171,35 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
         alert.show();
     }
 
+    /**
+     * Shows the progress UI and hides the login form.
+     */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+    private void showProgress(final boolean show) {
+
+        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
+        // for very easy animations. If available, use these APIs to fade-in
+        // the progress spinner.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+            m_progressView.animate().setDuration(shortAnimTime).alpha(
+                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                }
+            });
+
+            m_progressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            m_progressView.animate().setDuration(shortAnimTime).alpha(
+                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                }
+            });
+        }
+    }
+
     private void showFailure(int code, String msg) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
@@ -173,14 +210,21 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
         builder.setPositiveButton(m_activity.getString(R.string.button_ok), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
+                setRegisterButtonEnabled(true);
+                setBackButtonEnabled(true);
             }
         });
 
+        showProgress(false);
         AlertDialog alert = builder.create();
         alert.show();
+
     }
 
     public void handleRegisterButtonPress(View v) {
+        m_view = v;
+        m_progressView = (View) getActivity().findViewById(R.id.progress_bar);
+        //m_waiverContainer = (View) getActivity().findViewById(R.id.waiver_container);
         if (true) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
@@ -191,13 +235,17 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
 
             builder.setPositiveButton(m_activity.getString(R.string.button_yes), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
+                    setRegisterButtonEnabled(false);
+                    setBackButtonEnabled(false);
                     m_state = RegistrationState.UPDATED_NOTHING;
                     if (m_sess.getIsNewPatient() == true) {
                         m_sess.createNewPatient(m_this);
                     } else {
                         m_sess.updatePatientData(m_this, m_sess.getPatientId());
                     }
+                    showProgress(true);
                     dialog.dismiss();
+
                 }
             });
 
@@ -251,6 +299,12 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
     private void setRegisterButtonEnabled(boolean enable)
     {
         Button b = (Button) m_activity.findViewById(R.id.register_button);
+        b.setEnabled(enable);
+    }
+
+    private void setBackButtonEnabled(boolean enable)
+    {
+        Button b = (Button) m_activity.findViewById(R.id.back_button);
         b.setEnabled(enable);
     }
 
