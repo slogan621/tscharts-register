@@ -49,7 +49,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
-public class PatientSearchActivity extends AppCompatActivity {
+public class PatientSearchActivity extends AppCompatActivity implements ImageDisplayedListener {
 
     private Activity m_activity = this;
     private SessionSingleton m_sess = SessionSingleton.getInstance();
@@ -58,6 +58,27 @@ public class PatientSearchActivity extends AppCompatActivity {
     public void handleButtonPress(View v)
     {
         this.m_activity.finish();
+    }
+
+    public void onImageDisplayed(int imageId, String path)
+    {
+        SessionSingleton sess = SessionSingleton.getInstance();
+        sess.addHeadShotPath(imageId, path);
+        sess.startNextHeadshotJob();
+    }
+
+    public void onImageError(int imageId, String path, int errorCode)
+    {
+        if (errorCode != 404) {
+            m_activity.runOnUiThread(new Runnable() {
+                public void run() {
+                    Toast.makeText(m_activity, m_activity.getString(R.string.msg_unable_to_get_patient_headshot), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+        SessionSingleton.getInstance().removeHeadShotPath(imageId);
+        SessionSingleton sess = SessionSingleton.getInstance();
+        sess.startNextHeadshotJob();
     }
 
     @Override
@@ -284,8 +305,10 @@ public class PatientSearchActivity extends AppCompatActivity {
             m_sess.addHeadshotImage(headshot);
             headshot.setActivity(this);
             headshot.setImageView(button);
+            headshot.registerListener(this);
             Thread t = headshot.getImage(id);
             m_sess.addHeadshotJob(headshot);
+
             //m_sess.addHeadShotPath(id, headshot.getImageFileAbsolutePath());
             //t.start();
 

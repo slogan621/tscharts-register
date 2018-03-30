@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 import java.io.File;
+import java.util.ArrayList;
 
 public class HeadshotImage implements ImageReadyListener {
     private int m_id;
@@ -33,6 +34,25 @@ public class HeadshotImage implements ImageReadyListener {
     private Activity m_activity;
     private ImageDataReader m_reader = null;
     private Thread m_thread = null;
+    private ArrayList<ImageDisplayedListener> m_listener = new ArrayList<ImageDisplayedListener>();   // callback on success or error
+
+
+    private void sendOnImageDisplayed(int id, String path) {
+        for (int i = 0; i < m_listener.size(); i++) {
+            m_listener.get(i).onImageDisplayed(id, path);
+        }
+    }
+
+    private void sendOnImageError(int id, String path, int code) {
+        for (int i = 0; i < m_listener.size(); i++) {
+            m_listener.get(i).onImageError(id, path, code);
+        }
+    }
+
+    public void registerListener(ImageDisplayedListener listener)
+    {
+        m_listener.add(listener);
+    }
 
     void setImageView(ImageView imageView) {
         m_imageView = imageView;
@@ -91,9 +111,7 @@ public class HeadshotImage implements ImageReadyListener {
                 m_imageView.setBackground(null);
                 m_imageView.setAdjustViewBounds(true);
                 Picasso.with(m_context).load(file).memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).into(m_imageView);
-                SessionSingleton sess = SessionSingleton.getInstance();
-                sess.addHeadShotPath(m_id, getImageFileAbsolutePath());
-                sess.startNextHeadshotJob();
+                sendOnImageDisplayed(m_id, getImageFileAbsolutePath());
 
                 //Picasso.with(m_context).load(file).fit().centerInside().into(m_imageView);
                 //p.with(m_context).load(file).into(m_imageView);
@@ -103,15 +121,6 @@ public class HeadshotImage implements ImageReadyListener {
 
     @Override
     public void onImageError(int code) {
-        SessionSingleton.getInstance().removeHeadShotPath(m_id);
-        if (code != 404) {
-            m_activity.runOnUiThread(new Runnable() {
-                public void run() {
-                    Toast.makeText(m_activity, m_activity.getString(R.string.msg_unable_to_get_patient_headshot), Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-        SessionSingleton sess = SessionSingleton.getInstance();
-        sess.startNextHeadshotJob();
+        sendOnImageError(m_id, getImageFileAbsolutePath(), code);
     }
 }

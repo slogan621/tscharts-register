@@ -23,6 +23,7 @@ import android.os.Looper;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class ImageDataReader {
@@ -32,7 +33,7 @@ public class ImageDataReader {
     private File m_file = null;
     private String m_imageFileName = null;
     private int m_id;                               // id of resource in DB, e.g., patient ID
-    private ImageReadyListener m_listener = null;   // callback on success or error
+    private ArrayList<ImageReadyListener> m_listener = new ArrayList<ImageReadyListener>();   // callback on success or error
     private boolean m_isCached = false;             // image data is already cached in file
     private ImageREST m_imageData;
 
@@ -78,19 +79,26 @@ public class ImageDataReader {
         return m_file;
     }
 
+    private void onImageRead(File file) {
+        for (int i = 0; i < m_listener.size(); i++) {
+            m_listener.get(i).onImageRead(file);
+        }
+    }
+
+    private void onImageError(int code) {
+        for (int i = 0; i < m_listener.size(); i++) {
+            m_listener.get(i).onImageError(code);
+        }
+    }
+
     public void read(int id)
     {
         if (m_isCached && m_file != null) {
             // notify the listener, if registered
-
-            if (m_listener != null) {
-                m_listener.onImageRead(m_file);
-            }
+            onImageRead(m_file);
         } else {
             if (m_context == null) {
-                if (m_listener != null) {
-                    m_listener.onImageError(500);
-                }
+                onImageError(500);
             }
             if (m_file == null) {
                 try {
@@ -99,9 +107,7 @@ public class ImageDataReader {
                 }
             }
             if (m_file == null) {
-                if (m_listener != null) {
-                    m_listener.onImageError(500);
-                }
+                onImageError(500);
             } else if (Looper.myLooper() != Looper.getMainLooper()) {
                 m_imageData = new ImageREST(m_context);
                 Object lock = m_imageData.getMostRecentPatientImageData(id, m_file);
@@ -120,24 +126,18 @@ public class ImageDataReader {
 
                 int status = m_imageData.getStatus();
                 if (status == 200) {
-                    if (m_listener != null) {
-                        m_listener.onImageRead(m_file);
-                    }
+                    onImageRead(m_file);
                 } else {
-                    if (m_listener != null) {
-                        m_listener.onImageError(status);
-                    }
+                    onImageError(status);
                 }
             } else {
-                if (m_listener != null) {
-                    m_listener.onImageError(500);
-                }
+                onImageError(500);
             }
         }
     }
 
     public void registerListener(ImageReadyListener listener)
     {
-        m_listener = listener;
+        m_listener.add(listener);
     }
 }
