@@ -45,7 +45,7 @@
     <string name="title_medical_history">Historial médico</string>
 
     <string name="pregnancy">Embarazo</string>
-    <string name="mother_alcohol">">¿Consumió alcohol la madre durante el embarazo?</string>
+    <string name="mother_alcohol">¿Consumió alcohol la madre durante el embarazo?</string>
     <string name="pregnancy_duration">Duración del embarazo (meses)</string>
     <string name="pregnancy_smoke">¿Se llevó a cabo el embarazo en un ambiente donde se fuma?</string>
     <string name="pregnancy_complications">¿Hubo complicaciones con el embarazo?</string>
