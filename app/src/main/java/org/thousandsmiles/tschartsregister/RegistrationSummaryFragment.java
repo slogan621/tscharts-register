@@ -46,6 +46,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -93,47 +94,48 @@ public class RegistrationSummaryFragment extends Fragment {
             Picasso.with(getContext()).load(file).memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).into(m_imageView);
         }
 
-        TextView t = (TextView) getView().findViewById(R.id.value_summary_name);
         String middle = m_patientData.getMiddle();
         String first = m_patientData.getFirst();
         String flast = m_patientData.getFatherLast();
         String mlast = m_patientData.getMotherLast();
 
         String format = "";
+        TextView t = (TextView) getView().findViewById(R.id.value_summary_father_last_name);
 
-        if (first.length() > 0 || middle.length() > 0 || flast.length() > 0 || mlast.length() > 0) {
-
-            if (first.length() > 0) {
-                format = format.concat("%s");
-            } else {
-                format = format.concat("%s");
-            }
-
-            if (middle.length() > 0) {
-                format = format.concat(" %s");
-            } else {
-                format = format.concat("%s");
-            }
-
-            if (flast.length() > 0) {
-                format = format.concat(" %s");
-            } else {
-                format = format.concat("%s");
-            }
-
-            if (mlast.length() > 0) {
-                format = format.concat("-%s");
-            } else {
-                format = format.concat("%s");
-            }
-
-            t.setText(String.format(format,
-                    m_patientData.getFirst(),
-                    m_patientData.getMiddle(),
-                    m_patientData.getFatherLast(),
-                    m_patientData.getMotherLast()));
+        if (flast.length() > 0) {
+          t.setText(m_patientData.getFatherLast());
         } else {
-            TableRow r = (TableRow) getView().findViewById(R.id.summary_name_row);
+            TableRow r = (TableRow) getView().findViewById(R.id.summary_father_last_name_row);
+            if (r != null) {
+                r.setVisibility(View.GONE);
+            }
+        }
+
+        t = (TextView) getView().findViewById(R.id.value_summary_mother_last_name);
+        if (mlast.length() > 0) {
+              t.setText(m_patientData.getMotherLast());
+        } else {
+            TableRow r = (TableRow) getView().findViewById(R.id.summary_mother_last_name_row);
+            if (r != null) {
+                r.setVisibility(View.GONE);
+            }
+        }
+
+        t = (TextView) getView().findViewById(R.id.value_summary_first_name);
+        if (first.length() > 0) {
+            t.setText(m_patientData.getFirst());
+        } else {
+            TableRow r = (TableRow) getView().findViewById(R.id.summary_first_name_row);
+            if (r != null) {
+                r.setVisibility(View.GONE);
+            }
+        }
+
+        t = (TextView) getView().findViewById(R.id.value_summary_middle_name);
+        if (middle.length() > 0) {
+            t.setText(m_patientData.getMiddle());
+        } else {
+            TableRow r = (TableRow) getView().findViewById(R.id.summary_middle_name_row);
             if (r != null) {
                 r.setVisibility(View.GONE);
             }
@@ -168,6 +170,7 @@ public class RegistrationSummaryFragment extends Fragment {
             ImageView v  = (ImageView) getView().findViewById(R.id.value_summary_category);
             v.setImageResource(m_sess.getCategorySelector(name));
             t = (TextView) getView().findViewById(R.id.value_summary_category_name);
+            name = m_sess.categoryToSpanish(name);
             t.setText(name);
         }
     }

@@ -39,7 +39,7 @@
                 android:layout_weight="1.0"
                 >
                 <TextView
-                    android:text="Patient ID:"
+                    android:text="@string/label_summary_id"
                     android:layout_weight="1"
                     android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -62,7 +62,7 @@
                 >
 
                 <TextView
-                    android:text="Father Last:"
+                    android:text="@string/paternal_last"
                     android:layout_weight="1"
                     android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -86,7 +86,7 @@
                 >
 
                 <TextView
-                    android:text="Mother Last:"
+                    android:text="@string/maternal_last"
                     android:layout_weight="1"
                     android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -109,7 +109,7 @@
                 >
 
                 <TextView
-                    android:text="First:"
+                    android:text="@string/first_name"
                     android:layout_weight="1"
                     android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -132,7 +132,7 @@
                 >
 
                 <TextView
-                    android:text="Middle:"
+                    android:text="@string/middle_name"
                     android:layout_weight="1"
                     android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -155,7 +155,7 @@
                 >
 
                 <TextView
-                    android:text="Date of Birth:"
+                    android:text="@string/dob"
                     android:layout_weight="1"
                     android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -178,7 +178,7 @@
                 >
 
                 <TextView
-                    android:text="Gender:"
+                    android:text="@string/gender"
                     android:layout_weight="1"
                     android:textAppearance="?android:attr/textAppearanceLarge" />
 

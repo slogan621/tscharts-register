@@ -99,7 +99,11 @@ public class RegisterDialogFragment extends DialogFragment {
             v = (TextView) m_view.findViewById(R.id.patient_dob);
             v.setText(dob);
             v = (TextView) m_view.findViewById(R.id.patient_gender);
-            v.setText(gender);    // XXX translate
+            String genderString = getResources().getString(R.string.male);
+            if (gender.equals("Female")) {
+                genderString = getResources().getString(R.string.female);
+            }
+            v.setText(genderString);
 
             builder.setView(m_view)
                     // Add action buttons

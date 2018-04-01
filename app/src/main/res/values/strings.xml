@@ -28,6 +28,7 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_settings">Settings</string>
 
+    <string name="button_search">Search</string>
     <string name="title_activity_patient_search">Patient Search</string>
     <string name="error_no_matching_patients_found">No matching patients found</string>
     <string name="button_label_add_new">Register New Patient</string>
@@ -183,5 +184,19 @@
     <string name="msg_invalid_first_words_range">Enter a valid speaking age in months</string>
     <string name="msg_invalid_height">Enter a valid height</string>
     <string name="msg_invalid_weight">Enter a valid weight</string>
+
+    <!-- categories -->
+
+    <string name="category_new_cleft">New Cleft</string>
+    <string name="category_returning_cleft">Returning Cleft</string>
+    <string name="category_dental">Dental</string>
+    <string name="category_ortho">Ortho</string>
+    <string name="category_other">Other</string>
+
+    <string name="category_new_cleft_es">New Cleft</string>
+    <string name="category_returning_cleft_es">Returning Cleft</string>
+    <string name="category_dental_es">Dental</string>
+    <string name="category_ortho_es">Ortho</string>
+    <string name="category_other_es">Other</string>
 </resources>
 

@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class SessionSingleton {
@@ -51,6 +52,7 @@ public class SessionSingleton {
     private HashMap<Integer, PatientData> m_patientData = new HashMap<Integer, PatientData>();
     private HashMap<Integer, ReturnToClinic> m_returnToClinicData = new HashMap<Integer, ReturnToClinic>();
     private static HashMap<String, Integer> m_categoryToSelector = new HashMap<String, Integer>();
+    private static HashMap<String, String> m_categoryToSpanish = new HashMap<String, String>();
     private static ArrayList<JSONObject> m_categoryData = new ArrayList<JSONObject>();
     private static HashMap<Integer, String> m_stationIdToName = new HashMap<Integer, String>();
     private static HashMap<String, Integer> m_stationNameToId = new HashMap<String, Integer>();
@@ -775,6 +777,36 @@ public class SessionSingleton {
         m_categoryToSelector.put("New Cleft", R.drawable.category_new_cleft_selector);
         m_categoryToSelector.put("Returning Cleft", R.drawable.category_returning_cleft_selector);
         m_categoryToSelector.put("Other", R.drawable.category_other_selector);
+    }
+
+    public void initCategoryNameToSpanishMap()
+    {
+        m_categoryToSpanish.clear();
+        m_categoryToSpanish.put("Dental", m_ctx.getString(R.string.category_dental_es));
+        m_categoryToSpanish.put("Ortho",  m_ctx.getString(R.string.category_ortho_es));
+        m_categoryToSpanish.put("New Cleft",  m_ctx.getString(R.string.category_new_cleft_es));
+        m_categoryToSpanish.put("Returning Cleft",  m_ctx.getString(R.string.category_returning_cleft_es));
+        m_categoryToSpanish.put("Other",  m_ctx.getString(R.string.category_other_es));
+    }
+
+    public String categoryToSpanish(String name)
+    {
+        Locale current = m_ctx.getResources().getConfiguration().locale;
+        if (current.getLanguage().equals("es")) {
+            String spName = categoryNameToSpanish(name);
+            if (spName != null) {
+                name = spName;
+            }
+        }
+        return name;
+    }
+
+    public String categoryNameToSpanish(String name)
+    {
+        String ret;
+
+        ret = m_categoryToSpanish.get(name);
+        return ret;
     }
 
     private void getScreenResolution(Context context)

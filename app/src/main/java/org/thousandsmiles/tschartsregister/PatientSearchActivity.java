@@ -566,6 +566,7 @@ public class PatientSearchActivity extends AppCompatActivity implements ImageDis
                             });
                         } else {
                             m_sess.initCategoryNameToSelectorMap();
+                            m_sess.initCategoryNameToSpanishMap();
                         }
                     }
                 }

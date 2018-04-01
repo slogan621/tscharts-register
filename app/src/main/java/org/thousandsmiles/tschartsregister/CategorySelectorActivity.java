@@ -39,6 +39,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Calendar;
+import java.util.Locale;
 import java.util.TimeZone;
 
 public class CategorySelectorActivity extends AppCompatActivity {
@@ -153,8 +154,9 @@ public class CategorySelectorActivity extends AppCompatActivity {
 
             try {
                 String name = o.getString("name");
-                txt.setText(String.format("%s", name));  // XXX translate
                 button.setImageDrawable(getResources().getDrawable(m_sess.getSelector(name)));
+                name = m_sess.categoryToSpanish(name);
+                txt.setText(String.format("%s", name));
             } catch (JSONException e) {
             }
             txt.setTextColor(getResources().getColor(R.color.colorPrimaryDark));

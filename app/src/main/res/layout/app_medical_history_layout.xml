@@ -908,7 +908,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"/>
                     <Switch
-                        android:id="@+id/hepititis"
+                        android:id="@+id/hepatitis"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                 </LinearLayout>
