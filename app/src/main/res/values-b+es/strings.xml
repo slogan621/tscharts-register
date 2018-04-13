@@ -121,7 +121,7 @@
     <string name="address_street_2">Calle 2</string>
     <string name="address_colonia">Colonia</string>
     <string name="address_city">Ciudad</string>
-    <string name="address_state">Etadp</string>
+    <string name="address_state">Estado</string>
     <string name="patient_gender_dob">Género y fecha de nacimiento</string>
     <string name="gender">Género</string>
     <string name="male">Masculino</string>
@@ -191,10 +191,10 @@
     <string name="category_ortho">Ortho</string>
     <string name="category_other">Other</string>
 
-    <string name="category_new_cleft_es">New Cleft</string>
-    <string name="category_returning_cleft_es">Returning Cleft</string>
+    <string name="category_new_cleft_es">Nuevo paciente hendido</string>
+    <string name="category_returning_cleft_es">Paciente con hendido recurrente</string>
     <string name="category_dental_es">Dental</string>
     <string name="category_ortho_es">Ortho</string>
-    <string name="category_other_es">Other</string>
+    <string name="category_other_es">Otro</string>
 </resources>
 
