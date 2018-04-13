@@ -192,7 +192,7 @@
     <string name="category_other">Other</string>
 
     <string name="category_new_cleft_es">Nuevo paciente hendido</string>
-    <string name="category_returning_cleft_es">Paciente con hendido recurrente</string>
+    <string name="category_returning_cleft_es">Paciente henido que regresa</string>
     <string name="category_dental_es">Dental</string>
     <string name="category_ortho_es">Ortho</string>
     <string name="category_other_es">Otro</string>
