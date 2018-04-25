@@ -143,11 +143,18 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
         TextView tx;
         RadioButton rb;
 
-        // Name
-
         if (m_patientData == null) {
             return;
         }
+
+        // CURP
+
+        tx = (TextView) m_view.findViewById(R.id.curp);
+        if (tx != null) {
+            tx.setText(m_patientData.getCURP());
+        }
+
+        // Name
 
         tx = (TextView) m_view.findViewById(R.id.paternal_last);
         if (tx != null) {
@@ -305,6 +312,29 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
         Switch sw;
         TextView tx;
         RadioButton rb;
+
+        // CURP
+
+        tx = (TextView) m_view.findViewById(R.id.curp);
+        if (tx != null) {
+            tx.addTextChangedListener(new TextWatcher() {
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                }
+
+                @Override
+                public void beforeTextChanged(CharSequence s, int start,
+                                              int count, int after) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start,
+                                          int before, int count) {
+                    setDirty();
+                }
+            });
+        }
 
         // name
 
@@ -704,6 +734,13 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
 
         pd = m_patientData;
 
+        // CURP
+
+        tx = (TextView) m_view.findViewById(R.id.curp);
+        if (tx != null) {
+            pd.setCURP(tx.getText().toString());
+        }
+
         // Name
 
         tx = (TextView) m_view.findViewById(R.id.paternal_last);
@@ -847,6 +884,16 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
         TextView tx2;
         TextView tx3;
         ArrayList<Integer> list = new ArrayList();
+
+        tx1 =(TextView)m_view.findViewById(R.id.curp);
+
+        if(tx1.getText().toString().equals(""))
+        {
+            ret = false;
+            if (tx1.getText().toString().equals("")) {
+                list.add(R.id.curp);
+            }
+        }
 
         tx1 =(TextView)m_view.findViewById(R.id.paternal_last);
         tx2 = (TextView)m_view.findViewById(R.id.maternal_last);

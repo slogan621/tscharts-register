@@ -94,13 +94,26 @@ public class RegistrationSummaryFragment extends Fragment {
             Picasso.with(getContext()).load(file).memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).into(m_imageView);
         }
 
+        TextView t = (TextView) getView().findViewById(R.id.value_summary_curp);
+
+        String curp = m_patientData.getCURP();
+
+        if (curp.length() > 0) {
+            t.setText(curp);
+        } else {
+            TableRow r = (TableRow) getView().findViewById(R.id.summary_curp);
+            if (r != null) {
+                r.setVisibility(View.GONE);
+            }
+        }
+
         String middle = m_patientData.getMiddle();
         String first = m_patientData.getFirst();
         String flast = m_patientData.getFatherLast();
         String mlast = m_patientData.getMotherLast();
 
         String format = "";
-        TextView t = (TextView) getView().findViewById(R.id.value_summary_father_last_name);
+        t = (TextView) getView().findViewById(R.id.value_summary_father_last_name);
 
         if (flast.length() > 0) {
           t.setText(m_patientData.getFatherLast());

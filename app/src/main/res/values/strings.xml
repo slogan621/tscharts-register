@@ -198,5 +198,6 @@
     <string name="category_dental_es">Dental</string>
     <string name="category_ortho_es">Ortho</string>
     <string name="category_other_es">Otro</string>
+    <string name="curp">CURP</string>
 </resources>
 

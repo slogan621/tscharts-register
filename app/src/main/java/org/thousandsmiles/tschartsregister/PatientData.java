@@ -38,6 +38,7 @@ public class PatientData {
     private String m_emergencyFullName = "";
     private String m_emergencyPhone = "";
     private String m_emergencyEmail = "";
+    private String m_curp = "";
     private boolean m_valid;
 
     public PatientData() {
@@ -59,6 +60,7 @@ public class PatientData {
         m_emergencyFullName = "";
         m_emergencyPhone = "";
         m_emergencyEmail = "";
+        m_curp = "";
         m_valid = true;
     }
 
@@ -67,6 +69,14 @@ public class PatientData {
         if (o != null) {
             fromJSONObject(o);
         }
+    }
+
+    public String getCURP() {
+        return m_curp;
+    }
+
+    public void setCURP(String curp) {
+        m_curp = curp;
     }
 
     public int getId() {
@@ -230,71 +240,75 @@ public class PatientData {
 
         m_valid = true;
 
-        if (this.m_fatherLast != other.m_fatherLast) {
+        if (this.m_curp.equals(other.m_curp)) {
             return false;
         }
 
-        if (this.m_motherLast != other.m_motherLast) {
+        if (this.m_fatherLast.equals(other.m_fatherLast)) {
             return false;
         }
 
-        if (this.m_first != other.m_first) {
+        if (this.m_motherLast.equals(other.m_motherLast)) {
             return false;
         }
 
-        if (this.m_middle != other.m_middle) {
+        if (this.m_first.equals(other.m_first)) {
             return false;
         }
 
-        if (this.m_dob != other.m_dob) {
+        if (this.m_middle.equals(other.m_middle)) {
             return false;
         }
 
-        if (this.m_gender != other.m_gender) {
+        if (this.m_dob.equals(other.m_dob)) {
             return false;
         }
 
-        if (this.m_street1 != other.m_street1) {
+        if (this.m_gender.equals(other.m_gender)) {
             return false;
         }
 
-        if (this.m_street2 != other.m_street2) {
+        if (this.m_street1.equals(other.m_street1)) {
             return false;
         }
 
-        if (this.m_colonia != other.m_colonia) {
+        if (this.m_street2.equals(other.m_street2)) {
             return false;
         }
 
-        if (this.m_city != other.m_city) {
+        if (this.m_colonia.equals(other.m_colonia)) {
             return false;
         }
 
-        if (this.m_state != other.m_state) {
+        if (this.m_city.equals(other.m_city)) {
             return false;
         }
 
-        if (this.m_phone1 != other.m_phone1) {
+        if (this.m_state.equals(other.m_state)) {
             return false;
         }
 
-        if (this.m_phone2 != other.m_phone2) {
+        if (this.m_phone1.equals(other.m_phone1)) {
             return false;
         }
 
-        if (this.m_email != other.m_email) {
+        if (this.m_phone2.equals(other.m_phone2)) {
             return false;
         }
 
-        if (this.m_emergencyFullName != other.m_emergencyFullName) {
+        if (this.m_email.equals(other.m_email)) {
             return false;
         }
 
-        if (this.m_emergencyPhone != other.m_emergencyPhone) {
+        if (this.m_emergencyFullName.equals(other.m_emergencyFullName)) {
             return false;
         }
 
-        if (this.m_emergencyEmail != other.m_emergencyEmail) {
+        if (this.m_emergencyPhone.equals(other.m_emergencyPhone)) {
+            return false;
+        }
+
+        if (this.m_emergencyEmail.equals(other.m_emergencyEmail)) {
             return false;
         }
 
@@ -307,6 +321,7 @@ public class PatientData {
 
         try {
             setId(o.getInt("id"));
+            setCURP(o.getString("curp"));
             setFatherLast(o.getString("paternal_last"));
             setMotherLast(o.getString("maternal_last"));
             setFirst(o.getString("first"));
@@ -338,6 +353,7 @@ public class PatientData {
             if (SessionSingleton.getInstance().getIsNewPatient() == false) {
                 data.put("id", getId());
             }
+            data.put("curp", getCURP());
             data.put("paternal_last", getFatherLast());
             data.put("maternal_last", getMotherLast());
             data.put("first", getFirst());

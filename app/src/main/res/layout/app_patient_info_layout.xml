@@ -46,6 +46,58 @@
             android:paddingRight="16dp"
             android:orientation="vertical" >
 
+            <!-- CURP -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="16dp"
+                android:orientation="horizontal" >
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_gravity="left"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/med_hist_label_text_size"
+                    android:background="@color/lightGray"
+                    android:text="@string/curp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="16dp"
+                android:orientation="horizontal" >
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="16dp">
+                </ImageView>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/curp"/>
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+
+                <EditText
+                    android:id="@+id/curp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:layout_weight="1"
+                    android:drawablePadding="10dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:paddingLeft="15dp"
+                    android:scrollHorizontally="true"></EditText>
+            </LinearLayout>
+
             <!-- Patient Name -->
 
             <LinearLayout
