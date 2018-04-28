@@ -78,7 +78,7 @@ public class RegistrationSummaryFragment extends Fragment {
 
         boolean displayGenderImage = false;
 
-        String imagePath = m_sess.getPhotoPath();
+        String imagePath = m_sess.getCommonSessionSingleton().getPhotoPath();
         if (imagePath == null || imagePath.length() == 0) {
             displayGenderImage = true;
         }

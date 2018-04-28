@@ -38,6 +38,10 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.thousandsmiles.tscharts_lib.HeadshotImage;
+import org.thousandsmiles.tscharts_lib.ImageDisplayedListener;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -63,8 +67,8 @@ public class PatientSearchActivity extends AppCompatActivity implements ImageDis
     public void onImageDisplayed(int imageId, String path)
     {
         SessionSingleton sess = SessionSingleton.getInstance();
-        sess.addHeadShotPath(imageId, path);
-        sess.startNextHeadshotJob();
+        sess.getCommonSessionSingleton().addHeadShotPath(imageId, path);
+        sess.getCommonSessionSingleton().startNextHeadshotJob();
     }
 
     public void onImageError(int imageId, String path, int errorCode)
@@ -76,9 +80,8 @@ public class PatientSearchActivity extends AppCompatActivity implements ImageDis
                 }
             });
         }
-        SessionSingleton.getInstance().removeHeadShotPath(imageId);
-        SessionSingleton sess = SessionSingleton.getInstance();
-        sess.startNextHeadshotJob();
+        SessionSingleton.getInstance().getCommonSessionSingleton().removeHeadShotPath(imageId);
+        SessionSingleton.getInstance().getCommonSessionSingleton().startNextHeadshotJob();
     }
 
     @Override
@@ -302,12 +305,12 @@ public class PatientSearchActivity extends AppCompatActivity implements ImageDis
             button.setTag(value);
 
             HeadshotImage headshot  = new HeadshotImage();
-            m_sess.addHeadshotImage(headshot);
+            m_sess.getCommonSessionSingleton().addHeadshotImage(headshot);
             headshot.setActivity(this);
             headshot.setImageView(button);
             headshot.registerListener(this);
             Thread t = headshot.getImage(id);
-            m_sess.addHeadshotJob(headshot);
+            m_sess.getCommonSessionSingleton().addHeadshotJob(headshot);
 
             //m_sess.addHeadShotPath(id, headshot.getImageFileAbsolutePath());
             //t.start();
@@ -349,7 +352,7 @@ public class PatientSearchActivity extends AppCompatActivity implements ImageDis
                 row.addView(btnLO);
             }
         }
-        m_sess.startNextHeadshotJob();
+        m_sess.getCommonSessionSingleton().startNextHeadshotJob();
     }
 
     private Date isDateString(String s) {
@@ -483,7 +486,7 @@ public class PatientSearchActivity extends AppCompatActivity implements ImageDis
                 EditText t = (EditText) findViewById(R.id.patient_search);
                 String searchTerm = t.getText().toString();
                 button.setEnabled(false);
-                m_sess.cancelHeadshotImages();
+                m_sess.getCommonSessionSingleton().cancelHeadshotImages();
                 HideSearchResultTable();
                 getMatchingPatients(searchTerm);
                 InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -494,10 +497,10 @@ public class PatientSearchActivity extends AppCompatActivity implements ImageDis
         });
         m_context = this;
         m_activity = this;
-        m_sess.clearHeadShotCache();
-        m_sess.setPhotoPath("");
+        m_sess.getCommonSessionSingleton().clearHeadShotCache();
+        m_sess.getCommonSessionSingleton().setPhotoPath("");
 
-        if (m_sess.getClinicId() == -1) {
+        if (m_sess.getCommonSessionSingleton().getClinicId() == -1) {
             final ClinicREST clinicREST = new ClinicREST(m_context);
             final Object lock;
 

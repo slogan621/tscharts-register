@@ -30,6 +30,9 @@ import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.thousandsmiles.tscharts_lib.CommonSessionSingleton;
+import org.thousandsmiles.tscharts_lib.ImageREST;
+import org.thousandsmiles.tscharts_lib.RESTCompletionListener;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -41,13 +44,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class SessionSingleton {
     private static SessionSingleton m_instance;
-    private static String m_token = "";
-    private static Context m_ctx;
     private int m_patientRoutingSlipId;
     private MedicalHistory m_patientMedicalHistory = null;
     private JSONObject m_routingSlipEntryResponse = null;
     private JSONArray m_patientSearchResults = null;
-    private int m_clinicId = -1;
     private PatientData m_newPatientData = null; // only if m_isNewPatient is true
     private HashMap<Integer, PatientData> m_patientData = new HashMap<Integer, PatientData>();
     private HashMap<Integer, ReturnToClinic> m_returnToClinicData = new HashMap<Integer, ReturnToClinic>();
@@ -62,87 +62,20 @@ public class SessionSingleton {
     private ArrayList<String> m_medicationsList = new ArrayList<String>();
     private ArrayList<String> m_mexicanStates = new ArrayList<String>();
     private ArrayList<Integer> m_returnToClinics = new ArrayList<Integer>();
-    private ArrayList<HeadshotImage> m_headshotImages = new ArrayList<HeadshotImage>();
     private Registration m_registration = new Registration();
-    private int m_patientId;
     private boolean m_isNewPatient = false;
-    private String m_photoPath = "";
-    private File m_storageDir = null;
-    private int m_headshotTag = 676;
-    private ArrayList<HeadshotImage> m_headshotJobs = new ArrayList<HeadshotImage>();
-    private ConcurrentHashMap<Integer, String> m_headshotIdToPath = new ConcurrentHashMap<Integer, String>();
+    private CommonSessionSingleton m_commonSessionSingleton = null;
 
-    int getHeadshotTag()
+    public CommonSessionSingleton getCommonSessionSingleton()
     {
-        return m_headshotTag;
-    }
-
-    void setStorageDir(Activity activity) {
-        m_storageDir = activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-    }
-
-    void addHeadshotJob(HeadshotImage hs)
-    {
-        m_headshotJobs.add(hs);
-    }
-
-    void startNextHeadshotJob()
-    {
-        HeadshotImage hs;
-        if (m_headshotJobs.size() > 0) {
-            hs = m_headshotJobs.remove(0);
-            hs.start();
+        if (m_commonSessionSingleton == null) {
+            m_commonSessionSingleton = CommonSessionSingleton.getInstance();
         }
+        return m_commonSessionSingleton;
     }
 
-    void clearHeadShotCache() {
-        m_headshotIdToPath.clear();
-    }
-
-    void addHeadShotPath(int id, String path) {
-        m_headshotIdToPath.put(id, path);
-    }
-
-    void addHeadshotImage(HeadshotImage o)
-    {
-      m_headshotImages.add(o);
-    }
-
-    void cancelHeadshotImages()
-    {
-        m_headshotJobs.clear();
-        for (int i = 0; i < m_headshotImages.size(); i++) {
-            m_headshotImages.get(i).cancelPendingRequest(SessionSingleton.getInstance().getHeadshotTag());
-        }
-        m_headshotImages.clear();
-    }
-
-    void removeHeadShotPath(int id) {
-        m_headshotIdToPath.remove(id);
-    }
-
-    String getHeadShotPath(int id) {
-        String ret = null;
-
-        try {
-            ret = m_headshotIdToPath.get(id);
-        } catch(Exception e) {
-        }
-        return ret;
-    }
-
-    File getStorageDir() {
-        return m_storageDir;
-    }
-
-    public void setPhotoPath(String path)
-    {
-        m_photoPath = path;
-    }
-
-    public String getPhotoPath()
-    {
-        return m_photoPath;
+    public Context getContext() {
+        return getCommonSessionSingleton().getContext();
     }
 
     public void resetNewPatientObjects()
@@ -161,22 +94,22 @@ public class SessionSingleton {
 
     public int getPatientId()
     {
-        return m_patientId;
+        return getCommonSessionSingleton().getPatientId();
     }
 
     public void setPatientId(int id)
     {
-        m_patientId = id;
+        getCommonSessionSingleton().setPatientId(id);
     }
 
     public int getActivePatientId()
     {
-        return getPatientId();
+        return getCommonSessionSingleton().getPatientId();
     }
 
     public int getDisplayPatientId()
     {
-        return getPatientId();
+        return getCommonSessionSingleton().getPatientId();
     }
 
     public HashMap<Integer, PatientData> getPatientHashMap()
@@ -226,18 +159,6 @@ public class SessionSingleton {
         m_patientSearchResults = results;
     }
 
-    public void setToken(String token) {
-        m_token = String.format("Token %s", token);
-    }
-
-    public String getToken() {
-        return m_token;
-    }
-
-    public void setClinicId(int clinicId) {
-        m_clinicId = clinicId;
-    }
-
     public void setCategory(int categoryId) {
         m_registration.setCategory(categoryId);
     }
@@ -279,7 +200,7 @@ public class SessionSingleton {
         if (m_isNewPatient == true) {
             m_newPatientData = pd;
         } else {
-            int id = m_patientId;
+            int id = getPatientId();
             m_patientData.put(id, pd);
         }
     }
@@ -419,10 +340,6 @@ public class SessionSingleton {
         thread.start();
     }
 
-    public int getClinicId() {
-        return m_clinicId;
-    }
-
     public void addPatientData(JSONObject data) {
         int id;
 
@@ -491,53 +408,6 @@ public class SessionSingleton {
         thread.start();
     }
 
-    void createHeadshot(final RESTCompletionListener listener) {
-        boolean ret = false;
-
-        Thread thread = new Thread() {
-            public void run() {
-                // note we use session context because this may be called after onPause()
-                ImageREST rest = new ImageREST(getContext());
-                rest.addListener(listener);
-                Object lock;
-                int status;
-
-                File file = new File(getPhotoPath());
-
-                lock = rest.createImage(file);
-
-                synchronized (lock) {
-                    // we loop here in case of race conditions or spurious interrupts
-                    while (true) {
-                        try {
-                            lock.wait();
-                            break;
-                        } catch (InterruptedException e) {
-                            continue;
-                        }
-                    }
-                }
-                status = rest.getStatus();
-                if (status != 200) {
-                    Handler handler = new Handler(Looper.getMainLooper());
-                    handler.post(new Runnable() {
-                        public void run() {
-                            Toast.makeText(getContext(), getContext().getString(R.string.msg_unable_to_save_headshot_photo), Toast.LENGTH_LONG).show();
-                        }
-                    });
-                } else {
-                    Handler handler = new Handler(Looper.getMainLooper());
-                    handler.post(new Runnable() {
-                        public void run() {
-                            Toast.makeText(getContext(), getContext().getString(R.string.msg_successfully_saved_headshot_photo), Toast.LENGTH_LONG).show();
-                        }
-                    });
-                }
-            }
-        };
-        thread.start();
-    }
-
     void createRoutingSlip(final RESTCompletionListener listener) {
         boolean ret = false;
 
@@ -549,7 +419,7 @@ public class SessionSingleton {
                 Object lock;
                 int status;
 
-                lock = rest.createRoutingSlip(getPatientId(), getClinicId(), getCategoryName());
+                lock = rest.createRoutingSlip(getPatientId(), getCommonSessionSingleton().getClinicId(), getCategoryName());
 
                 synchronized (lock) {
                     // we loop here in case of race conditions or spurious interrupts
@@ -782,16 +652,16 @@ public class SessionSingleton {
     public void initCategoryNameToSpanishMap()
     {
         m_categoryToSpanish.clear();
-        m_categoryToSpanish.put("Dental", m_ctx.getString(R.string.category_dental_es));
-        m_categoryToSpanish.put("Ortho",  m_ctx.getString(R.string.category_ortho_es));
-        m_categoryToSpanish.put("New Cleft",  m_ctx.getString(R.string.category_new_cleft_es));
-        m_categoryToSpanish.put("Returning Cleft",  m_ctx.getString(R.string.category_returning_cleft_es));
-        m_categoryToSpanish.put("Other",  m_ctx.getString(R.string.category_other_es));
+        m_categoryToSpanish.put("Dental", getContext().getString(R.string.category_dental_es));
+        m_categoryToSpanish.put("Ortho",  getContext().getString(R.string.category_ortho_es));
+        m_categoryToSpanish.put("New Cleft",  getContext().getString(R.string.category_new_cleft_es));
+        m_categoryToSpanish.put("Returning Cleft",  getContext().getString(R.string.category_returning_cleft_es));
+        m_categoryToSpanish.put("Other",  getContext().getString(R.string.category_other_es));
     }
 
     public String categoryToSpanish(String name)
     {
-        Locale current = m_ctx.getResources().getConfiguration().locale;
+        Locale current = getContext().getResources().getConfiguration().locale;
         if (current.getLanguage().equals("es")) {
             String spName = categoryNameToSpanish(name);
             if (spName != null) {
@@ -822,7 +692,7 @@ public class SessionSingleton {
     public int getSelectorNumColumns()
     {
         if (m_width == -1 && m_height == -1) {
-            getScreenResolution(m_ctx);
+            getScreenResolution(getContext());
         }
         m_selectorNumColumns = m_width / 250;
         return m_selectorNumColumns;
@@ -1040,13 +910,6 @@ public class SessionSingleton {
             m_instance = new SessionSingleton();
         }
         return m_instance;
-    }
-
-    public void setContext(Context ctx) {
-        m_ctx = ctx;
-    }
-    public Context getContext() {
-        return m_ctx;
     }
 }
 

@@ -1235,7 +1235,7 @@ public class AppMedicalHistoryFragment extends Fragment {
             public void run() {
             Thread thread = new Thread(){
                 public void run() {
-                m_medicalHistory = m_sess.getMedicalHistory(m_sess.getClinicId(), m_sess.getDisplayPatientId());
+                m_medicalHistory = m_sess.getMedicalHistory(m_sess.getCommonSessionSingleton().getClinicId(), m_sess.getDisplayPatientId());
                 if (m_medicalHistory == null) {
                     m_activity.runOnUiThread(new Runnable() {
                         public void run() {

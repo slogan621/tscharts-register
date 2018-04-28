@@ -50,6 +50,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.thousandsmiles.tscharts_lib.CommonSessionSingleton;
+import org.thousandsmiles.tscharts_lib.LoginREST;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -103,7 +106,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SessionSingleton s = SessionSingleton.getInstance();
+        CommonSessionSingleton s = SessionSingleton.getInstance().getCommonSessionSingleton();
         s.setContext(getApplicationContext());
         setContentView(R.layout.activity_login);
         s.setStorageDir(this);

@@ -45,6 +45,8 @@ import com.github.barteksc.pdfviewer.listener.OnPageErrorListener;
 import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle;
 import com.github.barteksc.pdfviewer.util.FitPolicy;
 
+import org.thousandsmiles.tscharts_lib.RESTCompletionListener;
+
 import java.util.ArrayList;
 
 public class AppWaiverFragment extends Fragment implements RESTCompletionListener, OnPageChangeListener, OnLoadCompleteListener,
@@ -113,7 +115,7 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
             }
         } else if (m_state == RegistrationState.UPDATED_PATIENT) {
             m_state = RegistrationState.UPDATED_MEDICAL_HISTORY;
-            m_sess.createHeadshot(this);
+            m_sess.getCommonSessionSingleton().createHeadshot(this);
         } else if (m_state == RegistrationState.UPDATED_MEDICAL_HISTORY) {
             m_state = RegistrationState.UPDATED_PHOTO;
             m_sess.createRoutingSlip(this);

@@ -607,7 +607,7 @@ public class MedicalHistory {
             data.put("birth_weight_metric", this.isBirthWeightMetric());
             data.put("bleeding_problems", this.isBleedingProblems());
             data.put("cancer", this.isCancer());
-            data.put("clinic", SessionSingleton.getInstance().getClinicId());
+            data.put("clinic", SessionSingleton.getInstance().getCommonSessionSingleton().getClinicId());
             data.put("congenitalheartdefect", this.isCongenitalHeartDefect());
             data.put("congenitalheartdefect_planforcare", this.isCongenitalHeartDefectPlanForCare());
             data.put("congenitalheartdefect_workup", this.isCongenitalHeartDefectWorkup());

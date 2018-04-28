@@ -70,7 +70,7 @@ public class AppPatientPhotoFragment extends Fragment {
 
     public void restorePhotoPath()
     {
-        m_sess.setPhotoPath(m_currentPhotoPath);
+        m_sess.getCommonSessionSingleton().setPhotoPath(m_currentPhotoPath);
     }
 
     @Override
@@ -183,13 +183,13 @@ public class AppPatientPhotoFragment extends Fragment {
 
         if (which == 1) {
             file = m_photo1;
-            m_sess.setPhotoPath(m_photo1Path);
+            m_sess.getCommonSessionSingleton().setPhotoPath(m_photo1Path);
         } else if (which == 2) {
             file = m_photo2;
-            m_sess.setPhotoPath(m_photo2Path);
+            m_sess.getCommonSessionSingleton().setPhotoPath(m_photo2Path);
         } else if (which == 3) {
             file = m_photo3;
-            m_sess.setPhotoPath(m_photo3Path);
+            m_sess.getCommonSessionSingleton().setPhotoPath(m_photo3Path);
         }
 
         if (file != null) {
@@ -236,7 +236,7 @@ public class AppPatientPhotoFragment extends Fragment {
 
             AlertDialog alert = builder.create();
             alert.show();
-        } else if (m_sess.getPhotoPath() == null || m_sess.getPhotoPath().equals("")) {
+        } else if (m_sess.getCommonSessionSingleton().getPhotoPath() == null || m_sess.getCommonSessionSingleton().getPhotoPath().equals("")) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
             builder.setTitle(m_activity.getString(R.string.title_missing_photo));
@@ -265,7 +265,7 @@ public class AppPatientPhotoFragment extends Fragment {
             createImageFile(3);
         } catch (IOException e) {
         }
-        m_currentPhotoPath = m_sess.getPhotoPath();
+        m_currentPhotoPath = m_sess.getCommonSessionSingleton().getPhotoPath();
     }
 
     @Override
