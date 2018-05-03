@@ -59,7 +59,6 @@ public class SessionSingleton {
     private int m_selectorNumColumns;
     private int m_width = -1;
     private int m_height = -1;
-    private ArrayList<String> m_medicationsList = new ArrayList<String>();
     private ArrayList<String> m_mexicanStates = new ArrayList<String>();
     private ArrayList<Integer> m_returnToClinics = new ArrayList<Integer>();
     private Registration m_registration = new Registration();
@@ -882,27 +881,6 @@ public class SessionSingleton {
                 }
             }
         }
-    }
-
-    public void setMedicationsList(JSONArray a)
-    {
-        m_medicationsList.clear();
-        for (int i = 0; i < a.length(); i++) {
-            try {
-                m_medicationsList.add(a.getString(i));
-            } catch (JSONException e) {
-            }
-        }
-    }
-
-    public ArrayList<String> getMedicationsList()
-    {
-        return m_medicationsList;
-    }
-
-    public String[] getMedicationsListStringArray()
-    {
-        return m_medicationsList.toArray(new String[0]);
     }
 
     public static SessionSingleton getInstance() {
