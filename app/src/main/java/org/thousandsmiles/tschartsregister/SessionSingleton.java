@@ -33,6 +33,7 @@ import org.json.JSONObject;
 import org.thousandsmiles.tscharts_lib.CommonSessionSingleton;
 import org.thousandsmiles.tscharts_lib.ImageREST;
 import org.thousandsmiles.tscharts_lib.MedicalHistory;
+import org.thousandsmiles.tscharts_lib.MedicalHistoryREST;
 import org.thousandsmiles.tscharts_lib.RESTCompletionListener;
 
 import java.io.File;
@@ -46,7 +47,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SessionSingleton {
     private static SessionSingleton m_instance;
     private int m_patientRoutingSlipId;
-    private MedicalHistory m_patientMedicalHistory = null;
     private JSONObject m_routingSlipEntryResponse = null;
     private JSONArray m_patientSearchResults = null;
     private PatientData m_newPatientData = null; // only if m_isNewPatient is true
@@ -81,7 +81,7 @@ public class SessionSingleton {
     public void resetNewPatientObjects()
     {
         m_newPatientData = null;
-        m_patientMedicalHistory = null;
+        getCommonSessionSingleton().resetPatientMedicalHistory();
     }
 
     public PatientData getNewPatientData()
@@ -131,19 +131,6 @@ public class SessionSingleton {
         m_patientData.clear();
     }
 
-    public MedicalHistory getPatientMedicalHistory()
-    {
-        return m_patientMedicalHistory;
-    }
-
-    public MedicalHistory getNewPatientMedicalHistory()
-    {
-        if (m_patientMedicalHistory == null) {
-            m_patientMedicalHistory = new MedicalHistory();
-        }
-        return m_patientMedicalHistory;
-    }
-
     public void setPatientRoutingSlipId(int id)
     {
         m_patientRoutingSlipId = id;
@@ -178,22 +165,6 @@ public class SessionSingleton {
 
     public String getCategoryName() {
         return m_registration.getCategoryName();
-    }
-
-    public void setMedicalHistoryId(int id) {
-        m_patientMedicalHistory.setId(id);
-    }
-
-    public void setPatientMedicalHistory(JSONObject o)
-    {
-        if (m_patientMedicalHistory == null) {
-            m_patientMedicalHistory = new MedicalHistory();
-        }
-        m_patientMedicalHistory.fromJSONObject(o);
-    }
-
-    public void updatePatientMedicalHistory(MedicalHistory mh) {
-        m_patientMedicalHistory = mh;
     }
 
     public void updatePatientData(PatientData pd) {
@@ -373,8 +344,8 @@ public class SessionSingleton {
             Object lock;
             int status;
 
-            m_patientMedicalHistory.setPatient(getPatientId());
-            lock = rest.createMedicalHistory(m_patientMedicalHistory);
+            getCommonSessionSingleton().getPatientMedicalHistory().setPatient(getPatientId());
+            lock = rest.createMedicalHistory(getCommonSessionSingleton().getPatientMedicalHistory());
 
             synchronized (lock) {
                 // we loop here in case of race conditions or spurious interrupts
@@ -587,7 +558,7 @@ public class SessionSingleton {
 
             int status = mhData.getStatus();
             if (status == 200) {
-                mh = getPatientMedicalHistory();
+                mh = getCommonSessionSingleton().getPatientMedicalHistory();
             }
         }
         return mh;
@@ -605,7 +576,7 @@ public class SessionSingleton {
                 Object lock;
                 int status;
 
-                lock = rest.updateMedicalHistory(m_patientMedicalHistory);
+                lock = rest.updateMedicalHistory(getCommonSessionSingleton().getPatientMedicalHistory());
 
                 synchronized (lock) {
                     // we loop here in case of race conditions or spurious interrupts

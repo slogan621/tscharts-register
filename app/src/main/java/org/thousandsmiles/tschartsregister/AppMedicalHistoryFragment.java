@@ -235,7 +235,7 @@ public class AppMedicalHistoryFragment extends Fragment {
 
             builder.setPositiveButton(m_activity.getString(R.string.button_yes), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
-                    m_sess.updatePatientMedicalHistory(mh);
+                    m_sess.getCommonSessionSingleton().updatePatientMedicalHistory(mh);
                     dialog.dismiss();
                     startActivity(new Intent(m_activity, PatientPhotoActivity.class));
                     m_activity.finish();
@@ -1270,14 +1270,14 @@ public class AppMedicalHistoryFragment extends Fragment {
     public void onResume() {
         super.onResume();
         if (m_sess.getIsNewPatient() == false) {
-            m_medicalHistory = m_sess.getPatientMedicalHistory();
+            m_medicalHistory = m_sess.getCommonSessionSingleton().getPatientMedicalHistory();
             if (m_medicalHistory == null) {
                 getMedicalHistoryDataFromREST();
             } else {
                 copyMedicalHistoryDataToUI();
             }
         } else {
-            m_medicalHistory = m_sess.getNewPatientMedicalHistory();
+            m_medicalHistory = m_sess.getCommonSessionSingleton().getNewPatientMedicalHistory();
             copyMedicalHistoryDataToUI();
         }
         setViewDirtyListeners();
