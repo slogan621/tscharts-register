@@ -123,7 +123,7 @@ public class CategoryREST extends RESTful {
 
         RequestQueue queue = volley.getQueue();
 
-        String url = String.format("http://%s:%s/tscharts/v1/category/", getIP(), getPort());
+        String url = String.format("%s://%s:%s/tscharts/v1/category/", getProtocol(), getIP(), getPort());
 
         AuthJSONArrayRequest request = new AuthJSONArrayRequest(url, null, new ResponseListener(), new ErrorListener());
         request.setRetryPolicy(new DefaultRetryPolicy(getTimeoutInMillis(), getRetries(), DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));

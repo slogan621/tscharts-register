@@ -1,6 +1,6 @@
 /*
- * (C) Copyright Syd Logan 2017
- * (C) Copyright Thousand Smiles Foundation 2017
+ * (C) Copyright Syd Logan 2017-2018
+ * (C) Copyright Thousand Smiles Foundation 2017-2018
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -136,7 +136,7 @@ public class ReturnToClinicREST extends RESTful {
 
         RequestQueue queue = volley.getQueue();
 
-        String url = String.format("http://%s:%s/tscharts/v1/returntoclinic/", getIP(), getPort());
+        String url = String.format("%s://%s:%s/tscharts/v1/returntoclinic/", getProtocol(), getIP(), getPort());
 
         JSONObject data = new JSONObject();
 
@@ -167,7 +167,7 @@ public class ReturnToClinicREST extends RESTful {
 
         RequestQueue queue = volley.getQueue();
 
-        String url = String.format("http://%s:%s/tscharts/v1/returntoclinic/?patient=%d", getIP(), getPort(), patientid);
+        String url = String.format("%s://%s:%s/tscharts/v1/returntoclinic/?patient=%d", getProtocol(), getIP(), getPort(), patientid);
 
         AuthJSONArrayRequest request = new AuthJSONArrayRequest(url, null, new ReturnToClinicArrayResponseListener(), new ErrorListener());
         request.setRetryPolicy(new DefaultRetryPolicy(getTimeoutInMillis(), getRetries(), DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
@@ -185,7 +185,7 @@ public class ReturnToClinicREST extends RESTful {
 
         RequestQueue queue = volley.getQueue();
 
-        String url = String.format("http://%s:%s/tscharts/v1/returntoclinic/%d/", getIP(), getPort(), id);
+        String url = String.format("%s://%s:%s/tscharts/v1/returntoclinic/%d/", getProtocol(), getIP(), getPort(), id);
 
         AuthJSONObjectRequest request = new AuthJSONObjectRequest(Request.Method.GET, url, null, new ReturnToClinicResponseListener(), new ErrorListener());
         request.setRetryPolicy(new DefaultRetryPolicy(getTimeoutInMillis(), getRetries(), DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));

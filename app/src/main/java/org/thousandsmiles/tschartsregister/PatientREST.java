@@ -1,6 +1,6 @@
 /*
- * (C) Copyright Syd Logan 2017
- * (C) Copyright Thousand Smiles Foundation 2017
+ * (C) Copyright Syd Logan 2017-2018
+ * (C) Copyright Thousand Smiles Foundation 2017-2018
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -178,7 +178,7 @@ public class PatientREST extends RESTful {
 
         RequestQueue queue = volley.getQueue();
 
-        String url = String.format("http://%s:%s/tscharts/v1/patient/", getIP(), getPort());
+        String url = String.format("%s://%s:%s/tscharts/v1/patient/", getProtocol(), getIP(), getPort());
 
         AuthJSONArrayRequest request = new AuthJSONArrayRequest(url, null, new ArrayResponseListener(), new ErrorListener());
         request.setRetryPolicy(new DefaultRetryPolicy(getTimeoutInMillis(), getRetries(), DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
@@ -198,7 +198,7 @@ public class PatientREST extends RESTful {
 
         JSONObject data = pd.toJSONObject();
 
-        String url = String.format("http://%s:%s/tscharts/v1/patient/", getIP(), getPort());
+        String url = String.format("%s://%s:%s/tscharts/v1/patient/", getProtocol(), getIP(), getPort());
 
         AuthJSONObjectRequest request = new AuthJSONObjectRequest(Request.Method.POST, url, data, new PostResponseListener(), new ErrorListener());
         request.setRetryPolicy(new DefaultRetryPolicy(getTimeoutInMillis(), getRetries(), DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
@@ -216,7 +216,7 @@ public class PatientREST extends RESTful {
 
         RequestQueue queue = volley.getQueue();
 
-        String url = String.format("http://%s:%s/tscharts/v1/patient/%d/", getIP(), getPort(), patientid);
+        String url = String.format("%s://%s:%s/tscharts/v1/patient/%d/", getProtocol(), getIP(), getPort(), patientid);
 
         AuthJSONObjectRequest request = new AuthJSONObjectRequest(Request.Method.GET, url, null, new ResponseListener(), new ErrorListener());
         request.setRetryPolicy(new DefaultRetryPolicy(getTimeoutInMillis(), getRetries(), DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
@@ -240,7 +240,7 @@ public class PatientREST extends RESTful {
         int year = cal.get(Calendar.YEAR);
         int day = cal.get(Calendar.DAY_OF_MONTH);
 
-        String url = String.format("http://%s:%s/tscharts/v1/patient?dob=%s/%s/%s", getIP(), getPort(),
+        String url = String.format("%s://%s:%s/tscharts/v1/patient?dob=%s/%s/%s", getProtocol(), getIP(), getPort(),
                 month, day, year);
 
         AuthJSONArrayRequest request = new AuthJSONArrayRequest(url, null, new ArrayResponseListener(), new ErrorListener());
@@ -259,7 +259,7 @@ public class PatientREST extends RESTful {
 
         RequestQueue queue = volley.getQueue();
 
-        String url = String.format("http://%s:%s/tscharts/v1/patient?name=%s", getIP(), getPort(), name);
+        String url = String.format("%s://%s:%s/tscharts/v1/patient?name=%s", getProtocol(), getIP(), getPort(), name);
 
         AuthJSONArrayRequest request = new AuthJSONArrayRequest(url, null, new ArrayResponseListener(), new ErrorListener());
         request.setRetryPolicy(new DefaultRetryPolicy(getTimeoutInMillis(), getRetries(), DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
@@ -279,7 +279,7 @@ public class PatientREST extends RESTful {
 
         JSONObject data = pd.toJSONObject();
 
-        String url = String.format("http://%s:%s/tscharts/v1/patient/%d/", getIP(), getPort(), pd.getId());
+        String url = String.format("%s://%s:%s/tscharts/v1/patient/%d/", getProtocol(), getIP(), getPort(), pd.getId());
 
         AuthJSONObjectRequest request = new AuthJSONObjectRequest(Request.Method.PUT, url, data, new PutResponseListener(), new ErrorListener());
         request.setRetryPolicy(new DefaultRetryPolicy(getTimeoutInMillis(), getRetries(), DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
