@@ -45,6 +45,8 @@ import com.github.barteksc.pdfviewer.listener.OnPageErrorListener;
 import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle;
 import com.github.barteksc.pdfviewer.util.FitPolicy;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.thousandsmiles.tscharts_lib.RESTCompletionListener;
 
 import java.util.ArrayList;
@@ -101,6 +103,16 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
         }
 
         return ret;
+    }
+
+    @Override
+    public void onSuccess(int code, String msg, JSONObject o)
+    {
+    }
+
+    @Override
+    public void onSuccess(int code, String msg, JSONArray a)
+    {
     }
 
     @Override
