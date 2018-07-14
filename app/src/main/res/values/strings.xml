@@ -199,5 +199,7 @@
     <string name="category_ortho_es">Ortho</string>
     <string name="category_other_es">Otro</string>
     <string name="curp">CURP</string>
+    <string name="msg_unable_to_register_patient_record">Unable to create registration record</string>
+    <string name="msg_successfully_registered_patient_record">Successfully created registration record</string>
 </resources>
 

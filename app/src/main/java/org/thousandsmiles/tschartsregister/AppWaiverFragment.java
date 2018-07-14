@@ -62,9 +62,11 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
     int pageNumber;
     private AppWaiverFragment m_this = this;
     ArrayList<Integer> m_stations = null;
-    boolean m_showSuccess = false;
+    private boolean m_showSuccess = false;
     private View m_view;
     private View m_progressView;
+    private boolean m_photoChecked = false;
+    private boolean m_waiverChecked = false;
 
     public enum RegistrationState {
         UPDATED_NOTHING,
@@ -72,7 +74,9 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
         UPDATED_MEDICAL_HISTORY,
         UPDATED_PHOTO,
         UPDATED_ROUTING_SLIP,
-        UPDATED_ROUTING_SLIP_ENTRIES
+        UPDATED_ROUTING_SLIP_ENTRIES,
+        CREATED_CONSENT,
+        CREATED_REGISTRATION,
     };
 
     private RegistrationState m_state = RegistrationState.UPDATED_NOTHING;
@@ -108,13 +112,19 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
     @Override
     public void onSuccess(int code, String msg, JSONObject o)
     {
+        // XXX - route to the generic handler
+        onSuccess(code, msg);
     }
 
     @Override
     public void onSuccess(int code, String msg, JSONArray a)
     {
+        // XXX - route to the generic handler
+        onSuccess(code, msg);
     }
 
+    /* patient --> medical history --> photo --> routing slip --> routing slip entries
+       --> register --> consent */
     @Override
     public void onSuccess(int code, String msg)
     {
@@ -132,6 +142,7 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
             m_state = RegistrationState.UPDATED_PHOTO;
             m_sess.createRoutingSlip(this);
         } else if (m_state == RegistrationState.UPDATED_PHOTO) {
+            m_state = RegistrationState.UPDATED_ROUTING_SLIP;
             ArrayList<Integer> catStations = m_sess.getStationsForCategory(m_sess.getCategoryName());
             ArrayList<Integer> rtcStations = m_sess.getReturnToClinicStations();
             ArrayList<Integer> stations = mergeStations(catStations, rtcStations);
@@ -140,14 +151,19 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
                 m_sess.createRoutingSlipEntry(this, m_stations.get(0));
                 m_stations.remove(m_stations.get(0));
             }
-            m_state = RegistrationState.UPDATED_ROUTING_SLIP;
-        } else {
+        } else if (m_state == RegistrationState.UPDATED_ROUTING_SLIP) {
+            m_state = RegistrationState.UPDATED_ROUTING_SLIP_ENTRIES;
             if (m_stations == null || m_stations.size() == 0) {
-                m_state = RegistrationState.UPDATED_ROUTING_SLIP_ENTRIES;
-                if (m_showSuccess == false) {
-                    showSuccess();
-                    m_showSuccess = true;
-                }
+                m_sess.register(this, m_sess.getPatientId(), m_sess.getClinicId());
+            }
+        } else if (m_state == RegistrationState.UPDATED_ROUTING_SLIP_ENTRIES) {
+            m_state = RegistrationState.CREATED_REGISTRATION;
+            m_sess.createConsentRecord(this, m_sess.getPatientId(), m_sess.getClinicId(), m_sess.getRegistrationId(), m_waiverChecked, m_photoChecked);
+        } else if (m_state == RegistrationState.CREATED_REGISTRATION){
+            m_state = RegistrationState.CREATED_CONSENT;
+            if (m_showSuccess == false) {
+                showSuccess();
+                m_showSuccess = true;
             }
         }
     }
@@ -296,18 +312,28 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
     }
 
     public void onWaiverCheckboxClicked(View v) {
-
         CheckBox cb = (CheckBox) v;
         boolean enable = false;
 
         if (cb.isChecked()) {
+            m_waiverChecked = true;
             enable = true;
+        } else {
+            m_waiverChecked = false;
         }
         setRegisterButtonEnabled(enable);
     }
 
     public void onWaiverPhotoClicked(View v) {
-        // TBD
+        CheckBox cb = (CheckBox) v;
+        boolean enable = false;
+
+        if (cb.isChecked()) {
+            m_photoChecked = true;
+            enable = true;
+        } else {
+            m_photoChecked = false;
+        }
     }
 
     private void setRegisterButtonEnabled(boolean enable)

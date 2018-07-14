@@ -388,7 +388,7 @@ public class PatientSearchActivity extends AppCompatActivity implements ImageDis
 
         ArrayList<Integer> ret = new ArrayList<Integer>();
 
-        m_sess.clearSearchResultData();
+        m_sess.clearPatientSearchResultData();
         m_sess.setIsNewPatient(false);
 
         final Date d = isDateString(searchTerm);

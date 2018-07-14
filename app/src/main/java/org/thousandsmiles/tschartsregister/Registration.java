@@ -19,7 +19,7 @@ package org.thousandsmiles.tschartsregister;
 
 public class Registration {
 
-    private int m_patientId;
+    private int m_clinicId;
     private int m_category;
     private String m_categoryName;
 
@@ -29,14 +29,6 @@ public class Registration {
 
     public void setCategoryName(String categoryName) {
         m_categoryName = categoryName;
-    }
-
-    public int getPatientId() {
-        return m_patientId;
-    }
-
-    public void setPatientId(int patientId) {
-        m_patientId = patientId;
     }
 
     public int getCategory() {

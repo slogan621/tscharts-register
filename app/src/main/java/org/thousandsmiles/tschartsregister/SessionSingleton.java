@@ -31,6 +31,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.thousandsmiles.tscharts_lib.CommonSessionSingleton;
+import org.thousandsmiles.tscharts_lib.ConsentREST;
 import org.thousandsmiles.tscharts_lib.ImageREST;
 import org.thousandsmiles.tscharts_lib.MedicalHistory;
 import org.thousandsmiles.tscharts_lib.MedicalHistoryREST;
@@ -49,6 +50,7 @@ public class SessionSingleton {
     private int m_patientRoutingSlipId;
     private JSONObject m_routingSlipEntryResponse = null;
     private JSONArray m_patientSearchResults = null;
+    private JSONArray m_registrationSearchResults = null;
     private PatientData m_newPatientData = null; // only if m_isNewPatient is true
     private HashMap<Integer, PatientData> m_patientData = new HashMap<Integer, PatientData>();
     private HashMap<Integer, ReturnToClinic> m_returnToClinicData = new HashMap<Integer, ReturnToClinic>();
@@ -63,8 +65,10 @@ public class SessionSingleton {
     private ArrayList<String> m_mexicanStates = new ArrayList<String>();
     private ArrayList<Integer> m_returnToClinics = new ArrayList<Integer>();
     private Registration m_registration = new Registration();
+    private int m_registrationId;
     private boolean m_isNewPatient = false;
     private CommonSessionSingleton m_commonSessionSingleton = null;
+
 
     public CommonSessionSingleton getCommonSessionSingleton()
     {
@@ -91,6 +95,8 @@ public class SessionSingleton {
         }
         return m_newPatientData;
     }
+
+    public int getClinicId() { return getCommonSessionSingleton().getClinicId(); }
 
     public int getPatientId()
     {
@@ -125,10 +131,15 @@ public class SessionSingleton {
         return m_isNewPatient;
     }
 
-    public void clearSearchResultData()
+    public void clearPatientSearchResultData()
     {
         m_patientSearchResults = null;
         m_patientData.clear();
+    }
+
+    public void clearRegistrationSearchResultData()
+    {
+        m_registrationSearchResults = null;
     }
 
     public void setPatientRoutingSlipId(int id)
@@ -174,6 +185,114 @@ public class SessionSingleton {
             int id = getPatientId();
             m_patientData.put(id, pd);
         }
+    }
+
+    public void setRegistrationSearchResults(JSONArray response) {
+        m_registrationSearchResults = response;
+    }
+
+    public void register(final RESTCompletionListener listener, final int patientId, final int clinicId)
+    {
+        boolean ret = false;
+
+        Thread thread = new Thread() {
+            public void run() {
+                // note we use session context because this may be called after onPause()
+                RegisterREST rest = new RegisterREST(getContext());
+                rest.addListener(listener);
+                Object lock;
+                int status;
+
+                lock = rest.register(patientId, clinicId);
+
+                synchronized (lock) {
+                    // we loop here in case of race conditions or spurious interrupts
+                    while (true) {
+                        try {
+                            lock.wait();
+                            break;
+                        } catch (InterruptedException e) {
+                            continue;
+                        }
+                    }
+                }
+                status = rest.getStatus();
+                if (status != 200) {
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.post(new Runnable() {
+                        public void run() {
+                            Toast.makeText(getContext(), getContext().getString(R.string.msg_unable_to_register_patient_record), Toast.LENGTH_LONG).show();
+                        }
+                    });
+                } else {
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.post(new Runnable() {
+                        public void run() {
+                            Toast.makeText(getContext(), getContext().getString(R.string.msg_successfully_registered_patient_record), Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+            }
+        };
+        thread.start();
+    }
+
+    public void setRegistrationId(JSONObject response) {
+        try {
+            m_registrationId = response.getInt("id");
+        } catch (JSONException e) {
+        }
+    }
+
+    public int getRegistrationId() {
+        return m_registrationId;
+    }
+
+    public void createConsentRecord(final RESTCompletionListener listener,
+                             final int patient, final int clinic, final int registration,
+                             final boolean waiver, final boolean photo) {
+        boolean ret = false;
+
+        Thread thread = new Thread() {
+            public void run() {
+            // note we use session context because this may be called after onPause()
+            ConsentREST rest = new ConsentREST(getContext());
+            rest.addListener(listener);
+            Object lock;
+            int status;
+
+            lock = rest.createConsent(patient, clinic, registration, photo, waiver);
+
+            synchronized (lock) {
+                // we loop here in case of race conditions or spurious interrupts
+                while (true) {
+                    try {
+                        lock.wait();
+                        break;
+                    } catch (InterruptedException e) {
+                        continue;
+                    }
+                }
+            }
+            status = rest.getStatus();
+            if (status != 200) {
+                Handler handler = new Handler(Looper.getMainLooper());
+                handler.post(new Runnable() {
+                    public void run() {
+                        Toast.makeText(getContext(), getContext().getString(R.string.msg_unable_to_create_patient_record), Toast.LENGTH_LONG).show();
+                    }
+                });
+            } else {
+                Handler handler = new Handler(Looper.getMainLooper());
+                handler.post(new Runnable() {
+                    public void run() {
+                        Toast.makeText(getContext(), getContext().getString(R.string.msg_successfully_created_patient_record), Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+            }
+        };
+        thread.start();
     }
 
     public void getPatientSearchResultData()

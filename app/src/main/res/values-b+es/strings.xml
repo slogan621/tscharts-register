@@ -161,7 +161,7 @@
     <string name="label_summary_id">Identificación del paciente</string>
     <string name="msg_unable_to_create_patient_record">No se logra crear expediente para el paciente</string> 
     <string name="msg_successfully_created_patient_record">Expediente para el paciente creado exitosamente</string>
-    <string name="title_failed_registration"> Fallo en la registración </string>
+    <string name="title_failed_registration">Fallo en la registración </string>
     <string name="msg_failed_to_register_patient">Fallo al registrar al paciente</string>
     <string name="msg_unable_to_save_headshot_photo">No se logra guardar foto del rostro</string> 
     <string name="msg_successfully_saved_headshot_photo">Foto del rostro guardado exitosamente</string> 
@@ -196,6 +196,9 @@
     <string name="category_dental_es">Dental</string>
     <string name="category_ortho_es">Ortho</string>
     <string name="category_other_es">Otro</string>
+    
     <string name="curp">CURP</string>
+    <string name="msg_unable_to_register_patient_record">No se logra crear registro</string>
+    <string name="msg_successfully_registered_patient_record">Crear registro</string>
 </resources>
 
