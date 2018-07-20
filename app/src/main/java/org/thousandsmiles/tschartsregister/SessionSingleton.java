@@ -23,6 +23,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -239,8 +240,12 @@ public class SessionSingleton {
 
     public void setRegistrationId(JSONObject response) {
         try {
+            String m;
             m_registrationId = response.getInt("id");
+            m = String.format("setRegistrationId: %d", m_registrationId);
+            Log.e("setRegistrationId", m);
         } catch (JSONException e) {
+            Log.e("setRegistrationId", "FAILED");
         }
     }
 
@@ -603,6 +608,7 @@ public class SessionSingleton {
             ret.add(m_stationNameToId.get("Audiology"));
             ret.add(m_stationNameToId.get("Surgery Screening"));
         } else if (category.equals("Dental")) {
+            ret.add(m_stationNameToId.get("X-Ray"));
             ret.add(m_stationNameToId.get("Dental"));
         } else if (category.equals("Ortho")) {
             ret.add(m_stationNameToId.get("Ortho"));

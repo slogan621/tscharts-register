@@ -31,6 +31,7 @@ import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +52,8 @@ import org.thousandsmiles.tscharts_lib.RESTCompletionListener;
 
 import java.util.ArrayList;
 
+import static org.thousandsmiles.tschartsregister.AppWaiverFragment.RegistrationState.REGISTRATION_FAILED;
+
 public class AppWaiverFragment extends Fragment implements RESTCompletionListener, OnPageChangeListener, OnLoadCompleteListener,
         OnPageErrorListener {
     private Activity m_activity = null;
@@ -60,6 +63,7 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
     String pdfFileName;
     PDFView pdfView;
     int pageNumber;
+    int m_count;
     private AppWaiverFragment m_this = this;
     ArrayList<Integer> m_stations = null;
     private boolean m_showSuccess = false;
@@ -77,6 +81,7 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
         UPDATED_ROUTING_SLIP_ENTRIES,
         CREATED_CONSENT,
         CREATED_REGISTRATION,
+        REGISTRATION_FAILED,
     };
 
     private RegistrationState m_state = RegistrationState.UPDATED_NOTHING;
@@ -93,6 +98,10 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
     @Override
     public void onFail(int code, String msg)
     {
+        String logMsg;
+        logMsg = String.format("onFail state: %s", getStateString());
+        Log.e("AppWaiverFragment", logMsg);
+        m_state = REGISTRATION_FAILED;
         showFailure(code, msg);
     }
 
@@ -123,11 +132,49 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
         onSuccess(code, msg);
     }
 
+    private String getStateString()
+    {
+        String ret = "Unknown state";
+        switch (m_state) {
+            case UPDATED_NOTHING:
+                ret = "UPDATED_NOTHING";
+                break;
+            case UPDATED_PATIENT:
+                ret = "UPDATED_PATIENT";
+                break;
+            case UPDATED_MEDICAL_HISTORY:
+                ret = "UPDATED_HISTORY";
+                break;
+            case UPDATED_PHOTO:
+                ret = "UPDATED_PHOTO";
+                break;
+            case UPDATED_ROUTING_SLIP:
+                ret = "UPDATED_ROUTING_SLIP";
+                break;
+            case UPDATED_ROUTING_SLIP_ENTRIES:
+                ret = "UPDATED_ROUTING_SLIP_ENTRIES";
+                break;
+            case CREATED_CONSENT:
+                ret = "CREATED_CONSENT";
+                break;
+            case CREATED_REGISTRATION:
+                ret = "CREATED_REGISTRATION";
+                break;
+            case REGISTRATION_FAILED:
+                ret = "REGISTRATION_FAILED";
+                break;
+        }
+        return ret;
+    }
+
     /* patient --> medical history --> photo --> routing slip --> routing slip entries
        --> register --> consent */
     @Override
     public void onSuccess(int code, String msg)
     {
+        String logMsg;
+        logMsg = String.format("onSuccess state: %s", getStateString());
+        Log.e("AppWaiverFragment", logMsg);
         if (m_state == RegistrationState.UPDATED_NOTHING) {
             m_state = RegistrationState.UPDATED_PATIENT;
             if (m_sess.getIsNewPatient()) {
@@ -147,17 +194,23 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
             ArrayList<Integer> rtcStations = m_sess.getReturnToClinicStations();
             ArrayList<Integer> stations = mergeStations(catStations, rtcStations);
             m_stations = stations;
+            m_count = m_stations.size();
+            // XXX what if size is 0?
             while (m_stations.size() > 0) {
                 m_sess.createRoutingSlipEntry(this, m_stations.get(0));
                 m_stations.remove(m_stations.get(0));
             }
         } else if (m_state == RegistrationState.UPDATED_ROUTING_SLIP) {
-            m_state = RegistrationState.UPDATED_ROUTING_SLIP_ENTRIES;
-            if (m_stations == null || m_stations.size() == 0) {
+            m_count--;
+            if (m_count <= 0) {
+                m_state = RegistrationState.UPDATED_ROUTING_SLIP_ENTRIES;
                 m_sess.register(this, m_sess.getPatientId(), m_sess.getClinicId());
             }
         } else if (m_state == RegistrationState.UPDATED_ROUTING_SLIP_ENTRIES) {
             m_state = RegistrationState.CREATED_REGISTRATION;
+            String m;
+            m = String.format("calling createConsentRecord reg ID is %d", m_sess.getRegistrationId());
+            Log.e("AppWaiverFragment", m);
             m_sess.createConsentRecord(this, m_sess.getPatientId(), m_sess.getClinicId(), m_sess.getRegistrationId(), m_waiverChecked, m_photoChecked);
         } else if (m_state == RegistrationState.CREATED_REGISTRATION){
             m_state = RegistrationState.CREATED_CONSENT;
