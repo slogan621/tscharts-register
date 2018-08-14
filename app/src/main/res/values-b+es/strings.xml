@@ -200,5 +200,9 @@
     <string name="curp">CURP</string>
     <string name="msg_unable_to_register_patient_record">No se logra crear registro</string>
     <string name="msg_successfully_registered_patient_record">Crear registro</string>
+    <string name="not_provided">No provisto</string>
+    <string name="please_enter_a_valid_curp">Ingrese un CURP válido aquí.</string>
+    <string name="has">Tiene</string>
+    <string name="doesnt_have">No tiene</string>
 </resources>
 

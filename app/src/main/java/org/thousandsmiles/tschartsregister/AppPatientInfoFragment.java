@@ -49,6 +49,10 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
     private int m_patientId;
     private boolean m_isNewPatient = true;
     private boolean m_dirty = false;
+    private boolean m_hasCurp = true;
+    private boolean m_hasAddr = true;
+    private boolean m_hasContact = true;
+    private boolean m_hasEmerContact = true;
 
     public static AppPatientInfoFragment newInstance() {
         return new AppPatientInfoFragment();
@@ -151,7 +155,10 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
 
         tx = (TextView) m_view.findViewById(R.id.curp);
         if (tx != null) {
-            tx.setText(m_patientData.getCURP());
+            String val = m_patientData.getCURP();
+            if (val.equals("") == true) {
+                tx.setHint(R.string.please_enter_a_valid_curp);
+            }
         }
 
         // Name
@@ -306,6 +313,98 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
 
     private void clearDirty() {
         m_dirty = false;
+    }
+
+    private void enableOrDisableCurpEntry(boolean enable)
+    {
+        TextView tx = (TextView) m_view.findViewById(R.id.curp);
+        if (tx != null) {
+           tx.setEnabled(enable);
+        }
+    }
+
+    private void handleHasCurp(boolean isClicked)
+    {
+        m_hasCurp = isClicked;
+        enableOrDisableCurpEntry(m_hasCurp);
+    }
+
+    private void enableOrDisableAddrEntry(boolean enable)
+    {
+        TextView tx = (TextView) m_view.findViewById(R.id.address_street_1);
+        if (tx != null) {
+            tx.setEnabled(enable);
+        }
+        tx = (TextView) m_view.findViewById(R.id.address_street_2);
+        if (tx != null) {
+            tx.setEnabled(enable);
+        }
+        tx = (TextView) m_view.findViewById(R.id.address_city);
+        if (tx != null) {
+            tx.setEnabled(enable);
+        }
+        tx = (TextView) m_view.findViewById(R.id.address_colonia);
+        if (tx != null) {
+            tx.setEnabled(enable);
+        }
+        tx = (TextView) m_view.findViewById(R.id.address_state);
+        if (tx != null) {
+            tx.setEnabled(enable);
+        }
+        tx = (TextView) m_view.findViewById(R.id.address_state_picker);
+        if (tx != null) {
+            tx.setEnabled(enable);
+        }
+    }
+
+    private void handleHasAddr(boolean isClicked)
+    {
+        m_hasAddr = isClicked;
+        enableOrDisableAddrEntry(m_hasAddr);
+    }
+
+    private void enableOrDisableContactEntry(boolean enable)
+    {
+        TextView tx = (TextView) m_view.findViewById(R.id.phone_1);
+        if (tx != null) {
+            tx.setEnabled(enable);
+        }
+        tx = (TextView) m_view.findViewById(R.id.phone_2);
+        if (tx != null) {
+            tx.setEnabled(enable);
+        }
+        tx = (TextView) m_view.findViewById(R.id.e_mail);
+        if (tx != null) {
+            tx.setEnabled(enable);
+        }
+    }
+
+    private void handleHasContact(boolean isClicked)
+    {
+        m_hasContact = isClicked;
+        enableOrDisableContactEntry(m_hasContact);
+    }
+
+    private void enableOrDisableEmergencyContactEntry(boolean enable)
+    {
+        TextView tx = (TextView) m_view.findViewById(R.id.emergency_full_name);
+        if (tx != null) {
+            tx.setEnabled(enable);
+        }
+        tx = (TextView) m_view.findViewById(R.id.emergency_phone);
+        if (tx != null) {
+            tx.setEnabled(enable);
+        }
+        tx = (TextView) m_view.findViewById(R.id.emergency_e_mail);
+        if (tx != null) {
+            tx.setEnabled(enable);
+        }
+    }
+
+    private void handleHasEmergencyContact(boolean isClicked)
+    {
+        m_hasEmerContact = isClicked;
+        enableOrDisableEmergencyContactEntry(m_hasEmerContact);
     }
 
     private void setViewDirtyListeners() {
@@ -721,6 +820,42 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
                 }
             });
         }
+
+        rb = (RadioButton) m_view.findViewById(R.id.has_curp);
+        if (rb != null) {
+            rb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    handleHasCurp(isChecked);
+                }
+            });
+        }
+
+        rb = (RadioButton) m_view.findViewById(R.id.has_addr);
+        if (rb != null) {
+            rb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    handleHasAddr(isChecked);
+                }
+            });
+        }
+
+        rb = (RadioButton) m_view.findViewById(R.id.has_contact);
+        if (rb != null) {
+            rb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    handleHasContact(isChecked);
+                }
+            });
+        }
+
+        rb = (RadioButton) m_view.findViewById(R.id.has_emergency_contact);
+        if (rb != null) {
+            rb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    handleHasEmergencyContact(isChecked);
+                }
+            });
+        }
     }
 
     private PatientData copyPatientDataFromUI() {
@@ -886,17 +1021,18 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
         ArrayList<Integer> list = new ArrayList();
 
         tx1 =(TextView)m_view.findViewById(R.id.curp);
+        tx1.setError(null);
 
-        if(tx1.getText().toString().equals(""))
+        if(tx1.getText().toString().equals("") && m_hasCurp == true)
         {
             ret = false;
-            if (tx1.getText().toString().equals("")) {
-                list.add(R.id.curp);
-            }
+            list.add(R.id.curp);
         }
 
-        tx1 =(TextView)m_view.findViewById(R.id.paternal_last);
+        tx1 = (TextView)m_view.findViewById(R.id.paternal_last);
+        tx1.setError(null);
         tx2 = (TextView)m_view.findViewById(R.id.maternal_last);
+        tx2.setError(null);
 
         if(tx1.getText().toString().equals("") && tx2.getText().toString().equals(""))
         {
@@ -910,6 +1046,7 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
         }
 
         tx1 =(TextView)m_view.findViewById(R.id.first_name);
+        tx1.setError(null);
         if (tx1.getText().toString().equals("")) {
             ret = false;
             list.add(R.id.first_name);
@@ -918,8 +1055,10 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
         // Address
 
         tx1 =(TextView)m_view.findViewById(R.id.address_street_1);
+        tx1.setError(null);
         tx2 =(TextView)m_view.findViewById(R.id.address_street_2);
-        if(tx1.getText().toString().equals("") && tx2.getText().toString().equals(""))
+        tx2.setError(null);
+        if(m_hasAddr == true && (tx1.getText().toString().equals("") && tx2.getText().toString().equals("")))
         {
             ret = false;
             if (tx1.getText().toString().equals("")) {
@@ -931,20 +1070,23 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
         }
 
         tx1 =(TextView)m_view.findViewById(R.id.address_city);
-        if(tx1.getText().toString().equals(""))
+        tx1.setError(null);
+        if(m_hasAddr == true && tx1.getText().toString().equals(""))
         {
             ret = false;
             list.add(R.id.address_city);
         }
 
         tx1 =(TextView)m_view.findViewById(R.id.address_state);
-        if(tx1.getText().toString().equals(""))
+        tx1.setError(null);
+        if(m_hasAddr == true && tx1.getText().toString().equals(""))
         {
             ret = false;
             list.add(R.id.address_state);
         }
 
         tx1 =(TextView)m_view.findViewById(R.id.dob);
+        tx1.setError(null);
         if(tx1.getText().toString().equals(""))
         {
             ret = false;
@@ -953,40 +1095,13 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
 
         // contact info
 
-        tx1 =(TextView)m_view.findViewById(R.id.address_street_1);
-        tx2 =(TextView)m_view.findViewById(R.id.address_street_2);
-
-        if(tx1.getText().toString().equals("") && tx2.getText().toString().equals(""))
-        {
-            ret = false;
-            if (tx1.getText().toString().equals("")) {
-                list.add(R.id.address_street_1);
-            }
-            if (tx2.getText().toString().equals("")) {
-                list.add(R.id.address_street_2);
-            }
-        }
-
-        tx1 =(TextView)m_view.findViewById(R.id.address_city);
-        if(tx1.getText().toString().equals(""))
-        {
-            ret = false;
-            list.add(R.id.address_city);
-        }
-
-        tx1 =(TextView)m_view.findViewById(R.id.address_state);
-        if(tx1.getText().toString().equals(""))
-        {
-            ret = false;
-            list.add(R.id.address_state);
-        }
-
-        // contact info
-
         tx1 =(TextView)m_view.findViewById(R.id.phone_1);
+        tx1.setError(null);
         tx2 =(TextView)m_view.findViewById(R.id.phone_2);
+        tx2.setError(null);
         tx3 =(TextView)m_view.findViewById(R.id.e_mail);
-        if(tx1.getText().toString().equals("") && tx2.getText().toString().equals("") && tx3.getText().toString().equals(""))
+        tx3.setError(null);
+        if(m_hasContact == true && tx1.getText().toString().equals("") && tx2.getText().toString().equals("") && tx3.getText().toString().equals(""))
         {
             ret = false;
             if (tx1.getText().toString().equals("")) {
@@ -1003,15 +1118,18 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
         }
 
         tx1 =(TextView)m_view.findViewById(R.id.emergency_full_name);
-        if(tx1.getText().toString().equals(""))
+        tx1.setError(null);
+        if(m_hasEmerContact == true && tx1.getText().toString().equals(""))
         {
             ret = false;
             list.add(R.id.emergency_full_name);
         }
 
         tx1 =(TextView)m_view.findViewById(R.id.emergency_phone);
+        tx1.setError(null);
         tx2 =(TextView)m_view.findViewById(R.id.emergency_e_mail);
-        if(tx1.getText().toString().equals("") && tx2.getText().toString().equals("") && tx3.getText().toString().equals(""))
+        tx2.setError(null);
+        if(m_hasEmerContact == true && tx1.getText().toString().equals("") && tx2.getText().toString().equals("") && tx3.getText().toString().equals(""))
         {
             ret = false;
             if (tx1.getText().toString().equals("")) {
