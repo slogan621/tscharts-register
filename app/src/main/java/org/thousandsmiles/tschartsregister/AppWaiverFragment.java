@@ -51,6 +51,7 @@ import org.json.JSONObject;
 import org.thousandsmiles.tscharts_lib.RESTCompletionListener;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import static org.thousandsmiles.tschartsregister.AppWaiverFragment.RegistrationState.REGISTRATION_FAILED;
 
@@ -59,8 +60,6 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
     private Activity m_activity = null;
     private SessionSingleton m_sess = null;
     private boolean m_dirty = false;
-    public static final String SAMPLE_FILE = "sample.pdf";
-    String pdfFileName;
     PDFView pdfView;
     int pageNumber;
     int m_count;
@@ -344,14 +343,20 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
         }
     }
 
-    private void displayFromAsset(String assetFileName) {
-        pdfFileName = assetFileName;
-
+    private void displayFromAsset() {
+        String pdfFileName;
         pdfView = (PDFView) getActivity().findViewById(R.id.pdfView);
 
         if (pdfView != (PDFView) null) {
 
-            pdfView.fromAsset(SAMPLE_FILE)
+            Locale current = getContext().getResources().getConfiguration().locale;
+            if (current.getLanguage().equals("es")) {
+                pdfFileName="terms_es.pdf";
+            } else {
+                pdfFileName="terms.pdf";
+            }
+
+            pdfView.fromAsset(pdfFileName)
                     .defaultPage(0)
                     .onPageChange(this)
                     //.enableAnnotationRendering(true)
@@ -428,7 +433,7 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
     public void onStart()
     {
         super.onStart();
-        displayFromAsset(SAMPLE_FILE);
+        displayFromAsset();
         CheckBox cb = (CheckBox) m_activity.findViewById(R.id.waiver_acknowledgement);
         cb.setChecked(false);
         setRegisterButtonEnabled(false);
