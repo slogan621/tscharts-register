@@ -409,6 +409,7 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRegisterButtonEnabled(false);
         setHasOptionsMenu(false);
     }
 
