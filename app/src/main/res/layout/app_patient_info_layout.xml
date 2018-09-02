@@ -113,6 +113,7 @@
                     android:hint="@string/please_enter_a_valid_curp"
                     android:ellipsize="end"
                     android:maxLines="1"
+                    android:inputType="text"
                     android:paddingLeft="15dp"
                     android:scrollHorizontally="true"></EditText>
             </LinearLayout>
@@ -165,6 +166,7 @@
                     android:drawablePadding="10dp"
                     android:ellipsize="end"
                     android:maxLines="1"
+                    android:inputType="text"
                     android:paddingLeft="15dp"
                     android:scrollHorizontally="true"></EditText>
             </LinearLayout>
@@ -199,6 +201,7 @@
                     android:drawablePadding="10dp"
                     android:ellipsize="end"
                     android:maxLines="1"
+                    android:inputType="text"
                     android:paddingLeft="15dp"
                     android:scrollHorizontally="true"></EditText>
             </LinearLayout>
@@ -233,6 +236,7 @@
                     android:drawablePadding="10dp"
                     android:ellipsize="end"
                     android:maxLines="1"
+                    android:inputType="text"
                     android:paddingLeft="15dp"
                     android:scrollHorizontally="true"></EditText>
             </LinearLayout>
@@ -262,6 +266,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
+                    android:inputType="text"
                     android:scrollHorizontally="true"
                     android:ellipsize="end"
                     android:layout_weight="1"
@@ -349,6 +354,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
+                    android:inputType="text"
                     android:scrollHorizontally="true"
                     android:ellipsize="end"
                     android:layout_weight="1"
@@ -419,6 +425,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
+                    android:inputType="text"
                     android:scrollHorizontally="true"
                     android:ellipsize="end"
                     android:layout_weight="1"
@@ -453,6 +460,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
+                    android:inputType="text"
                     android:scrollHorizontally="true"
                     android:ellipsize="end"
                     android:layout_weight="1"
@@ -487,6 +495,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
+                    android:inputType="text"
                     android:scrollHorizontally="true"
                     android:ellipsize="end"
                     android:layout_weight="1"
@@ -521,6 +530,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
+                    android:inputType="text"
                     android:scrollHorizontally="true"
                     android:ellipsize="end"
                     android:layout_weight="1"
@@ -771,6 +781,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
+                    android:inputType="text"
                     android:scrollHorizontally="true"
                     android:ellipsize="end"
                     android:layout_weight="1"
