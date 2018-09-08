@@ -39,7 +39,11 @@ import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -48,21 +52,126 @@ import static android.app.Activity.RESULT_OK;
 public class AppPatientPhotoFragment extends Fragment {
     private Activity m_activity = null;
     private SessionSingleton m_sess = null;
-    private int m_patientId;
-    private boolean m_isNewPatient = true;
     private boolean m_dirty = false;
     private ImageView m_mainImageView = null;
     private ImageView m_buttonImageView = null;
     private String m_currentPhotoPath = "";
-    private String m_photo1Path = "";
-    private String m_photo2Path = "";
-    private String m_photo3Path = "";
-    private String m_clickedPhotoPath = "";
-    private File m_photo1;
-    private File m_photo2;
-    private File m_photo3;
+    private PhotoFile m_photo1;
+    private PhotoFile m_photo2;
+    private PhotoFile m_photo3;
+    private PhotoFile m_tmpPhoto;     // used to hold result of camera, copied on success to corresponding m_photo[123]
     static final int REQUEST_TAKE_PHOTO = 1;
-    private int m_whichCamera = 0;
+    private int m_whichCamera;
+
+    private class PhotoFile {
+        private File m_file = null;
+        private String m_path = "";
+        int m_headshotImage = 0;
+
+        private void activate()
+        {
+            m_sess.getCommonSessionSingleton().setPhotoPath(m_path);
+        }
+
+        public void onPhotoTaken() {
+            ImageView v;
+            setToCopyOfFile(m_tmpPhoto.getFile());
+            v = (ImageView) m_activity.findViewById(m_headshotImage);
+            if (v != null) {
+                v.setClickable(true);
+                Picasso.with(getContext()).load(m_file).memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).into(m_buttonImageView);
+            }
+        }
+
+        public void setHeadshotImage(int id) {
+            m_headshotImage = id;
+        }
+
+        public File getFile()
+        {
+            return m_file;
+        }
+
+        public void setToCopyOfFile(File file)
+        {
+            try {
+                copyInputStreamToFile(new FileInputStream(file), m_file);
+                m_file.setLastModified(file.lastModified());
+            } catch (IOException e) {
+            }
+        }
+
+        public void copyInputStreamToFile(final InputStream in, final File dest)
+                throws IOException
+        {
+            copyInputStreamToOutputStream(in, new FileOutputStream(dest));
+        }
+
+
+        public void copyInputStreamToOutputStream(final InputStream in,
+                                                  final OutputStream out) throws IOException {
+            try {
+                try {
+                    final byte[] buffer = new byte[1024];
+                    int n;
+                    while ((n = in.read(buffer)) != -1)
+                        out.write(buffer, 0, n);
+                } finally {
+                    out.close();
+                }
+            } finally {
+                in.close();
+            }
+        }
+
+        private void create()
+        {
+            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            String imageFileName = "JPEG_" + timeStamp + "_";
+            File storageDir = m_activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+            try {
+                m_file = File.createTempFile(
+                    imageFileName,  /* prefix */
+                    ".jpg",         /* suffix */
+                    storageDir      /* directory */
+                );
+
+                // Save a file: path for use with ACTION_VIEW intents
+                m_path = m_file.getAbsolutePath();
+            }
+            catch (java.io.IOException e) {
+                m_file = null;
+                m_path = "";
+            }
+        }
+
+        private void displayMainImage()
+        {
+            Picasso.with(getContext()).load(m_file).memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).into(m_mainImageView);
+        }
+
+        public void selectImage()
+        {
+            if (m_file != null) {
+                activate();
+                displayMainImage();
+            }
+        }
+
+        public void dispatchTakePictureIntent() {
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            // Ensure that there's a camera activity to handle the intent
+            if (takePictureIntent.resolveActivity(m_activity.getPackageManager()) != null) {
+                if (m_file != null) {
+                    Uri photoURI = FileProvider.getUriForFile(m_activity,
+                        "com.example.android.fileprovider",
+                        m_file);
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                    startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+                }
+            }
+        }
+    }
 
     public static AppPatientPhotoFragment newInstance() {
         return new AppPatientPhotoFragment();
@@ -80,133 +189,50 @@ public class AppPatientPhotoFragment extends Fragment {
         if (context instanceof Activity){
             m_activity=(Activity) context;
             m_sess = SessionSingleton.getInstance();
-            if ((m_isNewPatient = m_sess.getIsNewPatient()) == false) {
-                m_patientId = m_sess.getPatientId();
-            }
         }
-    }
-
-    private File createImageFile(int which) throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = m_activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-
-        // Save a file: path for use with ACTION_VIEW intents
-        if (which == 1) {
-            m_photo1 = image;
-            m_photo1Path = image.getAbsolutePath();
-        } else if (which == 2) {
-            m_photo2 = image;
-            m_photo2Path = image.getAbsolutePath();
-        } else {
-            m_photo3 = image;
-            m_photo3Path = image.getAbsolutePath();
-        }
-        return image;
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
-            try {
-                File file = new File(m_clickedPhotoPath);
-                ImageView v;
-                if (m_whichCamera == 1) {
-                    v = (ImageView) m_activity.findViewById(R.id.headshot_image_1);
-                    v.setClickable(true);
-                } else if (m_whichCamera == 2) {
-                    v = (ImageView) m_activity.findViewById(R.id.headshot_image_2);
-                    v.setClickable(true);
-                } else if (m_whichCamera == 3) {
-                    v = (ImageView) m_activity.findViewById(R.id.headshot_image_3);
-                    v.setClickable(true);
-                }
-                Picasso.with(getContext()).load(file).memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).into(m_buttonImageView);
-             } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void dispatchTakePictureIntent(int which) {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure that there's a camera activity to handle the intent
-        if (takePictureIntent.resolveActivity(m_activity.getPackageManager()) != null) {
-            // Create the File where the photo should go
-            File photoFile = null;
-            String photoPath = null;
-            if (which == 1) {
-                photoFile = m_photo1;
-            } else if (which == 2) {
-                photoFile = m_photo2;
-            } else {
-                photoFile = m_photo3;
-            }
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(m_activity,
-                        "com.example.android.fileprovider",
-                        photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                m_whichCamera = which; // would pass this as an extra but doesn't work
-                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+            if (m_whichCamera == 1) {
+                m_photo1.onPhotoTaken();
+            } else if (m_whichCamera == 2) {
+                m_photo2.onPhotoTaken();
+            } else if (m_whichCamera == 3) {
+                m_photo3.onPhotoTaken();
             }
         }
     }
 
     public void handleImageButton1Press(View v) {
         m_buttonImageView = (ImageView)  m_activity.findViewById(R.id.headshot_image_1);
-        m_clickedPhotoPath = m_photo1Path;
-        dispatchTakePictureIntent(1);
+        m_whichCamera = 1;
+        m_tmpPhoto.dispatchTakePictureIntent();
     }
 
     public void handleImageButton2Press(View v) {
         m_buttonImageView = (ImageView)  m_activity.findViewById(R.id.headshot_image_2);
-        m_clickedPhotoPath = m_photo2Path;
-        dispatchTakePictureIntent(2);
+        m_whichCamera = 2;
+        m_tmpPhoto.dispatchTakePictureIntent();
     }
 
     public void handleImageButton3Press(View v) {
         m_buttonImageView = (ImageView) m_activity.findViewById(R.id.headshot_image_3);
-        m_clickedPhotoPath = m_photo3Path;
-        dispatchTakePictureIntent(3);
-    }
-
-    private void displayMainImage(int which) {
-        File file = null;
-
-        if (which == 1) {
-            file = m_photo1;
-            m_sess.getCommonSessionSingleton().setPhotoPath(m_photo1Path);
-        } else if (which == 2) {
-            file = m_photo2;
-            m_sess.getCommonSessionSingleton().setPhotoPath(m_photo2Path);
-        } else if (which == 3) {
-            file = m_photo3;
-            m_sess.getCommonSessionSingleton().setPhotoPath(m_photo3Path);
-        }
-
-        if (file != null) {
-            Picasso.with(getContext()).load(file).memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).into(m_mainImageView);
-        }
+        m_whichCamera = 3;
+        m_tmpPhoto.dispatchTakePictureIntent();
     }
 
     public void handleImage1Press(View v) {
-        displayMainImage(1);
+        m_photo1.selectImage();
     }
 
     public void handleImage2Press(View v) {
-        displayMainImage(2);
+        m_photo2.selectImage();
     }
 
     public void handleImage3Press(View v) {
-        displayMainImage(3);
+        m_photo3.selectImage();
     }
 
     public void handleNextButtonPress(View v) {
@@ -259,19 +285,23 @@ public class AppPatientPhotoFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(false);
-        try {
-            createImageFile(1);
-            createImageFile(2);
-            createImageFile(3);
-        } catch (IOException e) {
-        }
+        m_photo1 = new PhotoFile();
+        m_photo1.create();
+        m_photo1.setHeadshotImage(R.id.headshot_image_1);
+        m_photo2 = new PhotoFile();
+        m_photo2.create();
+        m_photo2.setHeadshotImage(R.id.headshot_image_2);
+        m_photo3 = new PhotoFile();
+        m_photo3.create();
+        m_photo3.setHeadshotImage(R.id.headshot_image_3);
+        m_tmpPhoto = new PhotoFile();
+        m_tmpPhoto.create();
         m_currentPhotoPath = m_sess.getCommonSessionSingleton().getPhotoPath();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
         m_mainImageView = (ImageView)  m_activity.findViewById(R.id.headshot_image_main);
     }
 
