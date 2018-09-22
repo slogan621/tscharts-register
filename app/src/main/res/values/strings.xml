@@ -205,5 +205,6 @@
     <string name="please_enter_a_valid_curp">Please enter a valid CURP here.</string>
     <string name="has">Has</string>
     <string name="doesnt_have">Doesn\'t have</string>
+    <string name="enter_a_medication_name_here">Enter A Medication Name Here</string>
 </resources>
 
