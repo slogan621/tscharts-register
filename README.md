@@ -7,6 +7,8 @@ Android UI used for patient registration at a Thousand Smiles clinic.
 See https://github.com/slogan621/tscharts for the backend to which this
 application interfaces.
 
+A video describing this application in detail is located at https://www.youtube.com/watch?v=S5N1bFUWe58
+
 # License
 
 ```
