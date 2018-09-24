@@ -26,7 +26,6 @@
                 android:resource="@xml/file_paths"></meta-data>
         </provider>
 
-
         <activity
             android:name=".LoginActivity"
             android:screenOrientation="landscape"
@@ -35,6 +34,7 @@
         <activity
             android:name=".MedicalHistoryActivity"
             android:screenOrientation="landscape"
+            android:windowSoftInputMode="adjustPan"
             android:label="@string/title_medical_history">
         </activity>
         <activity
@@ -44,7 +44,7 @@
         </activity>
         <activity
             android:name=".PatientInfoActivity"
-            android:windowSoftInputMode="stateHidden"
+            android:windowSoftInputMode="stateHidden|adjustPan"
             android:screenOrientation="landscape"
             android:label="@string/title_patient_info">
         </activity>

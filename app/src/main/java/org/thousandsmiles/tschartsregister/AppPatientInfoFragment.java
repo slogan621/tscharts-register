@@ -1162,6 +1162,14 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
         super.onResume();
         copyPatientDataToUI();
         setViewDirtyListeners();
+        if (m_view != null) {
+            TextView tx = (TextView) m_view.findViewById(R.id.phone_1);
+            tx.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
+            tx = (TextView) m_view.findViewById(R.id.phone_2);
+            tx.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
+            tx = (TextView) m_view.findViewById(R.id.emergency_phone);
+            tx.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
+        }
     }
 
     @Override
