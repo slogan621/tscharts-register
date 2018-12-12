@@ -148,11 +148,12 @@ public class PatientSearchActivity extends AppCompatActivity implements ImageDis
     private void getStations() {
         new Thread(new Runnable() {
             public void run() {
-                m_sess.updateStationData();
+                StationData sd = new StationData();
+                sd.setContext(m_context);
+                sd.updateStationData();
             };
         }).start();
     }
-
 
     private void HideSearchResultTable()
     {
