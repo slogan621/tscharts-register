@@ -1,6 +1,6 @@
 /*
- * (C) Copyright Syd Logan 2017-2018
- * (C) Copyright Thousand Smiles Foundation 2017-2018
+ * (C) Copyright Syd Logan 2017-2019
+ * (C) Copyright Thousand Smiles Foundation 2017-2019
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,6 +68,7 @@ public class SessionSingleton {
     private Registration m_registration = new Registration();
     private int m_registrationId;
     private boolean m_isNewPatient = false;
+    private boolean m_isNewMedicalHistory = false; /* old patient, new clinic so new medical history */
     private CommonSessionSingleton m_commonSessionSingleton = null;
 
 
@@ -130,6 +131,14 @@ public class SessionSingleton {
 
     public boolean getIsNewPatient() {
         return m_isNewPatient;
+    }
+
+    public void setIsNewMedicalHistory(boolean isNew) {
+        m_isNewMedicalHistory = isNew;
+    }
+
+    public boolean getIsNewMedicalHistory() {
+        return m_isNewMedicalHistory;
     }
 
     public void clearPatientSearchResultData()
@@ -491,6 +500,7 @@ public class SessionSingleton {
                     }
                 });
             } else {
+                setIsNewMedicalHistory(false);
                 Handler handler = new Handler(Looper.getMainLooper());
                 handler.post(new Runnable() {
                     public void run() {

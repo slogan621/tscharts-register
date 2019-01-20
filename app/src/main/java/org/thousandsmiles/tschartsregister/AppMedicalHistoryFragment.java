@@ -1,6 +1,6 @@
 /*
- * (C) Copyright Syd Logan 2018
- * (C) Copyright Thousand Smiles Foundation 2018
+ * (C) Copyright Syd Logan 2018-2019
+ * (C) Copyright Thousand Smiles Foundation 2018-2019
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1249,6 +1249,9 @@ public class AppMedicalHistoryFragment extends Fragment {
                 if (m_medicalHistory == null) {
                     m_activity.runOnUiThread(new Runnable() {
                         public void run() {
+                            m_medicalHistory = m_sess.getCommonSessionSingleton().getNewPatientMedicalHistory();
+                            copyMedicalHistoryDataToUI();
+                            m_sess.setIsNewMedicalHistory(true);
                             Toast.makeText(m_activity, m_activity.getString(R.string.msg_unable_to_get_medical_history), Toast.LENGTH_SHORT).show();
                         }
                     });

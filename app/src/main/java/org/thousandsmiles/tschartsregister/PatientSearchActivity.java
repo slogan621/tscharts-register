@@ -1,6 +1,6 @@
 /*
- * (C) Copyright Syd Logan 2018
- * (C) Copyright Thousand Smiles Foundation 2018
+ * (C) Copyright Syd Logan 2018-2019
+ * (C) Copyright Thousand Smiles Foundation 2018-2019
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -391,6 +391,7 @@ public class PatientSearchActivity extends AppCompatActivity implements ImageDis
 
         m_sess.clearPatientSearchResultData();
         m_sess.setIsNewPatient(false);
+        m_sess.setIsNewMedicalHistory(false);
 
         final Date d = isDateString(searchTerm);
         new Thread(new Runnable() {

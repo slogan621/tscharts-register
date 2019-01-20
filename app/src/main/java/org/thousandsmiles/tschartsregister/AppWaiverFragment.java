@@ -1,6 +1,6 @@
 /*
- * (C) Copyright Syd Logan 2018
- * (C) Copyright Thousand Smiles Foundation 2018
+ * (C) Copyright Syd Logan 2018-2019
+ * (C) Copyright Thousand Smiles Foundation 2018-2019
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -176,7 +176,7 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
         Log.e("AppWaiverFragment", logMsg);
         if (m_state == RegistrationState.UPDATED_NOTHING) {
             m_state = RegistrationState.UPDATED_PATIENT;
-            if (m_sess.getIsNewPatient()) {
+            if (m_sess.getIsNewPatient() || m_sess.getIsNewMedicalHistory()) {
                 m_sess.createMedicalHistory(this);
             } else {
                 m_sess.updateMedicalHistory(this);
