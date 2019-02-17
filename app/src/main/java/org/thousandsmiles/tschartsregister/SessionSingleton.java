@@ -37,6 +37,7 @@ import org.thousandsmiles.tscharts_lib.ImageREST;
 import org.thousandsmiles.tscharts_lib.MedicalHistory;
 import org.thousandsmiles.tscharts_lib.MedicalHistoryREST;
 import org.thousandsmiles.tscharts_lib.RESTCompletionListener;
+import org.thousandsmiles.tscharts_lib.RoutingSlipREST;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -48,7 +49,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class SessionSingleton {
     private static SessionSingleton m_instance;
-    private int m_patientRoutingSlipId;
     private JSONObject m_routingSlipEntryResponse = null;
     private JSONArray m_patientSearchResults = null;
     private JSONArray m_registrationSearchResults = null;
@@ -150,16 +150,6 @@ public class SessionSingleton {
     public void clearRegistrationSearchResultData()
     {
         m_registrationSearchResults = null;
-    }
-
-    public void setPatientRoutingSlipId(int id)
-    {
-        m_patientRoutingSlipId = id;
-    }
-
-    public int getPatientRoutingSlipId()
-    {
-        return m_patientRoutingSlipId;
     }
 
     public void setPatientSearchResults(JSONArray results)
@@ -569,7 +559,7 @@ public class SessionSingleton {
                 Object lock;
                 int status;
 
-                lock = rest.createRoutingSlipEntry(getPatientRoutingSlipId(), station);
+                lock = rest.createRoutingSlipEntry(m_commonSessionSingleton.getPatientRoutingSlipId(), station);
 
                 synchronized (lock) {
                     // we loop here in case of race conditions or spurious interrupts
