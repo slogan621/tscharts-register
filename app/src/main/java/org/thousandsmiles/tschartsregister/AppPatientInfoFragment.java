@@ -1,6 +1,6 @@
 /*
- * (C) Copyright Syd Logan 2017-2018
- * (C) Copyright Thousand Smiles Foundation 2017-2018
+ * (C) Copyright Syd Logan 2017-2019
+ * (C) Copyright Thousand Smiles Foundation 2017-2019
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,8 +38,12 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Switch;
 import android.widget.TextView;
+
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 public class AppPatientInfoFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
     private Activity m_activity = null;
@@ -72,6 +76,23 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
         Calendar c = Calendar.getInstance();
         c.set(year, month, day);
         setDate(c);
+    }
+
+    private boolean isValidPatientBirthDate(String dateStr)
+    {
+        boolean ret = false;
+        Date date, today;
+
+        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
+        sdf.setLenient(false);
+        date = sdf.parse(dateStr, new ParsePosition(0));
+        today = new Date();
+        if (date != null) {
+            if (date.compareTo(today) < 0) {
+                ret = true;
+            }
+        }
+        return ret;
     }
 
     @Override
@@ -1087,7 +1108,7 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
 
         tx1 =(TextView)m_view.findViewById(R.id.dob);
         tx1.setError(null);
-        if(tx1.getText().toString().equals(""))
+        if(tx1.getText().toString().equals("") || isValidPatientBirthDate(tx1.getText().toString()) == false)
         {
             ret = false;
             list.add(R.id.dob);
