@@ -17,6 +17,9 @@
 
 package org.thousandsmiles.tschartsregister;
 
+// XXX TODO This has been duplicated in tscharts_lib, refactor out this class and use the one in
+// tscharts instead
+
 import android.content.Context;
 
 import com.android.volley.AuthFailureError;
