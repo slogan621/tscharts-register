@@ -83,8 +83,8 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
         boolean ret = false;
         Date date, today;
 
-        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
-        sdf.setLenient(false);
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+        sdf.setLenient(true);
         date = sdf.parse(dateStr, new ParsePosition(0));
         today = new Date();
         if (date != null) {
