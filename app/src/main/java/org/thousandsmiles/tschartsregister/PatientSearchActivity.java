@@ -18,6 +18,7 @@
 package org.thousandsmiles.tschartsregister;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -306,13 +307,23 @@ public class PatientSearchActivity extends AppCompatActivity implements ImageDis
             }
             button.setTag(value);
 
-            HeadshotImage headshot  = new HeadshotImage();
-            m_sess.getCommonSessionSingleton().addHeadshotImage(headshot);
-            headshot.setActivity(this);
-            headshot.setImageView(button);
-            headshot.registerListener(this);
-            Thread t = headshot.getImage(id);
-            m_sess.getCommonSessionSingleton().addHeadshotJob(headshot);
+            ActivityManager.MemoryInfo memoryInfo = m_sess.getCommonSessionSingleton().getAvailableMemory();
+
+            if (!memoryInfo.lowMemory) {
+                HeadshotImage headshot = new HeadshotImage();
+                m_sess.getCommonSessionSingleton().addHeadshotImage(headshot);
+                headshot.setActivity(this);
+                headshot.setImageView(button);
+                headshot.registerListener(this);
+                Thread t = headshot.getImage(id);
+                m_sess.getCommonSessionSingleton().addHeadshotJob(headshot);
+            } else {
+                PatientSearchActivity.this.runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast.makeText(getApplicationContext(), R.string.error_unable_to_connect, Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
 
             //m_sess.addHeadShotPath(id, headshot.getImageFileAbsolutePath());
             //t.start();
@@ -402,10 +413,10 @@ public class PatientSearchActivity extends AppCompatActivity implements ImageDis
 
             if (d != null) {
                 lock = x.findPatientsByDOB(d);
-            } else if (searchTerm.length() > 0) {
-                lock = x.findPatientsByName(searchTerm);
+            } else if (searchTerm.length() < 2) {
+                lock = x.findPatientsByName("impossible_patient_name");
             } else {
-                lock = x.getAllPatientData();
+                lock = x.findPatientsByName(searchTerm);
             }
 
             Thread thread = new Thread(){
