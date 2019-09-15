@@ -599,13 +599,9 @@ public class SessionSingleton {
 
         if (category.equals("New Cleft")) {
             ret.add(m_stationNameToId.get("ENT"));
-            ret.add(m_stationNameToId.get("Speech"));
-            ret.add(m_stationNameToId.get("Audiology"));
             ret.add(m_stationNameToId.get("Surgery Screening"));
         } else if (category.equals("Returning Cleft")) {
             ret.add(m_stationNameToId.get("ENT"));
-            ret.add(m_stationNameToId.get("Speech"));
-            ret.add(m_stationNameToId.get("Audiology"));
             ret.add(m_stationNameToId.get("Surgery Screening"));
         } else if (category.equals("Dental")) {
             ret.add(m_stationNameToId.get("X-Ray"));
@@ -614,6 +610,7 @@ public class SessionSingleton {
             ret.add(m_stationNameToId.get("Ortho"));
         } else if (category.equals("Other")) {
             ret.add(m_stationNameToId.get("Surgery Screening"));
+            ret.add(m_stationNameToId.get("ENT"));
         }
         return ret;
     }
