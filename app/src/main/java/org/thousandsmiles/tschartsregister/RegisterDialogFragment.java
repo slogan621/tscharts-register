@@ -31,6 +31,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.thousandsmiles.tscharts_lib.PatientData;
+
 public class RegisterDialogFragment extends DialogFragment {
 
     private View m_view;

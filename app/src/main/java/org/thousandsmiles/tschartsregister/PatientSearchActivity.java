@@ -43,6 +43,7 @@ import android.widget.Toast;
 import org.thousandsmiles.tscharts_lib.ClinicREST;
 import org.thousandsmiles.tscharts_lib.HeadshotImage;
 import org.thousandsmiles.tscharts_lib.ImageDisplayedListener;
+import org.thousandsmiles.tscharts_lib.PatientData;
 
 import java.text.DateFormat;
 import java.text.ParseException;

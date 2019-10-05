@@ -35,6 +35,8 @@ import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.thousandsmiles.tscharts_lib.PatientData;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

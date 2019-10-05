@@ -29,6 +29,9 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
+
+import org.thousandsmiles.tscharts_lib.PatientData;
+
 import java.io.File;
 
 public class RegistrationSummaryFragment extends Fragment {

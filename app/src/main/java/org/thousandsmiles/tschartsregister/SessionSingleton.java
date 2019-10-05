@@ -36,6 +36,7 @@ import org.thousandsmiles.tscharts_lib.ConsentREST;
 import org.thousandsmiles.tscharts_lib.ImageREST;
 import org.thousandsmiles.tscharts_lib.MedicalHistory;
 import org.thousandsmiles.tscharts_lib.MedicalHistoryREST;
+import org.thousandsmiles.tscharts_lib.PatientData;
 import org.thousandsmiles.tscharts_lib.RESTCompletionListener;
 import org.thousandsmiles.tscharts_lib.RoutingSlipREST;
 
