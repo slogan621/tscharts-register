@@ -519,7 +519,7 @@ public class PatientSearchActivity extends AppCompatActivity implements ImageDis
             final ClinicREST clinicREST = new ClinicREST(m_context);
             final Object lock;
 
-            Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+            Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
             int year = calendar.get(Calendar.YEAR);
             int month = calendar.get(Calendar.MONTH) + 1;
             int day = calendar.get(Calendar.DAY_OF_MONTH);
