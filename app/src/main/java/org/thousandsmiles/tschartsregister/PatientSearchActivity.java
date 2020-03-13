@@ -1,6 +1,6 @@
 /*
- * (C) Copyright Syd Logan 2018-2019
- * (C) Copyright Thousand Smiles Foundation 2018-2019
+ * (C) Copyright Syd Logan 2018-2020
+ * (C) Copyright Thousand Smiles Foundation 2018-2020
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,10 +40,14 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.thousandsmiles.tscharts_lib.ClinicREST;
 import org.thousandsmiles.tscharts_lib.HeadshotImage;
 import org.thousandsmiles.tscharts_lib.ImageDisplayedListener;
 import org.thousandsmiles.tscharts_lib.PatientData;
+import org.thousandsmiles.tscharts_lib.PatientREST;
+import org.thousandsmiles.tscharts_lib.RESTCompletionListener;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -395,6 +399,31 @@ public class PatientSearchActivity extends AppCompatActivity implements ImageDis
         return ret;
     }
 
+    class GetMatchingPatientsListener implements RESTCompletionListener {
+
+        @Override
+        public void onSuccess(int code, String message, JSONArray a) {
+            try {
+                m_sess.setPatientSearchResults(a);
+            } catch (Exception e) {
+            }
+        }
+
+        @Override
+        public void onSuccess(int code, String message, JSONObject a) {
+
+        }
+
+        @Override
+        public void onSuccess(int code, String message) {
+        }
+
+        @Override
+        public void onFail(int code, String message) {
+        }
+    }
+
+
     private void getMatchingPatients(final String searchTerm)
     {
         // analyze search term, looking for DOB string, gender, or name. Then, search.
@@ -408,7 +437,10 @@ public class PatientSearchActivity extends AppCompatActivity implements ImageDis
         final Date d = isDateString(searchTerm);
         new Thread(new Runnable() {
             public void run() {
+
+                // sess.setPatientSearchResults(response);
             final PatientREST x = new PatientREST(getApplicationContext());
+            x.addListener(new GetMatchingPatientsListener());
 
             final Object lock;
 

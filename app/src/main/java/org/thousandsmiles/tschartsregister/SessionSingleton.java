@@ -1,6 +1,6 @@
 /*
- * (C) Copyright Syd Logan 2017-2019
- * (C) Copyright Thousand Smiles Foundation 2017-2019
+ * (C) Copyright Syd Logan 2017-2020
+ * (C) Copyright Thousand Smiles Foundation 2017-2020
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,6 +37,7 @@ import org.thousandsmiles.tscharts_lib.ImageREST;
 import org.thousandsmiles.tscharts_lib.MedicalHistory;
 import org.thousandsmiles.tscharts_lib.MedicalHistoryREST;
 import org.thousandsmiles.tscharts_lib.PatientData;
+import org.thousandsmiles.tscharts_lib.PatientREST;
 import org.thousandsmiles.tscharts_lib.RESTCompletionListener;
 import org.thousandsmiles.tscharts_lib.RoutingSlipREST;
 
@@ -310,6 +311,29 @@ public class SessionSingleton {
         }
     }
 
+    class GetPatientDataListener implements RESTCompletionListener {
+
+        @Override
+        public void onSuccess(int code, String message, JSONArray a) {
+        }
+
+        @Override
+        public void onSuccess(int code, String message, JSONObject a) {
+            try {
+                addPatientData(a);
+            } catch (Exception e) {
+            }
+        }
+
+        @Override
+        public void onSuccess(int code, String message) {
+        }
+
+        @Override
+        public void onFail(int code, String message) {
+        }
+    }
+
     public PatientData getPatientData(final int id) {
 
         PatientData o = null;
@@ -318,7 +342,9 @@ public class SessionSingleton {
             o = m_patientData.get(id);
         }
         if (o == null && Looper.myLooper() != Looper.getMainLooper()) {
+            GetPatientDataListener listener = new GetPatientDataListener();
             final PatientREST patientData = new PatientREST(getContext());
+            patientData.addListener(listener);
             Object lock = patientData.getPatientData(id);
 
             synchronized (lock) {
@@ -390,6 +416,30 @@ public class SessionSingleton {
         thread.start();
     }
 
+    class CreateNewPatientListener implements RESTCompletionListener {
+
+        @Override
+        public void onSuccess(int code, String message, JSONArray a) {
+        }
+
+        @Override
+        public void onSuccess(int code, String message, JSONObject a) {
+            try {
+                int id = a.getInt("id");
+                setPatientId(id);
+            } catch (Exception e) {
+            }
+        }
+
+        @Override
+        public void onSuccess(int code, String message) {
+        }
+
+        @Override
+        public void onFail(int code, String message) {
+        }
+    }
+
     void createNewPatient(final RESTCompletionListener listener) {
         boolean ret = false;
 
@@ -397,6 +447,7 @@ public class SessionSingleton {
             public void run() {
             // note we use session context because this may be called after onPause()
             PatientREST rest = new PatientREST(getContext());
+            rest.addListener(new CreateNewPatientListener());
             rest.addListener(listener);
             Object lock;
             int status;
