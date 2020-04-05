@@ -17,6 +17,7 @@
 
 package org.thousandsmiles.tschartsregister;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
@@ -134,13 +135,7 @@ public class PatientSearchActivity extends AppCompatActivity implements ImageDis
     {
         TableLayout layout = (TableLayout) findViewById(R.id.namestablelayout);
 
-        if (layout != null) {
-            int count = layout.getChildCount();
-            for (int i = 0; i < count; i++) {
-                View child = layout.getChildAt(i);
-                if (child instanceof TableRow) ((ViewGroup) child).removeAllViews();
-            }
-        }
+        layout.removeAllViews();
     }
 
     private void getMexicanStates() {
@@ -188,10 +183,10 @@ public class PatientSearchActivity extends AppCompatActivity implements ImageDis
         LinearLayout btnLO = new LinearLayout(this);
 
         LinearLayout.LayoutParams paramsLO = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         btnLO.setOrientation(LinearLayout.VERTICAL);
 
-        TableRow.LayoutParams parms = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT);
+        TableRow.LayoutParams parms = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
 
         int leftMargin=10;
         int topMargin=2;
@@ -521,6 +516,7 @@ public class PatientSearchActivity extends AppCompatActivity implements ImageDis
         }).start();
     }
 
+    @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
