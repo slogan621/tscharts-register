@@ -17,6 +17,7 @@
 
 package org.thousandsmiles.tschartsregister;
 
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
@@ -61,6 +62,7 @@ public class PatientInfoActivity extends AppCompatActivity {
         finish();
     }
 
+    @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

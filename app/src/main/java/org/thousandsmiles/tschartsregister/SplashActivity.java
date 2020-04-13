@@ -17,6 +17,7 @@
 
 package org.thousandsmiles.tschartsregister;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -41,6 +42,7 @@ public class SplashActivity extends Activity {
         h.toggleHideyBar(this);
     }
 
+    @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 

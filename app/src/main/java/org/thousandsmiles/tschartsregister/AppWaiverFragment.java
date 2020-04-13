@@ -183,7 +183,8 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
             }
         } else if (m_state == RegistrationState.UPDATED_PATIENT) {
             m_state = RegistrationState.UPDATED_MEDICAL_HISTORY;
-            m_sess.getCommonSessionSingleton().createHeadshot(this);
+            m_sess.getCommonSessionSingleton().createImage(m_sess.getClinicId(), m_sess.getActivePatientId(),
+                                                           "Headshot", this);
         } else if (m_state == RegistrationState.UPDATED_MEDICAL_HISTORY) {
             m_state = RegistrationState.UPDATED_PHOTO;
             m_sess.createRoutingSlip(this);
