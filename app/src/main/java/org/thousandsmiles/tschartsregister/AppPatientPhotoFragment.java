@@ -164,7 +164,7 @@ public class AppPatientPhotoFragment extends Fragment {
             if (takePictureIntent.resolveActivity(m_activity.getPackageManager()) != null) {
                 if (m_file != null) {
                     Uri photoURI = FileProvider.getUriForFile(m_activity,
-                        "com.example.android.fileprovider",
+                        "org.thousandsmiles.tschartsregister.android.fileprovider",
                         m_file);
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                     startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
