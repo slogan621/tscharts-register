@@ -31,6 +31,7 @@ import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.thousandsmiles.tscharts_lib.CategoryREST;
 import org.thousandsmiles.tscharts_lib.CommonSessionSingleton;
 import org.thousandsmiles.tscharts_lib.ConsentREST;
 import org.thousandsmiles.tscharts_lib.ImageREST;
@@ -308,6 +309,29 @@ public class SessionSingleton {
                 getPatientData(m_patientSearchResults.getInt(i));
             } catch (JSONException e) {
             }
+        }
+    }
+
+    class GetCategoryListener implements RESTCompletionListener {
+
+        @Override
+        public void onSuccess(int code, String message, JSONArray a) {
+            try {
+                addCategoryData(a);
+            } catch (Exception e) {
+            }
+        }
+
+        @Override
+        public void onSuccess(int code, String message, JSONObject a) {
+        }
+
+        @Override
+        public void onSuccess(int code, String message) {
+        }
+
+        @Override
+        public void onFail(int code, String message) {
         }
     }
 
@@ -856,6 +880,7 @@ public class SessionSingleton {
         m_categoryData.clear();
         if (Looper.myLooper() != Looper.getMainLooper()) {
             final CategoryREST categoryData = new CategoryREST(getContext());
+            categoryData.addListener(new GetCategoryListener());
             Object lock = categoryData.getCategoryData();
 
             synchronized (lock) {
