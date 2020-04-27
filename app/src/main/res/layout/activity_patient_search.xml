@@ -56,6 +56,12 @@
                 android:id="@+id/patient_search_button"
                 android:text="@string/button_search"
                 android:layout_width="wrap_content" />
+
+            <ImageButton
+                android:id="@+id/patient_search_date_picker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/date_range_black_48dp"/>
         </LinearLayout>
 
         <View

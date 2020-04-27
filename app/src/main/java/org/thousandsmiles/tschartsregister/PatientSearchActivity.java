@@ -20,6 +20,7 @@ package org.thousandsmiles.tschartsregister;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -33,6 +34,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -44,6 +46,7 @@ import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.thousandsmiles.tscharts_lib.ClinicREST;
+import org.thousandsmiles.tscharts_lib.DatePickerFragment;
 import org.thousandsmiles.tscharts_lib.HeadshotImage;
 import org.thousandsmiles.tscharts_lib.ImageDisplayedListener;
 import org.thousandsmiles.tscharts_lib.PatientData;
@@ -61,7 +64,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
-public class PatientSearchActivity extends AppCompatActivity implements ImageDisplayedListener {
+public class PatientSearchActivity extends AppCompatActivity implements ImageDisplayedListener, DatePickerDialog.OnDateSetListener {
 
     private Activity m_activity = this;
     private SessionSingleton m_sess = SessionSingleton.getInstance();
@@ -90,6 +93,22 @@ public class PatientSearchActivity extends AppCompatActivity implements ImageDis
         }
         SessionSingleton.getInstance().getCommonSessionSingleton().removeHeadShotPath(imageId);
         SessionSingleton.getInstance().getCommonSessionSingleton().startNextHeadshotJob();
+    }
+
+    private void setDate(final Calendar calendar) {
+
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH) + 1;
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        String dateString = String.format("%02d-%02d-%d", month, day, year);
+        ((TextView) findViewById(R.id.patient_search)).setText(dateString);
+    }
+
+    public void onDateSet(DatePicker view, int year, int month, int day) {
+        Calendar c = Calendar.getInstance();
+        c.set(year, month, day);
+        setDate(c);
     }
 
     @Override
@@ -127,6 +146,17 @@ public class PatientSearchActivity extends AppCompatActivity implements ImageDis
             @Override
             public void onGlobalLayout() {
                 goImmersive();
+            }
+        });
+
+        ImageButton button = findViewById(R.id.patient_search_date_picker);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                org.thousandsmiles.tscharts_lib.DatePickerFragment fragment = new DatePickerFragment();
+                fragment.setListeningActivity(PatientSearchActivity.this);
+                fragment.show(m_activity.getFragmentManager(), "date");
             }
         });
     }
