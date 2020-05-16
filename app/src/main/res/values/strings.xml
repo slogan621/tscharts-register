@@ -189,12 +189,16 @@
 
     <string name="category_new_cleft">New Cleft</string>
     <string name="category_returning_cleft">Returning Cleft</string>
+    <string name="category_hearingaids">Hearing Aids</string>
+    <string name="category_ears">Ears</string>
     <string name="category_dental">Dental</string>
     <string name="category_ortho">Ortho</string>
     <string name="category_other">Other</string>
 
     <string name="category_new_cleft_es">Nuevo paciente hendido</string>
     <string name="category_returning_cleft_es">Paciente henido que regresa</string>
+    <string name="category_hearingaids_es">Audífonos</string>
+    <string name="category_ears_es">Orejas</string>
     <string name="category_dental_es">Dental</string>
     <string name="category_ortho_es">Ortho</string>
     <string name="category_other_es">Otro</string>

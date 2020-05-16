@@ -679,6 +679,10 @@ public class SessionSingleton {
         } else if (category.equals("Returning Cleft")) {
             ret.add(m_stationNameToId.get("ENT"));
             ret.add(m_stationNameToId.get("Surgery Screening"));
+        } else if (category.equals("Hearing Aids")) {
+            ret.add(m_stationNameToId.get("Audiology"));
+        } else if (category.equals("Ears")) {
+            ret.add(m_stationNameToId.get("ENT"));
         } else if (category.equals("Dental")) {
             ret.add(m_stationNameToId.get("X-Ray"));
             ret.add(m_stationNameToId.get("Dental"));
@@ -787,6 +791,8 @@ public class SessionSingleton {
         m_categoryToSelector.put("Dental", R.drawable.category_dental_selector);
         m_categoryToSelector.put("Ortho", R.drawable.category_ortho_selector);
         m_categoryToSelector.put("New Cleft", R.drawable.category_new_cleft_selector);
+        m_categoryToSelector.put("Ears", R.drawable.category_ears_selector);
+        m_categoryToSelector.put("Hearing Aids", R.drawable.category_hearingaids_selector);
         m_categoryToSelector.put("Returning Cleft", R.drawable.category_returning_cleft_selector);
         m_categoryToSelector.put("Other", R.drawable.category_other_selector);
     }
@@ -797,6 +803,8 @@ public class SessionSingleton {
         m_categoryToSpanish.put("Dental", getContext().getString(R.string.category_dental_es));
         m_categoryToSpanish.put("Ortho",  getContext().getString(R.string.category_ortho_es));
         m_categoryToSpanish.put("New Cleft",  getContext().getString(R.string.category_new_cleft_es));
+        m_categoryToSpanish.put("Hearing Aids",  getContext().getString(R.string.category_hearingaids_es));
+        m_categoryToSpanish.put("Ears",  getContext().getString(R.string.category_ears_es));
         m_categoryToSpanish.put("Returning Cleft",  getContext().getString(R.string.category_returning_cleft_es));
         m_categoryToSpanish.put("Other",  getContext().getString(R.string.category_other_es));
     }
