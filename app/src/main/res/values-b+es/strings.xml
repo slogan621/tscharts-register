@@ -209,5 +209,6 @@
     <string name="has">Tiene</string>
     <string name="doesnt_have">No tiene</string>
     <string name="enter_a_medication_name_here">Ingresar aquí nombre del medicamento</string>
+    <string name="msg_select_patient_category">¿Por qué la paciente está aquí hoy?</string>
 </resources>
 

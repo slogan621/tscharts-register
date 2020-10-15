@@ -210,5 +210,6 @@
     <string name="has">Has</string>
     <string name="doesnt_have">Doesn\'t have</string>
     <string name="enter_a_medication_name_here">Enter A Medication Name Here</string>
+    <string name="msg_select_patient_category">Why Is the Patient Here Today?</string>
 </resources>
 
