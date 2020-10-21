@@ -78,11 +78,11 @@ public class RegisterDialogFragment extends DialogFragment {
             String dob = "";
             String gender = "";
 
-            fatherLast = o.getFatherLast();
-            motherLast = o.getMotherLast();
+            fatherLast = o.getFatherLast().toUpperCase();
+            motherLast = o.getMotherLast().toUpperCase();
             first = o.getFirst();
             middle = o.getMiddle();
-            dob = o.getDob();
+            dob = o.getDobMilitary(m_sess.getContext());
             gender = o.getGender();
 
             // Inflate and set the layout for the dialog

@@ -93,14 +93,14 @@ public class RegistrationSummaryFragment extends Fragment {
 
         String middle = m_patientData.getMiddle();
         String first = m_patientData.getFirst();
-        String flast = m_patientData.getFatherLast();
-        String mlast = m_patientData.getMotherLast();
+        String flast = m_patientData.getFatherLast().toUpperCase();
+        String mlast = m_patientData.getMotherLast().toUpperCase();
 
         String format = "";
         t = (TextView) getView().findViewById(R.id.value_summary_father_last_name);
 
         if (flast.length() > 0) {
-          t.setText(m_patientData.getFatherLast());
+          t.setText(flast);
         } else {
             TableRow r = (TableRow) getView().findViewById(R.id.summary_father_last_name_row);
             if (r != null) {
@@ -110,7 +110,7 @@ public class RegistrationSummaryFragment extends Fragment {
 
         t = (TextView) getView().findViewById(R.id.value_summary_mother_last_name);
         if (mlast.length() > 0) {
-              t.setText(m_patientData.getMotherLast());
+              t.setText(mlast);
         } else {
             TableRow r = (TableRow) getView().findViewById(R.id.summary_mother_last_name_row);
             if (r != null) {
@@ -138,8 +138,8 @@ public class RegistrationSummaryFragment extends Fragment {
             }
         }
         t = (TextView) getView().findViewById(R.id.value_summary_dob);
-        if (m_patientData.getDob().length() > 0) {
-            t.setText(String.format("%s", m_patientData.getDob()));
+        if (m_patientData.getDobMilitary(m_sess.getContext()).length() > 0) {
+            t.setText(String.format("%s", m_patientData.getDobMilitary(m_sess.getContext())));
         } else {
             TableRow r = (TableRow) getView().findViewById(R.id.summary_dob_row);
             if (r != null) {

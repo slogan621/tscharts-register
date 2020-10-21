@@ -362,7 +362,7 @@ public class PatientSearchActivity extends AppCompatActivity implements ImageDis
             btnLO.addView(button);
 
             txt = new TextView(getApplicationContext());
-            txt.setText(String.format("%d %s, %s", id, paternalLast, first));
+            txt.setText(String.format("%d %s, %s", id, paternalLast.toUpperCase(), first));
             txt.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
             txt.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
             btnLO.addView(txt);
