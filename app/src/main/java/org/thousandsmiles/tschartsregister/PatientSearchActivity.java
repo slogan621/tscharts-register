@@ -18,6 +18,7 @@
 package org.thousandsmiles.tschartsregister;
 
 import android.annotation.SuppressLint;
+import java.text.DateFormatSymbols;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.DatePickerDialog;
@@ -101,7 +102,7 @@ public class PatientSearchActivity extends AppCompatActivity implements ImageDis
         int month = calendar.get(Calendar.MONTH) + 1;
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        String dateString = String.format("%02d-%02d-%d", month, day, year);
+        String dateString = String.format("%02d%s%04d", day, new DateFormatSymbols().getMonths()[month-1].substring(0, 3).toUpperCase(), year);
         ((TextView) findViewById(R.id.patient_search)).setText(dateString);
     }
 
@@ -401,7 +402,77 @@ public class PatientSearchActivity extends AppCompatActivity implements ImageDis
         m_sess.getCommonSessionSingleton().startNextHeadshotJob();
     }
 
+    private String militaryToConventionalDateString(String s)
+    {
+        boolean ret = true;
+
+        if (s.length() != "MMMddYYYY".length()) {
+            ret = false;
+        } else {
+            String m = s.substring(2, 5); // already uppercase, but be sure
+            String d = s.substring(0, 2);
+            String y = s.substring(5, 9);
+            String monthStr = "";
+
+            // no question this is not super efficient, but it is robust to local changes and
+            // does not require a change as new languages are supported.
+
+            if (m.equalsIgnoreCase(getResources().getString(R.string.January).substring(0, 3))) {
+                monthStr = "01";
+            } else if (m.equalsIgnoreCase(getResources().getString(R.string.February).substring(0, 3))) {
+                monthStr = "02";
+            } else if (m.equalsIgnoreCase(getResources().getString(R.string.March).substring(0, 3))) {
+                monthStr = "03";
+            } else if (m.equalsIgnoreCase(getResources().getString(R.string.April).substring(0, 3))) {
+                monthStr = "04";
+            } else if (m.equalsIgnoreCase(getResources().getString(R.string.May).substring(0, 3))) {
+                monthStr = "05";
+            } else if (m.equalsIgnoreCase(getResources().getString(R.string.June).substring(0, 3))) {
+                monthStr = "06";
+            } else if (m.equalsIgnoreCase(getResources().getString(R.string.July).substring(0, 3))) {
+                monthStr = "07";
+            } else if (m.equalsIgnoreCase(getResources().getString(R.string.August).substring(0, 3))) {
+                monthStr = "08";
+            } else if (m.equalsIgnoreCase(getResources().getString(R.string.September).substring(0, 3))) {
+                monthStr = "09";
+            } else if (m.equalsIgnoreCase(getResources().getString(R.string.October).substring(0, 3))) {
+                monthStr = "10";
+            } else if (m.equalsIgnoreCase(getResources().getString(R.string.November).substring(0, 3))) {
+                monthStr = "11";
+            } else if (m.equalsIgnoreCase(getResources().getString(R.string.December).substring(0, 3))) {
+                monthStr = "12";
+            } else {
+                ret = false;
+            }
+
+            if (ret == true) {
+                int val;
+
+                try {
+                    val = Integer.parseInt(d);
+                } catch (NumberFormatException e) {
+                    ret = false;
+                }
+                try {
+                    val = Integer.parseInt(y);
+                } catch (NumberFormatException e) {
+                    ret = false;
+                }
+            }
+            if (ret == true) {
+
+                // passes the military test, so convert to something isDateString can recognize
+                
+                s = String.format("%s/%s/%s", monthStr, d, y);
+            }
+        }
+        return s;
+    }
+
     private Date isDateString(String s) {
+
+        s = militaryToConventionalDateString(s); // convert if necessary
+
         // supports variations where year is yyyy or yy day is dd and month is MM
 
         Date ret = null;

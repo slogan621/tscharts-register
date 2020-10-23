@@ -110,7 +110,7 @@
     <string name="button_back">Volver</string>
     <string name="button_next">Próximo</string>
     <string name="question_register_new_patient">¿Quisiera registrar un nuevo paciente?</string> 
-    <string name="patient_search_hint"> Ingresar cualquier parte del nombre, o fecha de nacimiento completo, con el formato mm/dd/aaaa</string> 
+    <string name="patient_search_hint">Ingrese cualquier parte del nombre del paciente, o seleccione la fecha de nacimiento del paciente usando el ícono de calendario, luego haga clic en BUSCAR</string>
     <string name="patient_name">Nombre del paciente</string>
     <string name="paternal_last">Apellido paterno (del padre)</string>
     <string name="patient_address">Dirección del paciente</string>
