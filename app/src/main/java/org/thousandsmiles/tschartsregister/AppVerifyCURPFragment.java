@@ -25,27 +25,14 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.widget.CompoundButton;
-import android.widget.RadioButton;
-import android.widget.Switch;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import org.thousandsmiles.tscharts_lib.MedicalHistory;
 
 public class AppVerifyCURPFragment extends Fragment {
     private Activity m_activity = null;
-    private SessionSingleton m_sess = null;
-    private MedicalHistory m_medicalHistory;
-    private boolean m_dirty = false;
-    private View m_view = null;
 
     public static AppVerifyCURPFragment newInstance() {
         return new AppVerifyCURPFragment();
@@ -88,7 +75,6 @@ public class AppVerifyCURPFragment extends Fragment {
         alert.show();
     }
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,8 +102,6 @@ public class AppVerifyCURPFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.app_verify_curp_layout, container, false);
-        m_view = view;
-        m_sess = SessionSingleton.getInstance();
         return view;
     }
 
