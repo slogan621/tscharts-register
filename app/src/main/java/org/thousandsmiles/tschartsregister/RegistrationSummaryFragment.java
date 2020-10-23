@@ -83,7 +83,7 @@ public class RegistrationSummaryFragment extends Fragment {
         String curp = m_patientData.getCURP();
 
         if (curp.length() > 0) {
-            t.setText(curp);
+            t.setText(String.format("CURP: %s", curp));
         } else {
             TableRow r = (TableRow) getView().findViewById(R.id.summary_curp);
             if (r != null) {

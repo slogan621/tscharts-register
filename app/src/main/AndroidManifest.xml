@@ -41,6 +41,13 @@
             tools:ignore="LockedOrientationActivity">
         </activity>
         <activity
+            android:name=".VerifyCURPActivity"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="adjustPan"
+            android:label="@string/title_verify_curp"
+            tools:ignore="LockedOrientationActivity">
+        </activity>
+        <activity
             android:name=".WaiverActivity"
             android:screenOrientation="landscape"
             android:label="@string/title_waiver"

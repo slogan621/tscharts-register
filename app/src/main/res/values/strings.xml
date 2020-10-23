@@ -211,5 +211,7 @@
     <string name="doesnt_have">Doesn\'t have</string>
     <string name="enter_a_medication_name_here">Enter A Medication Name Here</string>
     <string name="msg_select_patient_category">Why Is the Patient Here Today?</string>
+    <string name="title_verify_curp">Verify CURP</string>
+    <string name="msg_were_you_able_to_verify_curp">Were you able to verify the CURP?</string>
 </resources>
 

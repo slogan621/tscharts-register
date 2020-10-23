@@ -1,6 +1,6 @@
 /*
- * (C) Copyright Syd Logan 2017-2019
- * (C) Copyright Thousand Smiles Foundation 2017-2019
+ * (C) Copyright Syd Logan 2017-2020
+ * (C) Copyright Thousand Smiles Foundation 2017-2020
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,6 +35,7 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.NumberPicker;
 import android.widget.RadioButton;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -126,8 +127,16 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
 
         final PatientData pd = this.copyPatientDataFromUI();
         boolean valid;
+        final Class<?> nextClass;
 
         valid = validateFields();
+
+        if (m_hasCurp) {
+            nextClass = VerifyCURPActivity.class;
+        } else {
+            nextClass = MedicalHistoryActivity.class;
+        }
+
         if (valid == false) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
@@ -152,7 +161,7 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
                     m_sess.updatePatientData(pd);
-                    startActivity(new Intent(m_activity, MedicalHistoryActivity.class));
+                    startActivity(new Intent(m_activity, nextClass));
                     m_activity.finish();
                 }
             });
@@ -160,16 +169,14 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
             builder.setNegativeButton(m_activity.getString(R.string.button_no), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                    startActivity(new Intent(m_activity, MedicalHistoryActivity.class));
-                    m_activity.finish();
+                    dialog.dismiss(); // force the save
                 }
             });
 
             AlertDialog alert = builder.create();
             alert.show();
         } else {
-            startActivity(new Intent(m_activity, MedicalHistoryActivity.class));
+            startActivity(new Intent(m_activity, nextClass));
             m_activity.finish();
         }
     }
@@ -189,6 +196,8 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
             String val = m_patientData.getCURP();
             if (val.equals("") == true) {
                 tx.setHint(R.string.please_enter_a_valid_curp);
+            } else {
+                tx.setText(val);
             }
         }
 
@@ -363,6 +372,7 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
     private void enableOrDisableAddrEntry(boolean enable)
     {
         TextView tx = (TextView) m_view.findViewById(R.id.address_street_1);
+        NumberPicker statePicker;
         if (tx != null) {
             tx.setEnabled(enable);
         }
@@ -382,9 +392,9 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
         if (tx != null) {
             tx.setEnabled(enable);
         }
-        tx = (TextView) m_view.findViewById(R.id.address_state_picker);
-        if (tx != null) {
-            tx.setEnabled(enable);
+        statePicker = (NumberPicker) m_view.findViewById(R.id.address_state_picker);
+        if (statePicker != null) {
+            statePicker.setEnabled(enable);
         }
     }
 
