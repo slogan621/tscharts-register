@@ -409,12 +409,12 @@ public class PatientSearchActivity extends AppCompatActivity implements ImageDis
         if (s.length() != "MMMddYYYY".length()) {
             ret = false;
         } else {
-            String m = s.substring(2, 5); // already uppercase, but be sure
+            String m = s.substring(2, 5); 
             String d = s.substring(0, 2);
             String y = s.substring(5, 9);
             String monthStr = "";
 
-            // no question this is not super efficient, but it is robust to local changes and
+            // no question this is not super efficient, but it is robust to locale changes and
             // does not require a change as new languages are supported.
 
             if (m.equalsIgnoreCase(getResources().getString(R.string.January).substring(0, 3))) {
@@ -462,7 +462,7 @@ public class PatientSearchActivity extends AppCompatActivity implements ImageDis
             if (ret == true) {
 
                 // passes the military test, so convert to something isDateString can recognize
-                
+
                 s = String.format("%s/%s/%s", monthStr, d, y);
             }
         }
