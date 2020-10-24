@@ -33,6 +33,7 @@ import android.webkit.WebView;
 
 public class AppVerifyCURPFragment extends Fragment {
     private Activity m_activity = null;
+    private boolean m_hasCurp = false;
 
     public static AppVerifyCURPFragment newInstance() {
         return new AppVerifyCURPFragment();
@@ -78,19 +79,25 @@ public class AppVerifyCURPFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setHasOptionsMenu(false);
     }
 
     @Override
     public void onResume() {
         super.onResume();
+
+        Bundle b = getArguments();
+        m_hasCurp = b.getBoolean("hasCurp");
         WebView v = getActivity().findViewById(R.id.webview);
 
         if (v != null) {
             WebSettings webSettings = v.getSettings();
             webSettings.setJavaScriptEnabled(true);
+            CURPWebViewClient wvc = new CURPWebViewClient();
+            wvc.setHasCurp(m_hasCurp);
+            v.setWebViewClient(wvc);
             v.loadUrl("https://www.gob.mx/curp/");
-            v.setWebViewClient(new CURPWebViewClient());
         }
     }
 

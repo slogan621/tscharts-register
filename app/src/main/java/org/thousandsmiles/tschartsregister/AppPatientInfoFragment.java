@@ -134,7 +134,8 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
         if (m_hasCurp) {
             nextClass = VerifyCURPActivity.class;
         } else {
-            nextClass = MedicalHistoryActivity.class;
+            nextClass = VerifyCURPActivity.class;
+            //nextClass = MedicalHistoryActivity.class;
         }
 
         if (valid == false) {
@@ -161,7 +162,11 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
                     m_sess.updatePatientData(pd);
-                    startActivity(new Intent(m_activity, nextClass));
+                    Intent intent = new Intent(m_activity, nextClass);
+                    Bundle b = new Bundle();
+                    b.putBoolean("hasCurp", m_hasCurp);
+                    intent.putExtras(b);
+                    startActivity(intent);
                     m_activity.finish();
                 }
             });
@@ -176,7 +181,11 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
             AlertDialog alert = builder.create();
             alert.show();
         } else {
-            startActivity(new Intent(m_activity, nextClass));
+            Intent intent = new Intent(m_activity, nextClass);
+            Bundle b = new Bundle();
+            b.putBoolean("hasCurp", m_hasCurp);
+            intent.putExtras(b);
+            startActivity(intent);
             m_activity.finish();
         }
     }

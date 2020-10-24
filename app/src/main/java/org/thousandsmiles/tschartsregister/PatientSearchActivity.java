@@ -47,6 +47,7 @@ import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.thousandsmiles.tscharts_lib.ClinicREST;
+import org.thousandsmiles.tscharts_lib.CommonSessionSingleton;
 import org.thousandsmiles.tscharts_lib.DatePickerFragment;
 import org.thousandsmiles.tscharts_lib.HeadshotImage;
 import org.thousandsmiles.tscharts_lib.ImageDisplayedListener;
@@ -402,102 +403,6 @@ public class PatientSearchActivity extends AppCompatActivity implements ImageDis
         m_sess.getCommonSessionSingleton().startNextHeadshotJob();
     }
 
-    private String militaryToConventionalDateString(String s)
-    {
-        boolean ret = true;
-
-        if (s.length() != "MMMddYYYY".length()) {
-            ret = false;
-        } else {
-            String m = s.substring(2, 5); 
-            String d = s.substring(0, 2);
-            String y = s.substring(5, 9);
-            String monthStr = "";
-
-            // no question this is not super efficient, but it is robust to locale changes and
-            // does not require a change as new languages are supported.
-
-            if (m.equalsIgnoreCase(getResources().getString(R.string.January).substring(0, 3))) {
-                monthStr = "01";
-            } else if (m.equalsIgnoreCase(getResources().getString(R.string.February).substring(0, 3))) {
-                monthStr = "02";
-            } else if (m.equalsIgnoreCase(getResources().getString(R.string.March).substring(0, 3))) {
-                monthStr = "03";
-            } else if (m.equalsIgnoreCase(getResources().getString(R.string.April).substring(0, 3))) {
-                monthStr = "04";
-            } else if (m.equalsIgnoreCase(getResources().getString(R.string.May).substring(0, 3))) {
-                monthStr = "05";
-            } else if (m.equalsIgnoreCase(getResources().getString(R.string.June).substring(0, 3))) {
-                monthStr = "06";
-            } else if (m.equalsIgnoreCase(getResources().getString(R.string.July).substring(0, 3))) {
-                monthStr = "07";
-            } else if (m.equalsIgnoreCase(getResources().getString(R.string.August).substring(0, 3))) {
-                monthStr = "08";
-            } else if (m.equalsIgnoreCase(getResources().getString(R.string.September).substring(0, 3))) {
-                monthStr = "09";
-            } else if (m.equalsIgnoreCase(getResources().getString(R.string.October).substring(0, 3))) {
-                monthStr = "10";
-            } else if (m.equalsIgnoreCase(getResources().getString(R.string.November).substring(0, 3))) {
-                monthStr = "11";
-            } else if (m.equalsIgnoreCase(getResources().getString(R.string.December).substring(0, 3))) {
-                monthStr = "12";
-            } else {
-                ret = false;
-            }
-
-            if (ret == true) {
-                int val;
-
-                try {
-                    val = Integer.parseInt(d);
-                } catch (NumberFormatException e) {
-                    ret = false;
-                }
-                try {
-                    val = Integer.parseInt(y);
-                } catch (NumberFormatException e) {
-                    ret = false;
-                }
-            }
-            if (ret == true) {
-
-                // passes the military test, so convert to something isDateString can recognize
-
-                s = String.format("%s/%s/%s", monthStr, d, y);
-            }
-        }
-        return s;
-    }
-
-    private Date isDateString(String s) {
-
-        s = militaryToConventionalDateString(s); // convert if necessary
-
-        // supports variations where year is yyyy or yy day is dd and month is MM
-
-        Date ret = null;
-
-        String[] formats = {
-                "MM-dd-yy",
-                "MM/dd/yy",
-                "MM dd yy",
-                "MM-dd-yyyy",
-                "MM/dd/yyyy",
-                "MM dd yyyy"
-        };
-
-        for (int i = 0; i < formats.length; i++){
-            try {
-                DateFormat df = new SimpleDateFormat(formats[i], Locale.ENGLISH);
-                Date date = df.parse(s);
-                ret = date;
-                break;
-            } catch (ParseException pe) {
-            }
-        }
-        return ret;
-    }
-
     class GetMatchingPatientsListener implements RESTCompletionListener {
 
         @Override
@@ -522,7 +427,6 @@ public class PatientSearchActivity extends AppCompatActivity implements ImageDis
         }
     }
 
-
     private void getMatchingPatients(final String searchTerm)
     {
         // analyze search term, looking for DOB string, gender, or name. Then, search.
@@ -533,7 +437,7 @@ public class PatientSearchActivity extends AppCompatActivity implements ImageDis
         m_sess.setIsNewPatient(false);
         m_sess.setIsNewMedicalHistory(false);
 
-        final Date d = isDateString(searchTerm);
+        final Date d = CommonSessionSingleton.getInstance().isDateString(searchTerm);
         new Thread(new Runnable() {
             public void run() {
 

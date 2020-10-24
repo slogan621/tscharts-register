@@ -24,19 +24,33 @@ import android.webkit.WebViewClient;
 
 public class CURPWebViewClient extends WebViewClient {
 
+    private boolean m_hasCurp = false;
+
+    public void setHasCurp(boolean val) {
+        m_hasCurp = val;
+    }
+
     @Override
     public void onPageFinished(WebView view, String url)
     {
-        //super.onPageFinished(view, url);
+        super.onPageFinished(view, url);
         SessionSingleton sess = SessionSingleton.getInstance();
         String curp = sess.getPatientData(sess.getActivePatientId()).getCURP();
-        String js = String.format("javascript:(function f() {document.getElementById(\"curpinput\").value = \"%s\";document.getElementById(\"curpinput\").readOnly=true;})()", curp);
+        String js;
+
+        if (m_hasCurp == true && curp.equals("") == false) {
+            js = String.format("javascript:(function f() {document.getElementById(\"curpinput\").value = \"%s\";document.getElementById(\"curpinput\").readOnly=true;})()", curp);
+        } else {
+            js = String.format("javascript:document.querySelector('[data-ember-action-270]').click();");
+        }
+
+
         view.loadUrl(js);
     }
 
     @Override
     public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error)
     {
-
+        super.onReceivedError(view, request, error);
     }
 }

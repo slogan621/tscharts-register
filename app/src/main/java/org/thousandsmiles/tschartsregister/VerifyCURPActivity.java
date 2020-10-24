@@ -32,6 +32,7 @@ public class VerifyCURPActivity extends AppCompatActivity {
     private SessionSingleton m_sess = SessionSingleton.getInstance();
     private Context m_context;
     AppVerifyCURPFragment m_fragment;
+    private boolean m_hasCurp= false;
     RegistrationSummaryFragment m_registrationSummaryFragment;
 
     @Override
@@ -64,10 +65,13 @@ public class VerifyCURPActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle b = getIntent().getExtras();
+        m_hasCurp = b.getBoolean("hasCurp");
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         setContentView(R.layout.activity_medical_history);
         m_context = getApplicationContext();
         Bundle arguments = new Bundle();
+        arguments.putBoolean("hasCurp", m_hasCurp);
         m_fragment = new AppVerifyCURPFragment();
         m_fragment.setArguments(arguments);
         getSupportFragmentManager().beginTransaction()
