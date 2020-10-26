@@ -50,30 +50,35 @@ public class AppVerifyCURPFragment extends Fragment {
 
     public void handleNextButtonPress(View v) {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        if (m_hasCurp == false) {
+            startActivity(new Intent(m_activity, PatientInfoActivity.class));
+            m_activity.finish();
+        } else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-        builder.setTitle(m_activity.getString(R.string.title_verify_curp));
-        builder.setMessage(m_activity.getString(R.string.msg_were_you_able_to_verify_curp));
+            builder.setTitle(m_activity.getString(R.string.title_verify_curp));
+            builder.setMessage(m_activity.getString(R.string.msg_were_you_able_to_verify_curp));
 
-        builder.setPositiveButton(m_activity.getString(R.string.button_yes), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                startActivity(new Intent(m_activity, MedicalHistoryActivity.class));
-                m_activity.finish();
-            }
-        });
+            builder.setPositiveButton(m_activity.getString(R.string.button_yes), new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    startActivity(new Intent(m_activity, MedicalHistoryActivity.class));
+                    m_activity.finish();
+                }
+            });
 
-        builder.setNegativeButton(m_activity.getString(R.string.button_no), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                startActivity(new Intent(m_activity, PatientInfoActivity.class));
-                m_activity.finish();
-            }
-        });
+            builder.setNegativeButton(m_activity.getString(R.string.button_no), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    startActivity(new Intent(m_activity, PatientInfoActivity.class));
+                    m_activity.finish();
+                }
+            });
 
-        AlertDialog alert = builder.create();
-        alert.show();
+            AlertDialog alert = builder.create();
+            alert.show();
+        }
     }
 
     @Override
