@@ -40,9 +40,11 @@ import android.widget.RadioButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import org.thousandsmiles.tscharts_lib.CommonSessionSingleton;
 import org.thousandsmiles.tscharts_lib.DatePickerFragment;
 import org.thousandsmiles.tscharts_lib.PatientData;
 
+import java.text.DateFormatSymbols;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -72,7 +74,7 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
         int month = calendar.get(Calendar.MONTH) + 1;
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        String dateString = String.format("%02d-%02d-%d", month, day, year);
+        String dateString = String.format("%02d%s%04d", day, new DateFormatSymbols().getMonths()[month-1].substring(0, 3).toUpperCase(), year);
         ((TextView) m_view.findViewById(R.id.dob)).setText(dateString);
     }
 
@@ -84,9 +86,11 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
 
     private boolean isValidPatientBirthDate(String dateStr)
     {
+        final Date date = CommonSessionSingleton.getInstance().isDateString(dateStr);
         boolean ret = false;
-        Date date, today;
+        Date today;
 
+        /*
         SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
         sdf.setLenient(true);
         date = sdf.parse(dateStr, new ParsePosition(0));
@@ -96,6 +100,7 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
             sdf.setLenient(true);
             date = sdf.parse(dateStr, new ParsePosition(0));
         }
+        */
 
         if (date != null) {
             today = new Date();
@@ -318,7 +323,7 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
 
         tx = (TextView) m_view.findViewById(R.id.dob);
         if (tx != null) {
-            tx.setText(m_patientData.getDob());
+            tx.setText(m_patientData.getDobMilitary(m_sess.getContext()));
         }
 
         // Contact Info

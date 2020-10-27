@@ -55,14 +55,10 @@ import org.thousandsmiles.tscharts_lib.PatientData;
 import org.thousandsmiles.tscharts_lib.PatientREST;
 import org.thousandsmiles.tscharts_lib.RESTCompletionListener;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
