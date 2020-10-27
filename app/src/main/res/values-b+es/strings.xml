@@ -212,5 +212,6 @@
     <string name="msg_select_patient_category">¿Por qué la paciente está aquí hoy?</string>
     <string name="title_verify_curp">Verificar CURP</string>
     <string name="msg_were_you_able_to_verify_curp">¿Pudiste verificar la/el CURP?</string>
+    <string name="button_skip">Omitir</string>
 </resources>
 

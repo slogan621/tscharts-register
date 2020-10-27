@@ -50,7 +50,7 @@ public class AppVerifyCURPFragment extends Fragment {
 
     public void handleNextButtonPress(View v) {
 
-        if (m_hasCurp == false) {
+        if (false && m_hasCurp == false) {
             startActivity(new Intent(m_activity, PatientInfoActivity.class));
             m_activity.finish();
         } else {
@@ -75,6 +75,17 @@ public class AppVerifyCURPFragment extends Fragment {
                     m_activity.finish();
                 }
             });
+
+            if (m_hasCurp == false) {
+                builder.setNeutralButton(m_activity.getString(R.string.button_skip), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        startActivity(new Intent(m_activity, MedicalHistoryActivity.class));
+                        m_activity.finish();
+                    }
+                });
+            }
 
             AlertDialog alert = builder.create();
             alert.show();
