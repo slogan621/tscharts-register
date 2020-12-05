@@ -35,15 +35,18 @@ public class CURPWebViewClient extends WebViewClient {
     {
         super.onPageFinished(view, url);
         SessionSingleton sess = SessionSingleton.getInstance();
-        String curp = sess.getPatientData(sess.getActivePatientId()).getCURP();
+        String curp = "";
         String js;
+
+        if (m_hasCurp == true) {
+            curp = sess.getPatientData(sess.getActivePatientId()).getCURP();
+        }
 
         if (m_hasCurp == true && curp.equals("") == false) {
             js = String.format("javascript:(function f() {document.getElementById(\"curpinput\").value = \"%s\";document.getElementById(\"curpinput\").readOnly=true;})()", curp);
         } else {
             js = String.format("javascript:document.querySelector('[data-ember-action-270]').click();");
         }
-
 
         view.loadUrl(js);
     }

@@ -50,7 +50,7 @@ public class AppVerifyCURPFragment extends Fragment {
 
     public void handleNextButtonPress(View v) {
 
-        if (false && m_hasCurp == false) {
+        if (false && m_hasCurp == false) {  // XXX
             startActivity(new Intent(m_activity, PatientInfoActivity.class));
             m_activity.finish();
         } else {
@@ -62,7 +62,11 @@ public class AppVerifyCURPFragment extends Fragment {
             builder.setPositiveButton(m_activity.getString(R.string.button_yes), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
-                    startActivity(new Intent(m_activity, MedicalHistoryActivity.class));
+                    if (false /* && SessionSingleton.getInstance().getCURPLookup()*/) {
+                        startActivity(new Intent(m_activity, PatientInfoActivity.class));
+                    } else {
+                        startActivity(new Intent(m_activity, MedicalHistoryActivity.class));
+                    }
                     m_activity.finish();
                 }
             });
