@@ -17,10 +17,16 @@
 
 package org.thousandsmiles.tschartsregister;
 
+import android.content.Context;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
+import org.thousandsmiles.tscharts_lib.CommonSessionSingleton;
+import org.thousandsmiles.tscharts_lib.PatientData;
+
+import java.util.ArrayList;
 
 public class CURPWebViewClient extends WebViewClient {
 
@@ -36,16 +42,37 @@ public class CURPWebViewClient extends WebViewClient {
         super.onPageFinished(view, url);
         SessionSingleton sess = SessionSingleton.getInstance();
         String curp = "";
+        String first = "";
+        String motherLast = "";
+        String fatherLast = "";
+        String birthDay = "";
+        String birthMonth = "";
+        String birthYear = "";
+        String gender = "H";
+
         String js;
+        PatientData data = sess.getPatientData(sess.getActivePatientId());
 
         if (m_hasCurp == true) {
-            curp = sess.getPatientData(sess.getActivePatientId()).getCURP();
+            curp = data.getCURP();
+        } else {
+            first = data.getFirst();
+            motherLast = data.getMotherLast();
+            fatherLast = data.getFatherLast();
+            String dob = data.getDob();
+            dob = data.fromDobMilitary(sess.getContext(), dob);
+            String delims = "[/]";
+
+            String[] tokens = dob.split(delims);
+            birthMonth = tokens[0];
+            birthDay = tokens[1];
+            birthYear = tokens[2];
         }
 
         if (m_hasCurp == true && curp.equals("") == false) {
             js = String.format("javascript:(function f() {document.getElementById(\"curpinput\").value = \"%s\";document.getElementById(\"curpinput\").readOnly=true;})()", curp);
         } else {
-            js = String.format("javascript:document.querySelector('[data-ember-action-270]').click();");
+            js = String.format("javascript:(function f() {document.querySelector('[data-ember-action-270]').click(); document.getElementById(\"nombre\").value = \"%s\";document.getElementById(\"primerApellido\").value = \"%s\";document.getElementById(\"segundoApellido\").value = \"%s\";document.getElementById(\"diaNacimiento\").value = \"%s\";document.getElementById(\"mesNacimiento\").value = \"%s\";document.getElementById(\"selectedYear\").value = \"%s\";document.getElementById(\"sexo\").value = \"%s\";})()", first, fatherLast, motherLast, birthDay, birthMonth, birthYear, gender);
         }
 
         view.loadUrl(js);
