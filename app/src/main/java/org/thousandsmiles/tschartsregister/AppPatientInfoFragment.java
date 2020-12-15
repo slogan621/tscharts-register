@@ -22,6 +22,7 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -220,6 +221,8 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
         tx = (TextView) m_view.findViewById(R.id.paternal_last);
         if (tx != null) {
             tx.setText(m_patientData.getFatherLast());
+            tx.setTypeface(null, Typeface.BOLD_ITALIC);
+            tx.setBackgroundResource(R.color.pressed_color);
         }
 
         tx = (TextView) m_view.findViewById(R.id.maternal_last);
@@ -1089,7 +1092,7 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
         tx2 = (TextView)m_view.findViewById(R.id.maternal_last);
         tx2.setError(null);
 
-        if(tx1.getText().toString().equals("") && tx2.getText().toString().equals(""))
+        if(tx1.getText().toString().equals("") || tx2.getText().toString().equals(""))
         {
             ret = false;
             if (tx1.getText().toString().equals("")) {

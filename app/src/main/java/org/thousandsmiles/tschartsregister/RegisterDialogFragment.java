@@ -20,6 +20,7 @@ package org.thousandsmiles.tschartsregister;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
@@ -90,6 +91,8 @@ public class RegisterDialogFragment extends DialogFragment {
             m_view = inflater.inflate(R.layout.register_dialog, null);
             TextView v = (TextView) m_view.findViewById(R.id.patient_father_last);
             v.setText(fatherLast);
+            v.setTypeface(null, Typeface.BOLD_ITALIC);
+            v.setBackgroundResource(R.color.pressed_color);
             v = (TextView) m_view.findViewById(R.id.patient_mother_last);
             v.setText(motherLast);
             v = (TextView) m_view.findViewById(R.id.patient_first);

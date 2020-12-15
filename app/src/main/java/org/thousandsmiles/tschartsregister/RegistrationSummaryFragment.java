@@ -18,6 +18,7 @@
 package org.thousandsmiles.tschartsregister;
 
 import android.app.Activity;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -101,6 +102,8 @@ public class RegistrationSummaryFragment extends Fragment {
 
         if (flast.length() > 0) {
           t.setText(flast);
+          t.setTypeface(null, Typeface.BOLD_ITALIC);
+          t.setBackgroundResource(R.color.pressed_color);
         } else {
             TableRow r = (TableRow) getView().findViewById(R.id.summary_father_last_name_row);
             if (r != null) {
