@@ -214,5 +214,7 @@
     <string name="title_verify_curp">Verify CURP</string>
     <string name="msg_were_you_able_to_verify_curp">Were you able to verify the CURP?</string>
     <string name="button_skip">Skip</string>
+    <string name="msg_tablet_is_out_of_disk_space">This tablet is out of disk space</string>
+    <string name="msg_unable_to_take_photo_out_of_disk_space">Unable to take photo due to disk space issues. Try another tablet.</string>
 </resources>
 

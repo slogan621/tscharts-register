@@ -33,6 +33,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
@@ -142,6 +143,12 @@ public class AppPatientPhotoFragment extends Fragment {
             catch (java.io.IOException e) {
                 m_file = null;
                 m_path = "";
+                m_activity.runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast.makeText(m_activity, m_activity.getString(R.string.msg_tablet_is_out_of_disk_space), Toast.LENGTH_SHORT).show();
+
+                    }
+                });
             }
         }
 
@@ -168,6 +175,13 @@ public class AppPatientPhotoFragment extends Fragment {
                         m_file);
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                     startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+                } else {
+                    m_activity.runOnUiThread(new Runnable() {
+                        public void run() {
+                            Toast.makeText(m_activity, m_activity.getString(R.string.msg_unable_to_take_photo_out_of_disk_space), Toast.LENGTH_SHORT).show();
+
+                        }
+                    });
                 }
             }
         }

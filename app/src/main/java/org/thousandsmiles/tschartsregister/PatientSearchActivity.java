@@ -429,6 +429,8 @@ public class PatientSearchActivity extends AppCompatActivity implements ImageDis
         m_sess.setIsNewPatient(false);
         m_sess.setIsNewMedicalHistory(false);
 
+        CommonSessionSingleton.getInstance().clearStorageDir();
+
         final Date d = CommonSessionSingleton.getInstance().isDateString(searchTerm);
         new Thread(new Runnable() {
             public void run() {
