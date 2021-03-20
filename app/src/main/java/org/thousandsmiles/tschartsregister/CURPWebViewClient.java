@@ -51,7 +51,14 @@ public class CURPWebViewClient extends WebViewClient {
         String gender = "H";
 
         String js;
-        PatientData data = sess.getPatientData(sess.getActivePatientId());
+
+        PatientData data;
+
+        if (sess.getIsNewPatient()) {
+            data = sess.getNewPatientData();
+        } else {
+            data = sess.getPatientData(sess.getActivePatientId());
+        }
 
         if (m_hasCurp == true) {
             curp = data.getCURP();
