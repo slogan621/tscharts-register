@@ -76,7 +76,7 @@ public class RegistrationSummaryFragment extends Fragment {
             }
         } else {
             File file = new File(imagePath);
-            Picasso.with(getContext()).load(file).memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).into(m_imageView);
+            Picasso.get().load(file).memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).into(m_imageView);
         }
 
         TextView t = (TextView) getView().findViewById(R.id.value_summary_curp);

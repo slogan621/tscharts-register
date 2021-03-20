@@ -79,7 +79,7 @@ public class AppPatientPhotoFragment extends Fragment {
             v = (ImageView) m_activity.findViewById(m_headshotImage);
             if (v != null) {
                 v.setClickable(true);
-                Picasso.with(getContext()).load(m_file).memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).into(m_buttonImageView);
+                Picasso.get().load(m_file).memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).into(m_buttonImageView);
             }
         }
 
@@ -147,7 +147,7 @@ public class AppPatientPhotoFragment extends Fragment {
 
         private void displayMainImage()
         {
-            Picasso.with(getContext()).load(m_file).memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).into(m_mainImageView);
+            Picasso.get().load(m_file).memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).into(m_mainImageView);
         }
 
         public void selectImage()

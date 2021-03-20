@@ -24,7 +24,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.github.slogan621:tscharts-lib:0.2.35'
+    compile 'com.github.slogan621:tscharts-lib:0.2.41'
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
@@ -36,7 +36,8 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:support-v4:26.1.0'
     compile 'com.android.support:design:26.1.0'
-    compile 'com.squareup.picasso:picasso:2.5.2'
+    //compile 'com.squareup.picasso:picasso:2.5.2'
+    //compile 'com.squareup.picasso:picasso:2.8'
     //compile 'com.github.barteksc:android-pdf-viewer:2.8.2'
     compile 'com.github.barteksc:android-pdf-viewer:3.0.0-beta.5'
 }
