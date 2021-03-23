@@ -406,7 +406,7 @@ public class SessionSingleton {
             Object lock;
             int status;
 
-            lock = rest.updatePatient(m_patientData.get(patientId));
+            lock = rest.updatePatient(getContext(), m_patientData.get(patientId));
 
             synchronized (lock) {
                 // we loop here in case of race conditions or spurious interrupts
