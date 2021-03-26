@@ -66,6 +66,7 @@ public class PatientSearchActivity extends AppCompatActivity implements ImageDis
     private Activity m_activity = this;
     private SessionSingleton m_sess = SessionSingleton.getInstance();
     private Context m_context;
+    private View mProgressView = null;
 
     public void handleButtonPress(View v)
     {
@@ -419,6 +420,11 @@ public class PatientSearchActivity extends AppCompatActivity implements ImageDis
         }
     }
 
+    private void showProgress(final boolean show) {
+        ShowProgress progress = new ShowProgress();
+        progress.showProgress(this, null, mProgressView, show);
+    }
+
     private void getMatchingPatients(final String searchTerm)
     {
         // analyze search term, looking for DOB string, gender, or name. Then, search.
@@ -428,6 +434,7 @@ public class PatientSearchActivity extends AppCompatActivity implements ImageDis
         m_sess.clearPatientSearchResultData();
         m_sess.setIsNewPatient(false);
         m_sess.setIsNewMedicalHistory(false);
+        showProgress(true);
 
         CommonSessionSingleton.getInstance().clearStorageDir();
 
@@ -463,6 +470,7 @@ public class PatientSearchActivity extends AppCompatActivity implements ImageDis
                     }
                 }
 
+                showProgress(false);
                 if (x.getStatus() == 200) {
                     m_sess.getPatientSearchResultData();
                     PatientSearchActivity.this.runOnUiThread(new Runnable() {
@@ -544,6 +552,7 @@ public class PatientSearchActivity extends AppCompatActivity implements ImageDis
         m_activity = this;
         m_sess.getCommonSessionSingleton().clearHeadShotCache();
         m_sess.getCommonSessionSingleton().setPhotoPath("");
+        mProgressView = findViewById(R.id.login_progress);
 
         if (m_sess.getCommonSessionSingleton().getClinicId() == -1) {
             final ClinicREST clinicREST = new ClinicREST(m_context);
