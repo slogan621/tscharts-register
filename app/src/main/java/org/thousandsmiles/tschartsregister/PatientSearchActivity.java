@@ -53,6 +53,7 @@ import org.thousandsmiles.tscharts_lib.ImageDisplayedListener;
 import org.thousandsmiles.tscharts_lib.PatientData;
 import org.thousandsmiles.tscharts_lib.PatientREST;
 import org.thousandsmiles.tscharts_lib.RESTCompletionListener;
+import org.thousandsmiles.tscharts_lib.ShowProgress;
 
 import java.util.ArrayList;
 import java.util.Calendar;
