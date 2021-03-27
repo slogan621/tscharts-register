@@ -48,6 +48,7 @@ import com.github.barteksc.pdfviewer.util.FitPolicy;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.thousandsmiles.tscharts_lib.CommonSessionSingleton;
 import org.thousandsmiles.tscharts_lib.RESTCompletionListener;
 
 import java.util.ArrayList;
@@ -183,8 +184,14 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
             }
         } else if (m_state == RegistrationState.UPDATED_PATIENT) {
             m_state = RegistrationState.UPDATED_MEDICAL_HISTORY;
-            m_sess.getCommonSessionSingleton().createImage(m_sess.getClinicId(), m_sess.getActivePatientId(),
-                                                           "Headshot", this);
+            // if they did not take a photo, no photopath
+            if (CommonSessionSingleton.getInstance().getPhotoPath() != null) {
+                m_sess.getCommonSessionSingleton().createImage(m_sess.getClinicId(), m_sess.getActivePatientId(),
+                        "Headshot", this);
+            } else {
+                m_state = RegistrationState.UPDATED_ROUTING_SLIP;
+                m_sess.createRoutingSlip(this);
+            }
         } else if (m_state == RegistrationState.UPDATED_MEDICAL_HISTORY) {
             m_state = RegistrationState.UPDATED_PHOTO;
             m_sess.createRoutingSlip(this);

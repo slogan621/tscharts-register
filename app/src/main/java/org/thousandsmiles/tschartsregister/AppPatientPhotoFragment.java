@@ -287,6 +287,15 @@ public class AppPatientPhotoFragment extends Fragment {
                 }
             });
 
+            builder.setNegativeButton(m_activity.getString(R.string.button_skip), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    startActivity(new Intent(m_activity, WaiverActivity.class));
+                    m_activity.finish();
+                }
+            });
+
             AlertDialog alert = builder.create();
             alert.show();
         } else {
