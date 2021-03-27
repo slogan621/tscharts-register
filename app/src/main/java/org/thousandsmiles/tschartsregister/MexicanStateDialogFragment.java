@@ -18,28 +18,19 @@
 package org.thousandsmiles.tschartsregister;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
+import androidx.appcompat.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.thousandsmiles.tscharts_lib.PatientData;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class MexicanStateDialogFragment extends DialogFragment {
 
