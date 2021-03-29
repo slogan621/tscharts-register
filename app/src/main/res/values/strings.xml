@@ -216,5 +216,6 @@
     <string name="button_skip">Skip</string>
     <string name="msg_tablet_is_out_of_disk_space">This tablet is out of disk space</string>
     <string name="msg_unable_to_take_photo_out_of_disk_space">Unable to take photo due to disk space issues. Try another tablet.</string>
+    <string name="msg_invalid_search_term">Search term contains one or more spaces. Enter in 3 or 4 characters of patient last name or first name, and try again.</string>
 </resources>
 
