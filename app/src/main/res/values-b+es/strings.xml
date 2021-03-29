@@ -215,6 +215,6 @@
     <string name="button_skip">Omitir</string>
     <string name="msg_tablet_is_out_of_disk_space">Esta tableta no tiene espacio en disco</string>
     <string name="msg_unable_to_take_photo_out_of_disk_space">No se puede tomar una foto debido a problemas de espacio en el disco. Prueba con otra tableta.</string>
-    <string name="msg_invalid_search_term">El término de búsqueda contiene uno o más espacios. Introduzca 3 o 4 caracteres del apellido o el nombre del paciente y vuelva a intentarlo.</string>
+    <string name="msg_invalid_search_term">El término de búsqueda contiene uno o más espacios o es demasiado largo. Introduzca 3 o 4 caracteres del apellido o el nombre del paciente y vuelva a intentarlo.</string>
 </resources>
 

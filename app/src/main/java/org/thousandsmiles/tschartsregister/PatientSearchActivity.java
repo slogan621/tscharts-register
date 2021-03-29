@@ -429,6 +429,9 @@ public class PatientSearchActivity extends AppCompatActivity implements ImageDis
     }
 
     private boolean validSearchTerm(String s) {
+        if (s.length() > 5) {
+            return false;
+        }
         Pattern pattern = Pattern.compile("\\s");
         Matcher matcher = pattern.matcher(s);
         boolean found = matcher.find();
