@@ -424,14 +424,14 @@ public class SessionSingleton {
                 Handler handler = new Handler(Looper.getMainLooper());
                 handler.post(new Runnable() {
                     public void run() {
-                        Toast.makeText(getContext(), getContext().getString(R.string.msg_unable_to_save_medical_history), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), getContext().getString(R.string.msg_unable_to_update_patient_data), Toast.LENGTH_LONG).show();
                     }
                 });
             } else {
                 Handler handler = new Handler(Looper.getMainLooper());
                 handler.post(new Runnable() {
                     public void run() {
-                        Toast.makeText(getContext(), getContext().getString(R.string.msg_successfully_saved_medical_history), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), getContext().getString(R.string.msg_successfully_updated_patient_data), Toast.LENGTH_LONG).show();
                     }
                 });
             }
@@ -769,14 +769,14 @@ public class SessionSingleton {
                     Handler handler = new Handler(Looper.getMainLooper());
                     handler.post(new Runnable() {
                         public void run() {
-                            Toast.makeText(getContext(), getContext().getString(R.string.msg_unable_to_save_medical_history), Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(), getContext().getString(R.string.msg_unable_to_update_medical_history), Toast.LENGTH_LONG).show();
                         }
                     });
                 } else {
                     Handler handler = new Handler(Looper.getMainLooper());
                     handler.post(new Runnable() {
                         public void run() {
-                            Toast.makeText(getContext(), getContext().getString(R.string.msg_successfully_saved_medical_history), Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(), getContext().getString(R.string.msg_successfully_updated_medical_history), Toast.LENGTH_LONG).show();
                         }
                     });
                 }

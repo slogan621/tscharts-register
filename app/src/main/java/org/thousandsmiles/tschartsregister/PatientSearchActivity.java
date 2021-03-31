@@ -586,6 +586,9 @@ public class PatientSearchActivity extends AppCompatActivity implements ImageDis
         m_sess.getCommonSessionSingleton().clearHeadShotCache();
         m_sess.getCommonSessionSingleton().setPhotoPath("");
         mProgressView = findViewById(R.id.login_progress);
+        m_sess.setIsNewPatient(false);
+        m_sess.setIsNewMedicalHistory(false);
+        m_sess.getCommonSessionSingleton().resetPatientMedicalHistory();
 
         if (m_sess.getCommonSessionSingleton().getClinicId() == -1) {
             final ClinicREST clinicREST = new ClinicREST(m_context);

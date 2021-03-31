@@ -288,18 +288,29 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
         }
     }
 
-    private void showFailure(int code, String msg) {
+    private void showFailure(final int code, String msg) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         builder.setTitle(m_activity.getString(R.string.title_failed_registration));
-        String msgStr = String.format("%s\ncode: %d msg: %s", m_activity.getString(R.string.msg_failed_to_register_patient), code, msg);
+        String msgStr;
+        if (code == 409) {
+            msgStr = String.format("%s\ncode: %d msg: %s", m_activity.getString(R.string.msg_patient_already_in_database), code, msg);
+        } else {
+            msgStr = String.format("%s\ncode: %d msg: %s", m_activity.getString(R.string.msg_failed_to_register_patient), code, msg);
+         }
         builder.setMessage(msgStr);
 
         builder.setPositiveButton(m_activity.getString(R.string.button_ok), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-                setRegisterButtonEnabled(true);
-                setBackButtonEnabled(true);
+                if (code == 409) {
+                    startActivity(new Intent(m_activity, PatientSearchActivity.class));
+                    m_activity.finish();
+                    dialog.dismiss();
+                } else {
+                    setRegisterButtonEnabled(true);
+                    setBackButtonEnabled(true);
+                }
             }
         });
 

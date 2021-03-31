@@ -217,5 +217,16 @@
     <string name="msg_tablet_is_out_of_disk_space">This tablet is out of disk space</string>
     <string name="msg_unable_to_take_photo_out_of_disk_space">Unable to take photo due to disk space issues. Try another tablet.</string>
     <string name="msg_invalid_search_term">Search term contains one or more spaces or is too long. Enter in 3 or 4 characters of patient last name or first name, and try again.</string>
+    <string name="msg_error_processing_patient_search_terms">An error was encountered processing patient search terms.</string>
+    <string name="msg_error_trying_to_find_patient_record">An error occurred trying to check for existing patient record.</string>
+    <string name="msg_patient_already_in_database">A patient with this name, gender, and date of birth already exists in the database.</string>
+    <string name="title_matching_patient_found">Matching patient was found in database</string>
+    <string name="msg_matching_patient_was_found_please_search_again">A matching patient was found. Please search again.</string>
+    <string name="button_search_again">Search Again</string>
+    <string name="msg_unable_to_update_patient_data">Unable to update patient data</string>
+    <string name="msg_successfully_updated_patient_data">Successfully updated patient data</string>
+    <string name="msg_unable_to_update_medical_history">Unable to update medical history</string>
+    <string name="msg_successfully_updated_medical_history">Successfully updated medical history</string>
+    <string name="button_continue_anyway">Continue anyway</string>
 </resources>
 

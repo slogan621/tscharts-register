@@ -216,5 +216,16 @@
     <string name="msg_tablet_is_out_of_disk_space">Esta tableta no tiene espacio en disco</string>
     <string name="msg_unable_to_take_photo_out_of_disk_space">No se puede tomar una foto debido a problemas de espacio en el disco. Prueba con otra tableta.</string>
     <string name="msg_invalid_search_term">El término de búsqueda contiene uno o más espacios o es demasiado largo. Introduzca 3 o 4 caracteres del apellido o el nombre del paciente y vuelva a intentarlo.</string>
+    <string name="msg_error_processing_patient_search_terms">Se encontró un error al procesar los términos de búsqueda de pacientes</string>
+    <string name="msg_error_trying_to_find_patient_record">Se produjo un error al intentar verificar el registro del paciente existente.</string>
+    <string name="msg_patient_already_in_database">Ya existe un paciente con este nombre, sexo y fecha de nacimiento en la base de datos.</string>
+    <string name="title_matching_patient_found">Se encontró un paciente coincidente en la base de datos</string>
+    <string name="msg_matching_patient_was_found_please_search_again">Se encontró un paciente compatible. Busque de nuevo.</string>
+    <string name="button_search_again">Busca de nuevo</string>
+    <string name="msg_unable_to_update_patient_data">No se pueden actualizar los datos del paciente</string>
+    <string name="msg_successfully_updated_patient_data">Datos del paciente actualizados con éxitoa</string>
+    <string name="msg_unable_to_update_medical_history">No se puede actualizar el historial médico</string>
+    <string name="msg_successfully_updated_medical_history">Historial médico actualizado con éxito</string>
+    <string name="button_continue_anyway">Continuar independientemente</string>
 </resources>
 

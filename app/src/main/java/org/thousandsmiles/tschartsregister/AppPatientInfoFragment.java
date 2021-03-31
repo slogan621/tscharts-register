@@ -1,6 +1,6 @@
 /*
- * (C) Copyright Syd Logan 2017-2020
- * (C) Copyright Thousand Smiles Foundation 2017-2020
+ * (C) Copyright Syd Logan 2017-2021
+ * (C) Copyright Thousand Smiles Foundation 2017-2021
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,9 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.appcompat.app.AlertDialog;
+
+import android.os.Handler;
+import android.os.Looper;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -40,10 +43,15 @@ import android.widget.NumberPicker;
 import android.widget.RadioButton;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.thousandsmiles.tscharts_lib.CommonSessionSingleton;
 import org.thousandsmiles.tscharts_lib.DatePickerFragment;
 import org.thousandsmiles.tscharts_lib.PatientData;
+import org.thousandsmiles.tscharts_lib.PatientREST;
+import org.thousandsmiles.tscharts_lib.RESTCompletionListener;
 
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;
@@ -127,20 +135,122 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
         }
     }
 
+    class PatientLookupListener implements RESTCompletionListener {
+
+        @Override
+        public void onSuccess(int code, String message, JSONArray a) {
+            try {
+
+            } catch (Exception e) {
+            }
+        }
+
+        @Override
+        public void onSuccess(int code, String message, JSONObject a) {
+        }
+
+        @Override
+        public void onSuccess(int code, String message) {
+        }
+
+        @Override
+        public void onFail(int code, String message) {
+        }
+    }
+
+    private void checkForExistingPatient(final PatientData pd) {
+        Thread thread = new Thread() {
+            public void run() {
+                // note we use session context because this may be called after onPause()
+                PatientREST rest = new PatientREST(getContext());
+                PatientLookupListener l = new PatientLookupListener();
+                rest.addListener(l);
+                Object lock = null;
+                int status;
+                JSONObject searchTerms = new JSONObject();
+
+                try {
+                    searchTerms.put("paternal_last", pd.getFatherLast());
+                    searchTerms.put("maternal_last", pd.getMotherLast());
+                    searchTerms.put("first", pd.getFirst());
+                    searchTerms.put("dob", pd.fromDobMilitary(getContext(), pd.getDob()));
+                    searchTerms.put("gender", pd.getGender());
+                    lock = rest.findPatientsBySearchTerms(searchTerms);
+                } catch (Exception e) {
+                    l.onFail(500, getContext().getString(R.string.msg_error_processing_patient_search_terms));
+                    return;
+                }
+
+                synchronized (lock) {
+                    // we loop here in case of race conditions or spurious interrupts
+                    while (true) {
+                        try {
+                            lock.wait();
+                            break;
+                        } catch (InterruptedException e) {
+                            continue;
+                        }
+                    }
+                }
+
+                status = rest.getStatus();
+                if (status == 200) {
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.post(new Runnable() {
+                        public void run() {
+                            Toast.makeText(getContext(), getContext().getString(R.string.msg_patient_already_in_database), Toast.LENGTH_LONG).show();
+
+                            final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+                            builder.setTitle(m_activity.getString(R.string.title_matching_patient_found));
+                            builder.setMessage(m_activity.getString(R.string.msg_matching_patient_was_found_please_search_again));
+
+                            builder.setPositiveButton(m_activity.getString(R.string.button_search_again), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    AlertDialog alert = builder.create();
+                                    alert.show();
+                                    final Class<?> nextClass;
+                                    nextClass = PatientSearchActivity.class;
+                                    Intent intent = new Intent(m_activity, nextClass);
+                                    Bundle b = new Bundle();
+                                    startActivity(intent);
+                                    m_activity.finish();
+                                }
+                            });
+                            builder.setNegativeButton(m_activity.getString(R.string.button_continue_anyway), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    goToNextActivity(pd);
+                                }
+                            });
+                            builder.show();
+                        }
+                    });
+                } else if (status != 404 ) {
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.post(new Runnable() {
+                        public void run() {
+                            Toast.makeText(getContext(), getContext().getString(R.string.msg_error_trying_to_find_patient_record), Toast.LENGTH_LONG).show();
+                        }
+                    });
+                } else {
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.post(new Runnable() {
+                        public void run() {
+                            goToNextActivity(pd);
+                         }
+                    });
+                }
+            }
+        };
+        thread.start();
+    }
+
     public void handleNextButtonPress(View v) {
 
         final PatientData pd = this.copyPatientDataFromUI();
         boolean valid;
-        final Class<?> nextClass;
 
         valid = validateFields();
-
-        if (m_hasCurp) {
-            nextClass = VerifyCURPActivity.class;
-        } else {
-            nextClass = VerifyCURPActivity.class;
-            //nextClass = MedicalHistoryActivity.class;
-        }
 
         if (valid == false) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -155,7 +265,21 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
 
             AlertDialog alert = builder.create();
             alert.show();
-        } else if (m_dirty || pd.equals(m_patientData) == false) {
+        } else {
+            if (m_isNewPatient == false) {
+                goToNextActivity(pd);
+            } else {
+                checkForExistingPatient(pd);
+            }
+        }
+    }
+
+    private void goToNextActivity(final PatientData pd)
+    {
+        final Class<?> nextClass;
+        nextClass = VerifyCURPActivity.class;
+
+        if (m_dirty || pd.equals(m_patientData) == false) {
 
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
