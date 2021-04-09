@@ -217,11 +217,6 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
                                     m_activity.finish();
                                 }
                             });
-                            builder.setNegativeButton(m_activity.getString(R.string.button_continue_anyway), new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    goToNextActivity(pd);
-                                }
-                            });
                             builder.show();
                         }
                     });
