@@ -34,6 +34,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -467,7 +468,24 @@ public class PatientSearchActivity extends AppCompatActivity implements ImageDis
                 lock = x.findPatientsByName("impossible_patient_name");
             } else {
                 if (validSearchTerm(searchTerm)) {
-                    lock = x.findPatientsByName(searchTerm);
+                    CheckBox cb = m_activity.findViewById(R.id.curp_checkbox);
+                    if (cb != null && cb.isChecked()) {
+                        JSONObject o = new JSONObject();
+
+                        try {
+                            o.put("curp", searchTerm);
+                            lock = x.findPatientsBySearchTerms(o);
+                        } catch (Exception e) {
+                            m_activity.runOnUiThread(new Runnable() {
+                                public void run() {
+                                    Toast.makeText(m_context, R.string.error_unable_to_search_by_curp, Toast.LENGTH_LONG).show();
+                                }
+                            });
+                            return;
+                        }
+                    } else {
+                        lock = x.findPatientsByName(searchTerm);
+                    }
                 } else {
                     PatientSearchActivity.this.runOnUiThread(new Runnable() {
                         public void run() {

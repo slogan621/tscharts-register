@@ -1,8 +1,8 @@
 <!--
 
 /*
- * (C) Copyright Syd Logan 2018
- * (C) Copyright Thousand Smiles Foundation 2018
+ * (C) Copyright Syd Logan 2018-2021
+ * (C) Copyright Thousand Smiles Foundation 2018-2021
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,6 +54,29 @@
                     android:text="Column 1"
                     android:textAppearance="?android:attr/textAppearanceLarge" />
             </TableRow>
+
+           <TableRow
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_weight="1.0"
+               >
+
+               <TextView
+                   android:text="@string/curp"
+                   android:layout_weight="1"
+                   android:textAppearance="?android:attr/textAppearanceLarge" />
+
+               <View
+                   android:layout_width="0dp"
+                   android:layout_height="match_parent"
+                   android:layout_weight="1"/>
+
+               <TextView
+                   android:id="@+id/patient_curp"
+                   android:layout_weight="5"
+                   android:text="Column 1"
+                   android:textAppearance="?android:attr/textAppearanceLarge" />
+           </TableRow>
 
             <TableRow
                 android:layout_width="wrap_content"
