@@ -230,5 +230,7 @@
     <string name="button_continue_anyway">Continue anyway</string>
     <string name="label_search_for_curp">Search for CURP instead of name</string>
     <string name="error_unable_to_search_by_curp">Unable to search using CURP</string>
+    <string name="born_with_cleft_palate">Was the patient born with a cleft palate?</string>
+    <string name="born_with_cleft_lip">Was the patient born with a cleft lip?</string>
 </resources>
 

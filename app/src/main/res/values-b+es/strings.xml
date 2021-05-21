@@ -229,5 +229,7 @@
     <string name="button_continue_anyway">Continuar independientemente</string>
     <string name="label_search_for_curp">Busque CURP en lugar de nombre</string>
     <string name="error_unable_to_search_by_curp">No se puede realizar la búsqueda con CURP</string>
+    <string name="born_with_cleft_palate">¿Nació el paciente con paladar hendido?</string>
+    <string name="born_with_cleft_lip">¿Nació el paciente con labio leporino?</string>
 </resources>
 

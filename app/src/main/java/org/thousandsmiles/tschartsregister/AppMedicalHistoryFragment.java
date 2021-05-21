@@ -467,6 +467,17 @@ public class AppMedicalHistoryFragment extends Fragment {
         if (tx != null) {
             tx.setText(m_medicalHistory.getAllergyMeds());
         }
+
+        sw = (Switch) m_view.findViewById(R.id.born_with_cleft_lip);
+        if (sw != null) {
+            sw.setChecked(m_medicalHistory.isBornWithCleftLip());
+        }
+
+        sw = (Switch) m_view.findViewById(R.id.born_with_cleft_palate);
+        if (sw != null) {
+            sw.setChecked(m_medicalHistory.isBornWithCleftPalate());
+        }
+
         clearDirty();
     }
 
@@ -995,6 +1006,24 @@ public class AppMedicalHistoryFragment extends Fragment {
                     setDirty();
                 }
             });
+
+            sw = (Switch) m_view.findViewById(R.id.born_with_cleft_lip);
+            if (sw != null) {
+                sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        setDirty();
+                    }
+                });
+            }
+
+            sw = (Switch) m_view.findViewById(R.id.born_with_cleft_palate);
+            if (sw != null) {
+                sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        setDirty();
+                    }
+                });
+            }
         }
     }
 
@@ -1232,6 +1261,16 @@ public class AppMedicalHistoryFragment extends Fragment {
         tx = (TextView) m_view.findViewById(R.id.allergymeds);
         if (tx != null) {
             mh.setAllergyMeds(tx.getText().toString());
+        }
+
+        sw = (Switch) m_view.findViewById(R.id.born_with_cleft_lip);
+        if (sw != null) {
+            mh.setBornWithCleftLip(sw.isChecked());
+        }
+
+        sw = (Switch) m_view.findViewById(R.id.born_with_cleft_palate);
+        if (sw != null) {
+            mh.setBornWithCleftPalate(sw.isChecked());
         }
         return mh;
     }
