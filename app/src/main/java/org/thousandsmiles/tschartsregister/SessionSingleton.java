@@ -34,7 +34,6 @@ import org.json.JSONObject;
 import org.thousandsmiles.tscharts_lib.CategoryREST;
 import org.thousandsmiles.tscharts_lib.CommonSessionSingleton;
 import org.thousandsmiles.tscharts_lib.ConsentREST;
-import org.thousandsmiles.tscharts_lib.ImageREST;
 import org.thousandsmiles.tscharts_lib.MedicalHistory;
 import org.thousandsmiles.tscharts_lib.MedicalHistoryREST;
 import org.thousandsmiles.tscharts_lib.PatientData;

@@ -183,11 +183,12 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
         } else if (m_state == RegistrationState.UPDATED_PATIENT) {
             m_state = RegistrationState.UPDATED_MEDICAL_HISTORY;
             // if they did not take a photo, no photopath
-            if (CommonSessionSingleton.getInstance().getPhotoPath() != null) {
+            String photoPath = CommonSessionSingleton.getInstance().getPhotoPath();
+            if (photoPath != null && photoPath.equals("") == false) {
                 m_sess.getCommonSessionSingleton().createImage(m_sess.getClinicId(), m_sess.getActivePatientId(),
                         "Headshot", this);
             } else {
-                m_state = RegistrationState.UPDATED_ROUTING_SLIP;
+                m_state = RegistrationState.UPDATED_PHOTO;
                 m_sess.createRoutingSlip(this);
             }
         } else if (m_state == RegistrationState.UPDATED_MEDICAL_HISTORY) {
