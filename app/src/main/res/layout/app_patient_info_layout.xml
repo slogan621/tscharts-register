@@ -671,6 +671,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"/>
+
                 <EditText
                     android:id="@+id/phone_2"
                     android:layout_width="wrap_content"
@@ -864,7 +865,11 @@
                     android:paddingLeft="15dp">
                 </EditText>
             </LinearLayout>
-
+            <!-- following view hack helps ensure that text area is not completely hidden by soft keyboard -->
+            <View
+                android:layout_width="0dp"
+                android:layout_height="512dp"
+                android:layout_weight="1" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
