@@ -232,5 +232,6 @@
     <string name="error_unable_to_search_by_curp">Unable to search using CURP</string>
     <string name="born_with_cleft_palate">Was the patient born with a cleft palate?</string>
     <string name="born_with_cleft_lip">Was the patient born with a cleft lip?</string>
+    <string name="title_vaccination">Vaccination</string>
 </resources>
 

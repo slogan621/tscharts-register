@@ -41,6 +41,13 @@
             tools:ignore="LockedOrientationActivity">
         </activity>
         <activity
+            android:name=".VaccinationActivity"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="adjustPan"
+            android:label="@string/title_vaccination"
+            tools:ignore="LockedOrientationActivity">
+        </activity>
+        <activity
             android:name=".VerifyCURPActivity"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustPan"
