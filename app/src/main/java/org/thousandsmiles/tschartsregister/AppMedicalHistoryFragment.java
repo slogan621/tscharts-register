@@ -37,6 +37,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.thousandsmiles.tscharts_lib.CommonSessionSingleton;
 import org.thousandsmiles.tscharts_lib.MedicalHistory;
 
 public class AppMedicalHistoryFragment extends Fragment {
@@ -45,9 +46,14 @@ public class AppMedicalHistoryFragment extends Fragment {
     private MedicalHistory m_medicalHistory;
     private boolean m_dirty = false;
     private View m_view = null;
+    private Class<?> m_nextActivity;
 
     public static AppMedicalHistoryFragment newInstance() {
         return new AppMedicalHistoryFragment();
+    }
+
+    public void setNextActivity(Class<?> activity) {
+        m_nextActivity = activity;
     }
 
     @Override
@@ -244,7 +250,7 @@ public class AppMedicalHistoryFragment extends Fragment {
                 public void onClick(DialogInterface dialog, int which) {
                     m_sess.getCommonSessionSingleton().updatePatientMedicalHistory(mh);
                     dialog.dismiss();
-                    startActivity(new Intent(m_activity, PatientPhotoActivity.class));
+                    startActivity(new Intent(m_activity, m_nextActivity));
                     m_activity.finish();
                 }
             });
@@ -259,7 +265,7 @@ public class AppMedicalHistoryFragment extends Fragment {
             AlertDialog alert = builder.create();
             alert.show();
         } else {
-            startActivity(new Intent(m_activity, PatientPhotoActivity.class));
+            startActivity(new Intent(m_activity, m_nextActivity));
             m_activity.finish();
         }
     }
@@ -1323,7 +1329,7 @@ public class AppMedicalHistoryFragment extends Fragment {
 
     private void initialize()
     {
-        if (m_sess.getIsNewPatient() == false) {
+        if (CommonSessionSingleton.getInstance().getIsNewPatient() == false) {
             m_medicalHistory = m_sess.getCommonSessionSingleton().getPatientMedicalHistory();
             if (m_medicalHistory == null) {
                 getMedicalHistoryDataFromREST();

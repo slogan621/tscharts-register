@@ -1,6 +1,6 @@
 /*
- * (C) Copyright Syd Logan 2018
- * (C) Copyright Thousand Smiles Foundation 2018
+ * (C) Copyright Syd Logan 2018-2021
+ * (C) Copyright Thousand Smiles Foundation 2018-2021
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,7 +68,7 @@ public class PatientPhotoActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         m_patientPhotoFragment.restorePhotoPath();
-        startActivity(new Intent(PatientPhotoActivity.this, MedicalHistoryActivity.class));
+        startActivity(new Intent(PatientPhotoActivity.this, VaccinationActivity.class));
         finish();
     }
 

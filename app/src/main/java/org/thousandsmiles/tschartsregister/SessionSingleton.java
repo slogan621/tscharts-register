@@ -127,14 +127,6 @@ public class SessionSingleton {
         return m_patientData;
     }
 
-    public void setIsNewPatient(boolean isNew) {
-        m_isNewPatient = isNew;
-    }
-
-    public boolean getIsNewPatient() {
-        return m_isNewPatient;
-    }
-
     public void setIsNewMedicalHistory(boolean isNew) {
         m_isNewMedicalHistory = isNew;
     }

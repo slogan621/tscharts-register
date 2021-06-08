@@ -70,6 +70,7 @@ public class MedicalHistoryActivity extends AppCompatActivity {
         Bundle arguments = new Bundle();
         m_fragment = new AppMedicalHistoryFragment();
         m_fragment.setArguments(arguments);
+        m_fragment.setNextActivity(VaccinationActivity.class);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.app_panel, m_fragment)
                 .commit();

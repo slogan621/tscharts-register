@@ -54,7 +54,7 @@ public class CURPWebViewClient extends WebViewClient {
 
         PatientData data;
 
-        if (sess.getIsNewPatient()) {
+        if (CommonSessionSingleton.getInstance().getIsNewPatient()) {
             data = sess.getNewPatientData();
         } else {
             data = sess.getPatientData(sess.getActivePatientId());

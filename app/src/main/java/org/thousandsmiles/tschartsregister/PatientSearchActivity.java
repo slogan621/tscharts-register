@@ -243,7 +243,7 @@ public class PatientSearchActivity extends AppCompatActivity implements ImageDis
                     new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface arg0, int arg1) {
-                            m_sess.setIsNewPatient(true);
+                            CommonSessionSingleton.getInstance().setIsNewPatient(true);
                             m_sess.resetNewPatientObjects();
                             Intent intent = new Intent(m_activity, CategorySelectorActivity.class);
                             startActivity(intent);
@@ -446,7 +446,7 @@ public class PatientSearchActivity extends AppCompatActivity implements ImageDis
         ArrayList<Integer> ret = new ArrayList<Integer>();
 
         m_sess.clearPatientSearchResultData();
-        m_sess.setIsNewPatient(false);
+        CommonSessionSingleton.getInstance().setIsNewPatient(false);
         m_sess.setIsNewMedicalHistory(false);
         showProgress(true);
 
@@ -604,9 +604,11 @@ public class PatientSearchActivity extends AppCompatActivity implements ImageDis
         m_sess.getCommonSessionSingleton().clearHeadShotCache();
         m_sess.getCommonSessionSingleton().setPhotoPath("");
         mProgressView = findViewById(R.id.login_progress);
-        m_sess.setIsNewPatient(false);
+        CommonSessionSingleton.getInstance().setIsNewPatient(false);
         m_sess.setIsNewMedicalHistory(false);
         m_sess.getCommonSessionSingleton().resetPatientMedicalHistory();
+        m_sess.getCommonSessionSingleton().setIsNewVaccination(false);
+        m_sess.getCommonSessionSingleton().resetPatientVaccination();
 
         if (m_sess.getCommonSessionSingleton().getClinicId() == -1) {
             final ClinicREST clinicREST = new ClinicREST(m_context);

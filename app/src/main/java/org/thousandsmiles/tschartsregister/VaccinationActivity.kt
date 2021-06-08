@@ -23,7 +23,7 @@ import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import org.thousandsmiles.tscharts_common_ui.AppVaccineFragment
+import org.thousandsmiles.tscharts_lib.AppVaccineFragment
 
 class VaccinationActivity : AppCompatActivity() {
     private val m_activity: Activity = this
@@ -43,11 +43,12 @@ class VaccinationActivity : AppCompatActivity() {
     }
 
     fun handleNextButtonPress(v: View?) {
-        m_fragment!!.handleNextButtonPress(v)
+        m_fragment?.setNextActivity(PatientPhotoActivity::class.java)
+        m_fragment?.handleNextButtonPress(v)
     }
 
     override fun onBackPressed() {
-        startActivity(Intent(this@VaccinationActivity, PatientInfoActivity::class.java))
+        startActivity(Intent(this@VaccinationActivity, MedicalHistoryActivity::class.java))
         finish()
     }
 

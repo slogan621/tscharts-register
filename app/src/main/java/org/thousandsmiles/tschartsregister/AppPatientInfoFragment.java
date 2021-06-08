@@ -91,33 +91,6 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
         setDate(c);
     }
 
-    private boolean isValidPatientBirthDate(String dateStr)
-    {
-        final Date date = CommonSessionSingleton.getInstance().isDateString(dateStr);
-        boolean ret = false;
-        Date today;
-
-        /*
-        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
-        sdf.setLenient(true);
-        date = sdf.parse(dateStr, new ParsePosition(0));
-
-        if (date == null) {
-            sdf = new SimpleDateFormat("MM/dd/yyyy");
-            sdf.setLenient(true);
-            date = sdf.parse(dateStr, new ParsePosition(0));
-        }
-        */
-
-        if (date != null) {
-            today = new Date();
-            if (date.compareTo(today) < 0) {
-                ret = true;
-            }
-        }
-        return ret;
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -125,7 +98,7 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
         if (context instanceof Activity) {
             m_activity = (Activity) context;
             m_sess = SessionSingleton.getInstance();
-            if ((m_isNewPatient = m_sess.getIsNewPatient()) == false) {
+            if ((m_isNewPatient = CommonSessionSingleton.getInstance().getIsNewPatient()) == false) {
                 m_patientId = m_sess.getPatientId();
                 m_patientData = m_sess.getPatientData(m_patientId);
             } else {
@@ -1262,7 +1235,7 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
 
         tx1 =(TextView)m_view.findViewById(R.id.dob);
         tx1.setError(null);
-        if(tx1.getText().toString().equals("") || isValidPatientBirthDate(tx1.getText().toString()) == false)
+        if(tx1.getText().toString().equals("") || CommonSessionSingleton.getInstance().isValidPatientBirthDate(tx1.getText().toString()) == false)
         {
             ret = false;
             list.add(R.id.dob);

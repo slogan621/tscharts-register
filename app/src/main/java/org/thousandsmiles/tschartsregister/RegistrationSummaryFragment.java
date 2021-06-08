@@ -31,6 +31,7 @@ import android.widget.TextView;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
+import org.thousandsmiles.tscharts_lib.CommonSessionSingleton;
 import org.thousandsmiles.tscharts_lib.PatientData;
 
 import java.io.File;
@@ -52,7 +53,7 @@ public class RegistrationSummaryFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         m_activity=(Activity) getActivity();
         m_sess = SessionSingleton.getInstance();
-        m_isNewPatient = m_sess.getIsNewPatient();
+        m_isNewPatient = CommonSessionSingleton.getInstance().getIsNewPatient();
         m_imageView = (ImageView) m_activity.findViewById(R.id.headshot_image_main);
         if (m_isNewPatient == false) {
             m_patientId = m_sess.getPatientId();

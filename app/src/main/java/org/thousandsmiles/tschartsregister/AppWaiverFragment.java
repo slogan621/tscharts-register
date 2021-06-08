@@ -70,11 +70,13 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
     private View m_progressView;
     private boolean m_photoChecked = false;
     private boolean m_waiverChecked = false;
+    CommonSessionSingleton m_common = CommonSessionSingleton.getInstance();
 
     public enum RegistrationState {
         UPDATED_NOTHING,
         UPDATED_PATIENT,
         UPDATED_MEDICAL_HISTORY,
+        UPDATED_VACCINATIONS,
         UPDATED_PHOTO,
         UPDATED_ROUTING_SLIP,
         UPDATED_ROUTING_SLIP_ENTRIES,
@@ -144,6 +146,9 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
             case UPDATED_MEDICAL_HISTORY:
                 ret = "UPDATED_HISTORY";
                 break;
+            case UPDATED_VACCINATIONS:
+                ret = "UPDATED_VACCINATIONS";
+                break;
             case UPDATED_PHOTO:
                 ret = "UPDATED_PHOTO";
                 break;
@@ -176,7 +181,7 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
         Log.e("AppWaiverFragment", logMsg);
         if (m_state == RegistrationState.UPDATED_NOTHING) {
             m_state = RegistrationState.UPDATED_PATIENT;
-            if (m_sess.getIsNewPatient() || m_sess.getIsNewMedicalHistory()) {
+            if (CommonSessionSingleton.getInstance().getIsNewPatient() || m_sess.getIsNewMedicalHistory()) {
                 m_sess.createMedicalHistory(this);
             } else {
                 m_sess.updateMedicalHistory(this);
@@ -189,13 +194,21 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
                 m_sess.getCommonSessionSingleton().createImage(m_sess.getClinicId(), m_sess.getActivePatientId(),
                         "Headshot", this);
             } else {
-                m_state = RegistrationState.UPDATED_PHOTO;
+                m_state = RegistrationState.UPDATED_MEDICAL_HISTORY;
                 m_sess.createRoutingSlip(this);
             }
         } else if (m_state == RegistrationState.UPDATED_MEDICAL_HISTORY) {
             m_state = RegistrationState.UPDATED_PHOTO;
-            m_sess.createRoutingSlip(this);
+
+            if (CommonSessionSingleton.getInstance().getIsNewPatient() || m_common.getIsNewVaccination()) {
+                m_common.createVaccination(this);
+            } else {
+                m_common.updateVaccination(this);
+            }
         } else if (m_state == RegistrationState.UPDATED_PHOTO) {
+            m_state = RegistrationState.UPDATED_VACCINATIONS;
+            m_sess.createRoutingSlip(this);
+        } else if (m_state == RegistrationState.UPDATED_VACCINATIONS) {
             m_state = RegistrationState.UPDATED_ROUTING_SLIP;
             ArrayList<Integer> catStations = m_sess.getStationsForCategory(m_sess.getCategoryName());
             ArrayList<Integer> rtcStations = m_sess.getReturnToClinicStations();
@@ -339,7 +352,7 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
                     setRegisterButtonEnabled(false);
                     setBackButtonEnabled(false);
                     m_state = RegistrationState.UPDATED_NOTHING;
-                    if (m_sess.getIsNewPatient() == true) {
+                    if (CommonSessionSingleton.getInstance().getIsNewPatient() == true) {
                         m_sess.createNewPatient(m_this);
                     } else {
                         m_sess.updatePatientData(m_this, m_sess.getPatientId());

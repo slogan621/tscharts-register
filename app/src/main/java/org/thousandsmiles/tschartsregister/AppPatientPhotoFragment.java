@@ -38,6 +38,8 @@ import android.widget.Toast;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
+import org.thousandsmiles.tscharts_lib.CommonSessionSingleton;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
