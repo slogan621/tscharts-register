@@ -24,8 +24,11 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import org.thousandsmiles.tscharts_lib.AppVaccineFragment
+import org.thousandsmiles.tscharts_lib.FormSaveAndPatientCheckoutNotifierActivity
+import org.thousandsmiles.tscharts_lib.FormSaveListener
+import org.thousandsmiles.tscharts_lib.PatientCheckoutListener
 
-class VaccinationActivity : AppCompatActivity() {
+class VaccinationActivity : FormSaveAndPatientCheckoutNotifierActivity() {
     private val m_activity: Activity = this
     private val m_sess = SessionSingleton.getInstance()
     private var m_context: Context? = null
@@ -50,6 +53,38 @@ class VaccinationActivity : AppCompatActivity() {
     override fun onBackPressed() {
         startActivity(Intent(this@VaccinationActivity, MedicalHistoryActivity::class.java))
         finish()
+    }
+
+    // following are not implemented by registration application, save done at end of registration
+    // and there is no concept of a checkout XXX refactor into a base class that provides default
+    // empty implementation
+
+    override fun subscribeSave(instance: FormSaveListener?) {
+        //TODO("Not yet implemented")
+    }
+
+    override fun unsubscribeSave(instance: FormSaveListener?) {
+        //TODO("Not yet implemented")
+    }
+
+    override fun fragmentSaveDone(success: Boolean) {
+        //TODO("Not yet implemented")
+    }
+
+    override fun subscribeCheckout(instance: PatientCheckoutListener?) {
+        //TODO("Not yet implemented")
+    }
+
+    override fun unsubscribeCheckout(instance: PatientCheckoutListener?) {
+        TODO("Not yet implemented")
+    }
+
+    override fun fragmentReadyForCheckout(success: Boolean) {
+        TODO("Not yet implemented")
+    }
+
+    override fun dirty(dirty: Boolean) {
+        TODO("Not yet implemented")
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
