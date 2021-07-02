@@ -12,8 +12,8 @@ https://www.youtube.com/playlist?list=PLPoa7kXBiFDVmroxIjCOmvcHhGIjsZUCJ is a Yo
 # License
 
 ```
-(C) Copyright Syd Logan 2018
-(C) Copyright Thousand Smiles Foundation 2018
+(C) Copyright Syd Logan 2018-2021
+(C) Copyright Thousand Smiles Foundation 2018-2021
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
