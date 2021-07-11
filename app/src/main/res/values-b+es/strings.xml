@@ -85,7 +85,7 @@
     <string name="meds">Todos los medicamentos que toma actualmente el paciente</string>
     <string name="allergymeds">Todos los medicamentos a los cuales el paciente tiene alergia</string>
     <string name="cm">cm</string>
-    <string name="pulg">in</string>
+    <string name="in">pulg</string>
     <string name="kg">kg</string>
     <string name="lb">lb</string>
 
