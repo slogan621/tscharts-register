@@ -76,15 +76,15 @@ class VaccinationActivity : FormSaveAndPatientCheckoutNotifierActivity() {
     }
 
     override fun unsubscribeCheckout(instance: PatientCheckoutListener?) {
-        TODO("Not yet implemented")
+        //TODO("Not yet implemented")
     }
 
     override fun fragmentReadyForCheckout(success: Boolean) {
-        TODO("Not yet implemented")
+        //TODO("Not yet implemented")
     }
 
     override fun dirty(dirty: Boolean) {
-        TODO("Not yet implemented")
+        //TODO("Not yet implemented")
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
