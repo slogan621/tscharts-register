@@ -143,11 +143,11 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
                 JSONObject searchTerms = new JSONObject();
 
                 try {
-                    searchTerms.put("paternal_last", pd.getFatherLast());
-                    searchTerms.put("maternal_last", pd.getMotherLast());
-                    searchTerms.put("first", pd.getFirst());
-                    searchTerms.put("dob", pd.fromDobMilitary(getContext(), pd.getDob()));
-                    searchTerms.put("gender", pd.getGender());
+                    searchTerms.put("paternal_last", pd.getFatherLast().trim());
+                    searchTerms.put("maternal_last", pd.getMotherLast().trim());
+                    searchTerms.put("first", pd.getFirst().trim());
+                    searchTerms.put("dob", pd.fromDobMilitary(getContext(), pd.getDob().trim()));
+                    searchTerms.put("gender", pd.getGender().trim());
                     lock = rest.findPatientsBySearchTerms(searchTerms);
                 } catch (Exception e) {
                     l.onFail(500, getContext().getString(R.string.msg_error_processing_patient_search_terms));
