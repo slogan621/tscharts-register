@@ -43,7 +43,6 @@ import com.github.barteksc.pdfviewer.listener.OnPageChangeListener;
 import com.github.barteksc.pdfviewer.listener.OnPageErrorListener;
 import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle;
 import com.github.barteksc.pdfviewer.util.FitPolicy;
-//import com.github.barteksc.pdfviewer.util.FitPolicy;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
