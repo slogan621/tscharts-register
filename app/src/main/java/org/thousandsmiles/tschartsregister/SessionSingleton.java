@@ -1,6 +1,6 @@
 /*
- * (C) Copyright Syd Logan 2017-2020
- * (C) Copyright Thousand Smiles Foundation 2017-2020
+ * (C) Copyright Syd Logan 2017-2021
+ * (C) Copyright Thousand Smiles Foundation 2017-2021
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,6 +39,7 @@ import org.thousandsmiles.tscharts_lib.MedicalHistoryREST;
 import org.thousandsmiles.tscharts_lib.PatientData;
 import org.thousandsmiles.tscharts_lib.PatientREST;
 import org.thousandsmiles.tscharts_lib.RESTCompletionListener;
+import org.thousandsmiles.tscharts_lib.RegisterREST;
 import org.thousandsmiles.tscharts_lib.RoutingSlipREST;
 
 import java.io.File;
@@ -53,7 +54,6 @@ public class SessionSingleton {
     private static SessionSingleton m_instance;
     private JSONObject m_routingSlipEntryResponse = null;
     private JSONArray m_patientSearchResults = null;
-    private JSONArray m_registrationSearchResults = null;
     private PatientData m_newPatientData = null; // only if m_isNewPatient is true
     private HashMap<Integer, PatientData> m_patientData = new HashMap<Integer, PatientData>();
     private HashMap<Integer, ReturnToClinic> m_returnToClinicData = new HashMap<Integer, ReturnToClinic>();
@@ -68,7 +68,6 @@ public class SessionSingleton {
     private ArrayList<String> m_mexicanStates = new ArrayList<String>();
     private ArrayList<Integer> m_returnToClinics = new ArrayList<Integer>();
     private Registration m_registration = new Registration();
-    private int m_registrationId;
     private boolean m_isNewPatient = false;
     private boolean m_isNewMedicalHistory = false; /* old patient, new clinic so new medical history */
     private CommonSessionSingleton m_commonSessionSingleton = null;
@@ -141,11 +140,6 @@ public class SessionSingleton {
         m_patientData.clear();
     }
 
-    public void clearRegistrationSearchResultData()
-    {
-        m_registrationSearchResults = null;
-    }
-
     public void setPatientSearchResults(JSONArray results)
     {
         m_patientSearchResults = results;
@@ -179,10 +173,6 @@ public class SessionSingleton {
             int id = getPatientId();
             m_patientData.put(id, pd);
         }
-    }
-
-    public void setRegistrationSearchResults(JSONArray response) {
-        m_registrationSearchResults = response;
     }
 
     public void register(final RESTCompletionListener listener, final int patientId, final int clinicId)
@@ -229,21 +219,6 @@ public class SessionSingleton {
             }
         };
         thread.start();
-    }
-
-    public void setRegistrationId(JSONObject response) {
-        try {
-            String m;
-            m_registrationId = response.getInt("id");
-            m = String.format("setRegistrationId: %d", m_registrationId);
-            Log.e("setRegistrationId", m);
-        } catch (JSONException e) {
-            Log.e("setRegistrationId", "FAILED");
-        }
-    }
-
-    public int getRegistrationId() {
-        return m_registrationId;
     }
 
     public void createConsentRecord(final RESTCompletionListener listener,

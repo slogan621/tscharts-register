@@ -228,9 +228,9 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
         } else if (m_state == RegistrationState.UPDATED_ROUTING_SLIP_ENTRIES) {
             m_state = RegistrationState.CREATED_REGISTRATION;
             String m;
-            m = String.format("calling createConsentRecord reg ID is %d", m_sess.getRegistrationId());
+            m = String.format("calling createConsentRecord reg ID is %d", m_common.getRegistrationId());
             Log.e("AppWaiverFragment", m);
-            m_sess.createConsentRecord(this, m_sess.getPatientId(), m_sess.getClinicId(), m_sess.getRegistrationId(), m_waiverChecked, m_photoChecked);
+            m_sess.createConsentRecord(this, m_sess.getPatientId(), m_sess.getClinicId(), m_common.getRegistrationId(), m_waiverChecked, m_photoChecked);
         } else if (m_state == RegistrationState.CREATED_REGISTRATION){
             m_state = RegistrationState.CREATED_CONSENT;
             if (m_showSuccess == false) {
