@@ -233,5 +233,8 @@
     <string name="born_with_cleft_palate">Was the patient born with a cleft palate?</string>
     <string name="born_with_cleft_lip">Was the patient born with a cleft lip?</string>
     <string name="title_vaccination">Vaccination</string>
+    <string name="error_memory_is_low_unable_to_get_image">Memory is low, unable to load patient headshot</string>
+    <string name="msg_please_wait_while_patient_photos_are_processed">Please wait while patient photos are processed</string>
+    <string name="msg_please_wait_while_patients_are_searched_for">Please wait while patients are searched for</string>
 </resources>
 

@@ -47,6 +47,7 @@ import com.github.barteksc.pdfviewer.util.FitPolicy;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.thousandsmiles.tscharts_lib.CommonSessionSingleton;
+import org.thousandsmiles.tscharts_lib.HeadshotImage;
 import org.thousandsmiles.tscharts_lib.RESTCompletionListener;
 
 import java.util.ArrayList;
@@ -192,6 +193,8 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
             if (photoPath != null && photoPath.equals("") == false) {
                 m_sess.getCommonSessionSingleton().createImage(m_sess.getClinicId(), m_sess.getActivePatientId(),
                         "Headshot", this);
+                // remove from headshot cache
+                HeadshotImage.removePatientHeadshotFromCache(m_sess.getActivePatientId());
             } else {
                 m_state = RegistrationState.UPDATED_MEDICAL_HISTORY;
                 m_sess.createRoutingSlip(this);

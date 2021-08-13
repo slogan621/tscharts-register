@@ -323,6 +323,11 @@ public class PatientSearchActivity extends AppCompatActivity implements ImageDis
             paternalLast = value.getFatherLast();
             first = value.getFirst();
 
+            button.setMinimumWidth(512);
+            button.setMaxWidth(512);
+            button.setMinimumHeight(512);
+            button.setMaxHeight(512);
+
             if (count == 0) {
                 btnLO.setBackgroundColor(getResources().getColor(R.color.lightGray));
                 button.setBackgroundColor(getResources().getColor(R.color.lightGray));
@@ -339,6 +344,17 @@ public class PatientSearchActivity extends AppCompatActivity implements ImageDis
             }
             button.setTag(value);
 
+            button.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    RegisterDialogFragment rtc = new RegisterDialogFragment();
+                    PatientData o = (PatientData) v.getTag();
+                    rtc.setPatientId(o.getId());
+                    rtc.show(getSupportFragmentManager(), getApplicationContext().getString(R.string.title_register_dialog));
+                }
+            });
+
+            btnLO.addView(button);
+
             ActivityManager.MemoryInfo memoryInfo = m_sess.getCommonSessionSingleton().getAvailableMemory();
 
             if (!memoryInfo.lowMemory) {
@@ -348,28 +364,17 @@ public class PatientSearchActivity extends AppCompatActivity implements ImageDis
                 headshot.setImageView(button);
                 headshot.registerListener(this);
                 Thread t = headshot.getImage(id);
-                m_sess.getCommonSessionSingleton().addHeadshotJob(headshot);
+                //m_sess.getCommonSessionSingleton().addHeadshotJob(headshot);
             } else {
                 PatientSearchActivity.this.runOnUiThread(new Runnable() {
                     public void run() {
-                        Toast.makeText(getApplicationContext(), R.string.error_unable_to_connect, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), R.string.error_memory_is_low_unable_to_get_image, Toast.LENGTH_LONG).show();
                     }
                 });
             }
 
             //m_sess.addHeadShotPath(id, headshot.getImageFileAbsolutePath());
             //t.start();
-
-            button.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                RegisterDialogFragment rtc = new RegisterDialogFragment();
-                PatientData o = (PatientData) v.getTag();
-                rtc.setPatientId(o.getId());
-                rtc.show(getSupportFragmentManager(), getApplicationContext().getString(R.string.title_register_dialog));
-                  }
-            });
-
-            btnLO.addView(button);
 
             txt = new TextView(getApplicationContext());
             txt.setText(String.format("%d %s, %s", id, paternalLast.toUpperCase(), first));
@@ -448,9 +453,14 @@ public class PatientSearchActivity extends AppCompatActivity implements ImageDis
         m_sess.clearPatientSearchResultData();
         CommonSessionSingleton.getInstance().setIsNewPatient(false);
         m_sess.setIsNewMedicalHistory(false);
-        showProgress(true);
 
-        CommonSessionSingleton.getInstance().clearStorageDir();
+        PatientSearchActivity.this.runOnUiThread(new Runnable() {
+            public void run() {
+                showProgress(true);
+                Toast.makeText(getApplicationContext(), R.string.msg_please_wait_while_patients_are_searched_for, Toast.LENGTH_SHORT).show();
+            }});
+
+        //CommonSessionSingleton.getInstance().clearStorageDir();
 
         final Date d = CommonSessionSingleton.getInstance().isDateString(searchTerm);
         new Thread(new Runnable() {
@@ -526,13 +536,22 @@ public class PatientSearchActivity extends AppCompatActivity implements ImageDis
                     m_sess.getPatientSearchResultData();
                     PatientSearchActivity.this.runOnUiThread(new Runnable() {
                         public void run() {
-                        LayoutSearchResults();
-                        Button button = (Button) findViewById(R.id.patient_search_button);
-                        button.setEnabled(true);
+                            showProgress(false);
+                            LayoutSearchResults();
+                            Button button = (Button) findViewById(R.id.patient_search_button);
+                            button.setEnabled(true);
                         }
                     });
                     return;
-                } else if (x.getStatus() == 101) {
+                }
+
+                PatientSearchActivity.this.runOnUiThread(new Runnable() {
+                    public void run() {
+                        showProgress(false);
+                    }
+                });
+
+                if (x.getStatus() == 101) {
                     PatientSearchActivity.this.runOnUiThread(new Runnable() {
                         public void run() {
                         Toast.makeText(getApplicationContext(), R.string.error_unable_to_connect, Toast.LENGTH_LONG).show();
