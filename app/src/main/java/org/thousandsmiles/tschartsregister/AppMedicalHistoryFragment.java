@@ -79,7 +79,7 @@ public class AppMedicalHistoryFragment extends Fragment {
         try {
             val = Integer.parseInt(tx1.getText().toString());
 
-            if (val < 8 || val > 10) {
+            if (val < 6 || val > 10) {
                 ret = false;
                 tx1.setError(m_activity.getString(R.string.msg_invalid_pregnancy_range));
             }
@@ -99,8 +99,8 @@ public class AppMedicalHistoryFragment extends Fragment {
                     minVal = 2;
                     maxVal = 5;
                 } else {
-                    minVal = 5;
-                    maxVal = 11;
+                    minVal = 4;
+                    maxVal = 12;
                 }
             }
 
@@ -118,7 +118,7 @@ public class AppMedicalHistoryFragment extends Fragment {
         try {
             val = Integer.parseInt(tx1.getText().toString());
 
-            if (val < 4 || val > 18) {
+            if (val < 4 || val > 48) {
                 ret = false;
                 tx1.setError(m_activity.getString(R.string.msg_invalid_first_crawl_range));
             }
@@ -131,7 +131,7 @@ public class AppMedicalHistoryFragment extends Fragment {
         try {
             val = Integer.parseInt(tx1.getText().toString());
 
-            if (val < 4 || val > 18) {
+            if (val < 4 || val > 48) {
                 ret = false;
                 tx1.setError(m_activity.getString(R.string.msg_invalid_first_sit_range));
             }
@@ -145,7 +145,7 @@ public class AppMedicalHistoryFragment extends Fragment {
         try {
             val = Integer.parseInt(tx1.getText().toString());
 
-            if (val < 8 || val > 18) {
+            if (val < 8 || val > 48) {
                 ret = false;
                 tx1.setError(m_activity.getString(R.string.msg_first_walk_range));
             }
@@ -158,7 +158,7 @@ public class AppMedicalHistoryFragment extends Fragment {
         tx1.setError(null);
         try {
             val = Integer.parseInt(tx1.getText().toString());
-            if (val < 8 || val > 18)
+            if (val < 8 || val > 48)
             {
                 ret = false;
                 tx1.setError(m_activity.getString(R.string.msg_invalid_first_words_range));
@@ -197,10 +197,10 @@ public class AppMedicalHistoryFragment extends Fragment {
         if (rb != null) {
             if (rb.isChecked()) {
                 minVal = 0;
-                maxVal = 136;
+                maxVal = 181;
             } else {
                 minVal = 0;
-                maxVal = 300;
+                maxVal = 400;
             }
         }
 
