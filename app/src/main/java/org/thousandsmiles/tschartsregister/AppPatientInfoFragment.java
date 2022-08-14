@@ -148,6 +148,7 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
                     searchTerms.put("first", pd.getFirst().trim());
                     searchTerms.put("dob", pd.fromDobMilitary(getContext(), pd.getDob().trim()));
                     searchTerms.put("gender", pd.getGender().trim());
+                    searchTerms.put("exact", true);
                     lock = rest.findPatientsBySearchTerms(searchTerms);
                 } catch (Exception e) {
                     l.onFail(500, getContext().getString(R.string.msg_error_processing_patient_search_terms));
