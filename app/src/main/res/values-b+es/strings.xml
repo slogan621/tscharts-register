@@ -220,8 +220,10 @@
     <string name="msg_error_trying_to_find_patient_record">Se produjo un error al intentar verificar el registro del paciente existente.</string>
     <string name="msg_patient_already_in_database">Ya existe un paciente con este nombre, sexo y fecha de nacimiento en la base de datos.</string>
     <string name="title_matching_patient_found">Se encontró un paciente coincidente en la base de datos</string>
-    <string name="msg_matching_patient_was_found_please_search_again">Se encontró un paciente compatible. Busque de nuevo.</string>
+    <string name="msg_matching_patient_was_found_please_search_again">Se encontró un paciente coincidente. Busque de nuevo.</string>
     <string name="button_search_again">Busca de nuevo</string>
+    <string name="msg_matching_patient_was_found_please_choose_an_option">Se encontró un paciente coincidente. Por favor, elija una opción.</string>
+    <string name="button_search_use_matching_patient">Usar el paciente coincidente.</string>
     <string name="msg_unable_to_update_patient_data">No se pueden actualizar los datos del paciente</string>
     <string name="msg_successfully_updated_patient_data">Datos del paciente actualizados con éxitoa</string>
     <string name="msg_unable_to_update_medical_history">No se puede actualizar el historial médico</string>
@@ -235,5 +237,9 @@
     <string name="error_memory_is_low_unable_to_get_image">Memory is low, unable to load patient headshot</string>
     <string name="msg_please_wait_while_patients_are_searched_for">Espere mientras se busca a los pacientes</string>
     <string name="msg_please_wait_while_patient_photos_are_processed">Espere mientras se procesan las fotos de los pacientes</string>
+    <string name="title_existing_patient_dialog">¡Se Ha Encontrado Una Paciente Coincidente!</string>
+    <string name="make_changes_and_try_again">Modifique los datos y vuelva a intentarlo</string>
+    <string name="return_to_search_screen">Volver a la pantalla de búsqueda y empezar de nuevo</string>
+    <string name="continue_with_existing_patient_data">Seleccione esta paciente (recomendado)</string>
 </resources>
 

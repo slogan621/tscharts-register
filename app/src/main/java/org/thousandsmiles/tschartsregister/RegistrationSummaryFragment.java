@@ -1,6 +1,6 @@
 /*
- * (C) Copyright Syd Logan 2017-2018
- * (C) Copyright Thousand Smiles Foundation 2017-2018
+ * (C) Copyright Syd Logan 2017-2022
+ * (C) Copyright Thousand Smiles Foundation 2017-2022
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 package org.thousandsmiles.tschartsregister;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
@@ -28,21 +29,37 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import org.thousandsmiles.tscharts_lib.CommonSessionSingleton;
+import org.thousandsmiles.tscharts_lib.HeadshotImage;
+import org.thousandsmiles.tscharts_lib.ImageDisplayedListener;
 import org.thousandsmiles.tscharts_lib.PatientData;
 
 import java.io.File;
 
-public class RegistrationSummaryFragment extends Fragment {
+public class RegistrationSummaryFragment extends Fragment implements ImageDisplayedListener {
     private Activity m_activity = null;
     private SessionSingleton m_sess = null;
     private int m_patientId;
     private boolean m_isNewPatient = true;
     private PatientData m_patientData;
     private ImageView m_imageView;
+
+    public void onImageDisplayed(int imageId, String path)
+    {
+        SessionSingleton sess = SessionSingleton.getInstance();
+        sess.getCommonSessionSingleton().addHeadShotPath(imageId, path);
+        sess.getCommonSessionSingleton().startNextHeadshotJob();
+    }
+
+    @Override
+    public void onImageError(int imageId, String path, int errorCode) {
+
+    }
 
     public static RegistrationSummaryFragment newInstance() {
         return new RegistrationSummaryFragment();
@@ -63,7 +80,6 @@ public class RegistrationSummaryFragment extends Fragment {
         }
 
         boolean displayGenderImage = false;
-
         String imagePath = m_sess.getCommonSessionSingleton().getPhotoPath();
         if (imagePath == null || imagePath.length() == 0) {
             displayGenderImage = true;

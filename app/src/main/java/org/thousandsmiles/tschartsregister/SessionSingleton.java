@@ -1,6 +1,6 @@
 /*
- * (C) Copyright Syd Logan 2017-2021
- * (C) Copyright Thousand Smiles Foundation 2017-2021
+ * (C) Copyright Syd Logan 2017-2022
+ * (C) Copyright Thousand Smiles Foundation 2017-2022
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,8 +52,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class SessionSingleton {
     private static SessionSingleton m_instance;
+    private PatientData m_duplicatePatientData;
     private JSONObject m_routingSlipEntryResponse = null;
     private JSONArray m_patientSearchResults = null;
+    private JSONArray m_dupPatientSearchResults = null;
     private PatientData m_newPatientData = null; // only if m_isNewPatient is true
     private HashMap<Integer, PatientData> m_patientData = new HashMap<Integer, PatientData>();
     private HashMap<Integer, ReturnToClinic> m_returnToClinicData = new HashMap<Integer, ReturnToClinic>();
@@ -143,6 +145,20 @@ public class SessionSingleton {
     public void setPatientSearchResults(JSONArray results)
     {
         m_patientSearchResults = results;
+    }
+
+    public void clearDupPatientSearchResultData() {
+        m_dupPatientSearchResults = null;
+    }
+
+    public void setDupPatientSearchResults(JSONArray results)
+    {
+        m_dupPatientSearchResults = results;
+    }
+
+    public JSONArray getDupPatientSearchResults()
+    {
+        return m_dupPatientSearchResults;
     }
 
     public void setCategory(int categoryId) {
@@ -325,10 +341,21 @@ public class SessionSingleton {
     }
 
     public PatientData getPatientData(final int id) {
+        return getPatientData(id, false);
+    }
 
+    public void setDuplicatePatientData(PatientData o) {
+        m_duplicatePatientData = o;
+    }
+
+    PatientData getDuplicatePatientData() {
+        return m_duplicatePatientData;
+    }
+
+    public PatientData getPatientData(final int id, boolean forceRead) {
         PatientData o = null;
 
-        if (m_patientData != null) {
+        if (forceRead == false && m_patientData != null) {
             o = m_patientData.get(id);
         }
         if (o == null && Looper.myLooper() != Looper.getMainLooper()) {

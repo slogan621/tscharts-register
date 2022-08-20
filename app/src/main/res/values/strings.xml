@@ -223,6 +223,8 @@
     <string name="title_matching_patient_found">Matching patient was found in database</string>
     <string name="msg_matching_patient_was_found_please_search_again">A matching patient was found. Please search again.</string>
     <string name="button_search_again">Search Again</string>
+    <string name="msg_matching_patient_was_found_please_choose_an_option">A matching patient was found. Please choose an option.</string>
+    <string name="button_search_use_matching_patient">Use matching patient</string>
     <string name="msg_unable_to_update_patient_data">Unable to update patient data</string>
     <string name="msg_successfully_updated_patient_data">Successfully updated patient data</string>
     <string name="msg_unable_to_update_medical_history">Unable to update medical history</string>
@@ -236,5 +238,9 @@
     <string name="error_memory_is_low_unable_to_get_image">Memory is low, unable to load patient headshot</string>
     <string name="msg_please_wait_while_patient_photos_are_processed">Please wait while patient photos are processed</string>
     <string name="msg_please_wait_while_patients_are_searched_for">Please wait while patients are searched for</string>
+    <string name="title_existing_patient_dialog">A Matching Patient Has Been Found!</string>
+    <string name="make_changes_and_try_again">Modify data and try again</string>
+    <string name="return_to_search_screen">Return to Search Screen and Start Over</string>
+    <string name="continue_with_existing_patient_data">Select This Patient (Recommended)</string>
 </resources>
 

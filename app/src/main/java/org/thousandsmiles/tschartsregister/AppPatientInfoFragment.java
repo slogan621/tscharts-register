@@ -1,6 +1,6 @@
 /*
- * (C) Copyright Syd Logan 2017-2021
- * (C) Copyright Thousand Smiles Foundation 2017-2021
+ * (C) Copyright Syd Logan 2017-2022
+ * (C) Copyright Thousand Smiles Foundation 2017-2022
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.appcompat.app.AlertDialog;
 
@@ -45,10 +44,12 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.thousandsmiles.tscharts_lib.CommonSessionSingleton;
 import org.thousandsmiles.tscharts_lib.DatePickerFragment;
+import org.thousandsmiles.tscharts_lib.DentalState;
 import org.thousandsmiles.tscharts_lib.PatientData;
 import org.thousandsmiles.tscharts_lib.PatientREST;
 import org.thousandsmiles.tscharts_lib.RESTCompletionListener;
@@ -113,7 +114,9 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
         @Override
         public void onSuccess(int code, String message, JSONArray a) {
             try {
-
+                SessionSingleton sess = SessionSingleton.getInstance();
+                sess.setDupPatientSearchResults(a);
+                // got a response
             } catch (Exception e) {
             }
         }
@@ -131,11 +134,38 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
         }
     }
 
+    class DupPatientGetListener implements RESTCompletionListener {
+
+        @Override
+        public void onSuccess(int code, String message, JSONArray a) {
+        }
+
+        @Override
+        public void onSuccess(int code, String message, JSONObject a) {
+            try {
+                SessionSingleton sess = SessionSingleton.getInstance();
+                PatientData pd = new PatientData(a);
+                sess.setDuplicatePatientData(pd);
+                // got a response
+            } catch (Exception e) {
+            }
+        }
+
+        @Override
+        public void onSuccess(int code, String message) {
+        }
+
+        @Override
+        public void onFail(int code, String message) {
+        }
+    }
+
     private void checkForExistingPatient(final PatientData pd) {
         Thread thread = new Thread() {
             public void run() {
                 // note we use session context because this may be called after onPause()
                 PatientREST rest = new PatientREST(getContext());
+                m_sess.clearDupPatientSearchResultData();
                 PatientLookupListener l = new PatientLookupListener();
                 rest.addListener(l);
                 Object lock = null;
@@ -169,36 +199,115 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
 
                 status = rest.getStatus();
                 if (status == 200) {
-                    Handler handler = new Handler(Looper.getMainLooper());
-                    handler.post(new Runnable() {
-                        public void run() {
-                            Toast.makeText(getContext(), getContext().getString(R.string.msg_patient_already_in_database), Toast.LENGTH_LONG).show();
+                    JSONArray res = m_sess.getDupPatientSearchResults();
+                    PatientData o = null;
+                    int id = -1;
+                    try {
+                        id = res.getInt(0);
+                    } catch (Exception e) {
+                        Handler handler = new Handler(Looper.getMainLooper());
+                        handler.post(new Runnable() {
+                            public void run() {
+                                String msg;
+                                msg = String.format("%s: %s",
+                                        getContext().getString(R.string.msg_error_trying_to_find_patient_record),
+                                        e.toString());
+                                Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
+                    if (id != -1) {
+                        // go get the data for this patient
+                        final int patient_id = id;
+                        Thread thread = new Thread() {
+                            public void run() {
+                                PatientREST rest = new PatientREST(getContext());
+                                m_sess.clearDupPatientSearchResultData();
+                                DupPatientGetListener l = new DupPatientGetListener();
+                                rest.addListener(l);
+                                Object lock = null;
+                                int status;
 
-                            final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
-                            builder.setTitle(m_activity.getString(R.string.title_matching_patient_found));
-                            builder.setMessage(m_activity.getString(R.string.msg_matching_patient_was_found_please_search_again));
-
-                            builder.setPositiveButton(m_activity.getString(R.string.button_search_again), new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    AlertDialog alert = builder.create();
-                                    alert.show();
-                                    final Class<?> nextClass;
-                                    nextClass = PatientSearchActivity.class;
-                                    Intent intent = new Intent(m_activity, nextClass);
-                                    Bundle b = new Bundle();
-                                    startActivity(intent);
-                                    m_activity.finish();
+                                try {
+                                    lock = rest.getPatientData(patient_id);
+                                } catch (Exception e) {
+                                    Handler handler = new Handler(Looper.getMainLooper());
+                                    handler.post(new Runnable() {
+                                        public void run() {
+                                            String msg;
+                                            msg = String.format("%s: exception %s",
+                                                    getContext().getString(R.string.msg_error_trying_to_find_patient_record),
+                                                    e.toString());
+                                            Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
+                                        }
+                                    });
+                                    l.onFail(500, getContext().getString(R.string.msg_error_trying_to_find_patient_record));
+                                    return;
                                 }
-                            });
-                            builder.show();
-                        }
-                    });
+
+                                synchronized (lock) {
+                                    // we loop here in case of race conditions or spurious interrupts
+                                    while (true) {
+                                        try {
+                                            lock.wait();
+                                            break;
+                                        } catch (InterruptedException e) {
+                                            continue;
+                                        }
+                                    }
+                                }
+
+                                status = rest.getStatus();
+                                if (status == 200) {
+                                    Handler handler = new Handler(Looper.getMainLooper());
+                                    handler.post(new Runnable() {
+                                        public void run() {
+                                            ExistingPatientDialogFragment rtc = new ExistingPatientDialogFragment();
+                                            rtc.setPatientId(patient_id);
+                                            rtc.show(getActivity().getSupportFragmentManager(), getActivity().getApplicationContext().getString(R.string.title_register_dialog));
+                                        }
+                                    });
+                                } else if (status == 404) {
+                                    Handler handler = new Handler(Looper.getMainLooper());
+                                    handler.post(new Runnable() {
+                                        public void run() {
+                                            String msg;
+                                            msg = String.format("%s: patient data not found", getContext().getString(R.string.msg_error_trying_to_find_patient_record) );
+                                            Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
+                                        }
+                                    });
+                                } else {
+                                    Handler handler = new Handler(Looper.getMainLooper());
+                                    handler.post(new Runnable() {
+                                        public void run() {
+                                            String msg;
+                                            msg = String.format("%s: error code %d",
+                                                    getContext().getString(R.string.msg_error_trying_to_find_patient_record),
+                                                    status);
+                                            Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
+                                        }
+                                    });
+                                }
+                            }
+                        };
+                        thread.start();
+                    } else {
+                        Handler handler = new Handler(Looper.getMainLooper());
+                        handler.post(new Runnable() {
+                            public void run() {
+                                Toast.makeText(getContext(), getContext().getString(R.string.msg_error_trying_to_find_patient_record), Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
                 } else if (status != 404 ) {
                     Handler handler = new Handler(Looper.getMainLooper());
                     handler.post(new Runnable() {
                         public void run() {
-                            Toast.makeText(getContext(), getContext().getString(R.string.msg_error_trying_to_find_patient_record), Toast.LENGTH_LONG).show();
+                            String msg;
+                            msg = String.format("%s: error code %d",
+                                    getContext().getString(R.string.msg_error_trying_to_find_patient_record),
+                                    status);
+                            Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
                         }
                     });
                 } else {
@@ -206,7 +315,7 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
                     handler.post(new Runnable() {
                         public void run() {
                             goToNextActivity(pd);
-                         }
+                        }
                     });
                 }
             }
