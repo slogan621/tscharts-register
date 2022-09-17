@@ -241,5 +241,12 @@
     <string name="make_changes_and_try_again">Modifique los datos y vuelva a intentarlo</string>
     <string name="return_to_search_screen">Volver a la pantalla de búsqueda y empezar de nuevo</string>
     <string name="continue_with_existing_patient_data">Seleccione esta paciente (recomendado)</string>
+    <string name="title_no_clinic_today">No hay clínica hoy</string>
+    <string name="msg_no_clinic_register_prior_clinic">¿Le gustaría registrar un paciente que asistió a una clínica anterior? Si es así, seleccione la clínica anterior, luego haga clic en Continuar.</string>
+    <string name="label_start">Comienzo</string>
+    <string name="label_end">Final</string>
+    <string name="label_location">Lugar</string>
+    <string name="label_to">a</string>
+    <string name="label_continue">Continuar</string>
 </resources>
 

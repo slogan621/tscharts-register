@@ -22,6 +22,7 @@ import java.text.DateFormatSymbols;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -690,7 +691,35 @@ public class PatientSearchActivity extends AppCompatActivity implements ImageDis
                     } else if (status == 404) {
                         PatientSearchActivity.this.runOnUiThread(new Runnable() {
                             public void run() {
-                                Toast.makeText(getApplicationContext(), R.string.error_clinic_not_found_date, Toast.LENGTH_LONG).show();
+                                SelectClinicDialogFragment rtc = new SelectClinicDialogFragment();
+                                rtc.show(getSupportFragmentManager(), getApplicationContext().getString(R.string.title_register_dialog));
+                                /*
+                                AlertDialog.Builder builder = new AlertDialog.Builder(m_activity);
+
+                                builder.setTitle(m_activity.getString(R.string.title_no_clinic_today));
+                                builder.setMessage(m_activity.getString(R.string.msg_no_clinic_register_prior_clinic));
+
+                                builder.setPositiveButton(m_activity.getString(R.string.button_yes), new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                        startActivity(new Intent(m_activity, SelectClinicActivity.class));
+                                        m_activity.finish();
+                                    }
+                                });
+
+                                builder.setNegativeButton(m_activity.getString(R.string.button_no), new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                        startActivity(new Intent(m_activity, LoginActivity.class));
+                                        m_activity.finish();
+                                    }
+                                });
+                                Dialog ret = null;
+                                ret = builder.create();
+                                ret.show();
+
+                                 */
                             }
                         });
                     } else if (status == 500) {
