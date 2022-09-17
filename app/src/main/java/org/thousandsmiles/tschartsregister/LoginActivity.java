@@ -280,14 +280,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                                     Toast.makeText(getApplicationContext(), R.string.error_invalid_username_or_password, Toast.LENGTH_LONG).show();
                                 }
                                 });
-
                             } else {
                                 LoginActivity.this.runOnUiThread(new Runnable() {
                                     public void run() {
-                                        Toast.makeText(getApplicationContext(), R.string.error_unknown, Toast.LENGTH_LONG).show();
+                                        String msg;
+                                        msg = String.format("%s %d", R.string.error_unknown, x.getStatus());
+                                        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
                                     }
                                 });
-
                             }
                             Intent i = new Intent(LoginActivity.this, LoginActivity.class);
                             startActivity(i);
@@ -297,7 +297,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     };
 
                     thread.start();
-
                 }
             }).start();
         }
