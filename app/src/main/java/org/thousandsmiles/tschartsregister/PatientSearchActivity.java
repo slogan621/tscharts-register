@@ -673,6 +673,19 @@ public class PatientSearchActivity extends AppCompatActivity implements ImageDis
                         }
                     }
 
+                    getMexicanStates();
+                    getStations();
+                    if (m_sess.updateCategoryData() == false) {
+                        PatientSearchActivity.this.runOnUiThread(new Runnable() {
+                            public void run() {
+                                Toast.makeText(getApplicationContext(), R.string.error_unable_to_get_category_data, Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    } else {
+                        m_sess.initCategoryNameToSelectorMap();
+                        m_sess.initCategoryNameToSpanishMap();
+                    }
+
                     SessionSingleton data = SessionSingleton.getInstance();
                     int status = clinicREST.getStatus();
                     if (status == 101) {
@@ -693,33 +706,6 @@ public class PatientSearchActivity extends AppCompatActivity implements ImageDis
                             public void run() {
                                 SelectClinicDialogFragment rtc = new SelectClinicDialogFragment();
                                 rtc.show(getSupportFragmentManager(), getApplicationContext().getString(R.string.title_register_dialog));
-                                /*
-                                AlertDialog.Builder builder = new AlertDialog.Builder(m_activity);
-
-                                builder.setTitle(m_activity.getString(R.string.title_no_clinic_today));
-                                builder.setMessage(m_activity.getString(R.string.msg_no_clinic_register_prior_clinic));
-
-                                builder.setPositiveButton(m_activity.getString(R.string.button_yes), new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                        startActivity(new Intent(m_activity, SelectClinicActivity.class));
-                                        m_activity.finish();
-                                    }
-                                });
-
-                                builder.setNegativeButton(m_activity.getString(R.string.button_no), new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                        startActivity(new Intent(m_activity, LoginActivity.class));
-                                        m_activity.finish();
-                                    }
-                                });
-                                Dialog ret = null;
-                                ret = builder.create();
-                                ret.show();
-
-                                 */
                             }
                         });
                     } else if (status == 500) {
@@ -734,19 +720,6 @@ public class PatientSearchActivity extends AppCompatActivity implements ImageDis
                                 Toast.makeText(getApplicationContext(), R.string.error_unknown, Toast.LENGTH_LONG).show();
                             }
                         });
-                    } else {
-                        getMexicanStates();
-                        getStations();
-                        if (m_sess.updateCategoryData() == false) {
-                            PatientSearchActivity.this.runOnUiThread(new Runnable() {
-                                public void run() {
-                                    Toast.makeText(getApplicationContext(), R.string.error_unable_to_get_category_data, Toast.LENGTH_LONG).show();
-                                }
-                            });
-                        } else {
-                            m_sess.initCategoryNameToSelectorMap();
-                            m_sess.initCategoryNameToSpanishMap();
-                        }
                     }
                 }
             };

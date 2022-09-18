@@ -18,15 +18,15 @@
 package org.thousandsmiles.tschartsregister;
 
 import android.app.Dialog
+import android.content.Context
 import android.content.DialogInterface
 import android.content.DialogInterface.OnShowListener
 import android.content.Intent
 import android.os.Bundle
-import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.View
-import android.view.Window
+import android.view.*
 import android.widget.*
+import androidx.annotation.IdRes
+import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import kotlinx.serialization.Serializable
@@ -89,24 +89,49 @@ class SelectClinicDialogFragment : DialogFragment(), RESTCompletionListener {
         alertDialog?.show()
     }
 
+    class CustomSimpleAdapter(
+        private val mContext: Context,
+        data: ArrayList<Map<String, Any>>,
+        @LayoutRes
+        res: Int,
+        from: Array<String>,
+        @IdRes
+        to: IntArray
+    ) :
+    // Passing these params to SimpleAdapter
+        SimpleAdapter(mContext, data, res, from, to) {
+
+        override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+
+            // Get the view in our case list_item.xml
+            val view = super.getView(position, convertView, parent)
+
+            // Getting reference of ImageView that we
+            // have used in our list_item.xml file
+            // so that we can add user defined code
+            val checkboxView = view.findViewById<CheckBox>(R.id.select_clinic_check)
+
+            // Reference of TextView which is treated a title
+            //val titleTextView = view.findViewById<TextView>(R.id.titleTextView)
+
+            // Adding an clickEvent to the ImageView, as soon as we click this
+            // ImageView we will see a Toast which will display a message
+            // Note: this event will only fire when ImageView is pressed and
+            //       not when whole list_item is pressed
+            checkboxView.setOnClickListener {
+                Toast.makeText(
+                    mContext,
+                    "Image with title is pressed",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+            // Finally returning our view
+            return view
+        }
+    }
+
     private fun LayoutClinicList(list: MutableList<ClinicData>) {
-        /*
-        val arrayAdapter: ArrayAdapter<*>
-        var mListView = findViewById<ListView>(R.id.clinic_list)
-        arrayAdapter = ArrayAdapter(this,
-            android.R.layout.simple_list_item_1, list)
-        mListView.adapter = arrayAdapter
-         */
-        /*
-        val simpleAdapter: SimpleAdapter
-        var mListView = findViewById<ListView>(R.id.clinic_list)
-        simpleAdapter = SimpleAdapter(this,
-            list, R.layout.custom_select_clinic_list_view,
-
-        mListView.adapter = arrayAdapter
-
-         */
-
         // https://android.examples.directory/simpleadapter/
 
         val keyList: Array<String> = arrayOf(
@@ -123,10 +148,12 @@ class SelectClinicDialogFragment : DialogFragment(), RESTCompletionListener {
             adapterData.add(mutableMap)
         }
 
-        val simpleAdapter = SimpleAdapter(
-            context, adapterData, R.layout.select_clinic_list_row,
-            keyList, viewList
-        )
+        val simpleAdapter = context?.let {
+            CustomSimpleAdapter(
+                it, adapterData, R.layout.select_clinic_list_row,
+                keyList, viewList
+            )
+        }
         var mListView = m_view?.findViewById<ListView>(R.id.clinic_list)
         mListView!!.adapter = simpleAdapter
         mListView.onItemClickListener = AdapterView.OnItemClickListener {
