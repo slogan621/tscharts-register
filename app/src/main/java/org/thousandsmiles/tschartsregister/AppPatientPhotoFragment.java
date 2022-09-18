@@ -276,6 +276,8 @@ public class AppPatientPhotoFragment extends Fragment {
             });
 
             AlertDialog alert = builder.create();
+            alert.setCancelable(false);
+            alert.setCanceledOnTouchOutside(false);
             alert.show();
         } else if (m_sess.getCommonSessionSingleton().getPhotoPath() == null || m_sess.getCommonSessionSingleton().getPhotoPath().equals("")) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -298,6 +300,8 @@ public class AppPatientPhotoFragment extends Fragment {
             });
 
             AlertDialog alert = builder.create();
+            alert.setCancelable(false);
+            alert.setCanceledOnTouchOutside(false);
             alert.show();
         } else {
             startActivity(new Intent(m_activity, WaiverActivity.class));
@@ -353,6 +357,8 @@ public class AppPatientPhotoFragment extends Fragment {
             });
 
             AlertDialog alert = builder.create();
+            alert.setCancelable(false);
+            alert.setCanceledOnTouchOutside(false);
             alert.show();
         }
     }

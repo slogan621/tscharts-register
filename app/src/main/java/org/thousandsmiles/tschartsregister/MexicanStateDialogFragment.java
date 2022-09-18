@@ -131,7 +131,8 @@ public class MexicanStateDialogFragment extends DialogFragment {
                 });
         Dialog ret = builder.create();
         ret.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-
+        ret.setCanceledOnTouchOutside(false);
+        ret.setCancelable(false);
         ret.setTitle(R.string.title_select_state_dialog);
         return ret;
     }

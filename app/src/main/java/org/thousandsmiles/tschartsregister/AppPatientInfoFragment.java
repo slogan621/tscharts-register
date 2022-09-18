@@ -342,6 +342,8 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
             });
 
             AlertDialog alert = builder.create();
+            alert.setCancelable(false);
+            alert.setCanceledOnTouchOutside(false);
             alert.show();
         } else {
             if (m_isNewPatient == false) {
@@ -385,6 +387,8 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
             });
 
             AlertDialog alert = builder.create();
+            alert.setCancelable(false);
+            alert.setCanceledOnTouchOutside(false);
             alert.show();
         } else {
             Intent intent = new Intent(m_activity, nextClass);

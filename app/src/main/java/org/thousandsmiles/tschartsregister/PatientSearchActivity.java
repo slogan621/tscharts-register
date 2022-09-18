@@ -136,6 +136,8 @@ public class PatientSearchActivity extends AppCompatActivity implements ImageDis
         });
 
         AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.setCanceledOnTouchOutside(false);
+        alertDialog.setCancelable(false);
         alertDialog.show();
     }
 
@@ -259,6 +261,8 @@ public class PatientSearchActivity extends AppCompatActivity implements ImageDis
             });
 
             AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.setCanceledOnTouchOutside(false);
+            alertDialog.setCancelable(false);
             alertDialog.show();
             }
         });

@@ -239,6 +239,8 @@ public class AppMedicalHistoryFragment extends Fragment {
             });
 
             AlertDialog alert = builder.create();
+            alert.setCancelable(false);
+            alert.setCanceledOnTouchOutside(false);
             alert.show();
         } else if (m_dirty || mh.equals(m_medicalHistory) == false) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -263,6 +265,8 @@ public class AppMedicalHistoryFragment extends Fragment {
             });
 
             AlertDialog alert = builder.create();
+            alert.setCancelable(false);
+            alert.setCanceledOnTouchOutside(false);
             alert.show();
         } else {
             startActivity(new Intent(m_activity, m_nextActivity));

@@ -92,6 +92,8 @@ public class AppVerifyCURPFragment extends Fragment {
             }
 
             AlertDialog alert = builder.create();
+            alert.setCancelable(false);
+            alert.setCanceledOnTouchOutside(false);
             alert.show();
         }
     }

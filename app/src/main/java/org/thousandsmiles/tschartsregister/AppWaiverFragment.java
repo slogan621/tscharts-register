@@ -273,6 +273,8 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
         });
 
         AlertDialog alert = builder.create();
+        alert.setCancelable(false);
+        alert.setCanceledOnTouchOutside(false);
         alert.show();
     }
 
@@ -373,6 +375,8 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
             });
 
             AlertDialog alert = builder.create();
+            alert.setCanceledOnTouchOutside(false);
+            alert.setCancelable(false);
             alert.show();
         }
     }

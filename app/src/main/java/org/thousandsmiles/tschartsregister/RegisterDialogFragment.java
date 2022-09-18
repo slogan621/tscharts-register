@@ -133,10 +133,13 @@ public class RegisterDialogFragment extends DialogFragment {
                         }
                     });
             ret = builder.create();
+            ret.setCanceledOnTouchOutside(false);
+            ret.setCancelable(false);
             ret.setTitle(R.string.title_register_dialog);
         } else {
             Toast.makeText(getActivity(), R.string.error_unable_to_get_patient_data, Toast.LENGTH_LONG).show();
         }
+
         return ret;
     }
 }

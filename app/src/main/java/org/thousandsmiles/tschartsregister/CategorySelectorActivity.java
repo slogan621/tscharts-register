@@ -88,6 +88,8 @@ public class CategorySelectorActivity extends AppCompatActivity {
         });
 
         AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.setCanceledOnTouchOutside(false);
+        alertDialog.setCancelable(false);
         alertDialog.show();
     }
 
