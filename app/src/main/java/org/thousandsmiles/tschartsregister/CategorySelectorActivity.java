@@ -198,6 +198,7 @@ public class CategorySelectorActivity extends AppCompatActivity {
 
         super.onResume();
         LayoutCategoryGrid();
+        goImmersive();
     }
 
     @Override

@@ -60,14 +60,14 @@
                 android:layout_span="1"
                 android:text="@string/curp"
                 android:paddingRight="20dp"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:textAppearance="?android:attr/textAppearanceMedium" />
             -->
 
             <TextView
                 android:id="@+id/value_summary_curp"
                 android:layout_span="1"
                 android:text=""
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
         </TableRow>
 
@@ -82,13 +82,13 @@
                 android:layout_span="1"
                 android:text="@string/paternal_last"
                 android:paddingRight="20dp"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <TextView
                 android:id="@+id/value_summary_father_last_name"
                 android:layout_span="1"
                 android:text=""
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
         </TableRow>
 
@@ -103,13 +103,13 @@
                 android:layout_span="1"
                 android:text="@string/maternal_last"
                 android:paddingRight="20dp"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <TextView
                 android:id="@+id/value_summary_mother_last_name"
                 android:layout_span="1"
                 android:text=""
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
         </TableRow>
 
@@ -124,13 +124,13 @@
                 android:layout_span="1"
                 android:text="@string/first_name"
                 android:paddingRight="20dp"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <TextView
                 android:id="@+id/value_summary_first_name"
                 android:layout_span="1"
                 android:text=""
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
         </TableRow>
 
@@ -145,13 +145,13 @@
                 android:layout_span="1"
                 android:text="@string/middle_name"
                 android:paddingRight="20dp"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <TextView
                 android:id="@+id/value_summary_middle_name"
                 android:layout_span="1"
                 android:text=""
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
         </TableRow>
 
@@ -166,13 +166,13 @@
                 android:layout_span="1"
                 android:text="@string/label_summary_id"
                 android:paddingRight="20dp"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <TextView
                 android:id="@+id/value_summary_id"
                 android:layout_span="1"
                 android:text=""
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
         </TableRow>
 
@@ -187,7 +187,7 @@
                 android:layout_span="1"
                 android:paddingRight="20dp"
                 android:text="@string/label_summary_dob"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <TextView
                 android:id="@+id/value_summary_dob"
@@ -195,7 +195,7 @@
                 android:layout_height="wrap_content"
                 android:layout_span="1"
                 android:text=""
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
         </TableRow>
 
@@ -210,7 +210,7 @@
                 android:layout_span="1"
                 android:text="@string/label_summary_category"
                 android:paddingRight="20dp"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -224,7 +224,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=""
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
                 <ImageView
                     android:id="@+id/value_summary_category"
