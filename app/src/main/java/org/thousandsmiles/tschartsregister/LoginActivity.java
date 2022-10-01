@@ -284,7 +284,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                                 LoginActivity.this.runOnUiThread(new Runnable() {
                                     public void run() {
                                         String msg;
-                                        msg = String.format("%s %d", R.string.error_unknown, x.getStatus());
+                                        msg = String.format("%s %d", getResources().getString(R.string.error_unknown), x.getStatus());
                                         Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
                                     }
                                 });
