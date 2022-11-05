@@ -234,12 +234,13 @@
     <string name="born_with_cleft_palate">¿Nació el paciente con paladar hendido?</string>
     <string name="born_with_cleft_lip">¿Nació el paciente con labio leporino?</string>
     <string name="title_vaccination">Vacunación</string>
-    <string name="error_memory_is_low_unable_to_get_image">Memory is low, unable to load patient headshot</string>
+    <string name="error_memory_is_low_unable_to_get_image">La memoria es baja, no se puede cargar la foto de la cabeza del paciente</string>
     <string name="msg_please_wait_while_patients_are_searched_for">Espere mientras se busca a los pacientes</string>
     <string name="msg_please_wait_while_patient_photos_are_processed">Espere mientras se procesan las fotos de los pacientes</string>
     <string name="title_existing_patient_dialog">¡Se Ha Encontrado Una Paciente Coincidente!</string>
     <string name="make_changes_and_try_again">Modifique los datos y vuelva a intentarlo</string>
     <string name="return_to_search_screen">Volver a la pantalla de búsqueda y empezar de nuevo</string>
     <string name="continue_with_existing_patient_data">Seleccione esta paciente (recomendado)</string>
+    <string name="msg_patient_was_already_registered_for_this_clinic">El paciente ya estaba registrado en esta clínica</string>
 </resources>
 

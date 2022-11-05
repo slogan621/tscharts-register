@@ -99,11 +99,15 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
     @Override
     public void onFail(int code, String msg)
     {
-        String logMsg;
-        logMsg = String.format("onFail state: %s", getStateString());
-        Log.e("AppWaiverFragment", logMsg);
-        m_state = REGISTRATION_FAILED;
-        showFailure(code, msg);
+        if (code == 409) {
+            onSuccess(code, msg); // XXX assumes RegisterREST was failure here, bug if something else returns 409
+        } else {
+            String logMsg;
+            logMsg = String.format("onFail state: %s", getStateString());
+            Log.e("AppWaiverFragment", logMsg);
+            m_state = REGISTRATION_FAILED;
+            showFailure(code, msg);
+        }
     }
 
     private ArrayList<Integer> mergeStations(ArrayList<Integer> list1, ArrayList<Integer> list2)
@@ -171,8 +175,8 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
         return ret;
     }
 
-    /* patient --> medical history --> photo --> routing slip --> routing slip entries
-       --> register --> consent */
+    /* patient --> medical history --> photo --> vaccinations --> routing slip --> routing slip entries
+-       --> register --> consent */
     @Override
     public void onSuccess(int code, String msg)
     {
@@ -196,8 +200,7 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
                 // remove from headshot cache
                 HeadshotImage.removePatientHeadshotFromCache(m_sess.getActivePatientId());
             } else {
-                m_state = RegistrationState.UPDATED_MEDICAL_HISTORY;
-                m_sess.createRoutingSlip(this);
+                onSuccess(200, "");
             }
         } else if (m_state == RegistrationState.UPDATED_MEDICAL_HISTORY) {
             m_state = RegistrationState.UPDATED_PHOTO;
@@ -209,8 +212,18 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
             }
         } else if (m_state == RegistrationState.UPDATED_PHOTO) {
             m_state = RegistrationState.UPDATED_VACCINATIONS;
-            m_sess.createRoutingSlip(this);
+            m_sess.register(this, m_sess.getPatientId(), m_sess.getClinicId());
+            //m_sess.createRoutingSlip(this);
         } else if (m_state == RegistrationState.UPDATED_VACCINATIONS) {
+            m_state = RegistrationState.CREATED_REGISTRATION;
+            if (code == 409) {
+                // skip routing slip, routing slip entries, and consent
+                m_state = RegistrationState.UPDATED_ROUTING_SLIP_ENTRIES;
+                onSuccess(200, "");
+            } else {
+                m_sess.createRoutingSlip(this);
+            }
+        } else if  (m_state == RegistrationState.CREATED_REGISTRATION) {
             m_state = RegistrationState.UPDATED_ROUTING_SLIP;
             ArrayList<Integer> catStations = m_sess.getStationsForCategory(m_sess.getCategoryName());
             ArrayList<Integer> rtcStations = m_sess.getReturnToClinicStations();
@@ -226,15 +239,12 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
             m_count--;
             if (m_count <= 0) {
                 m_state = RegistrationState.UPDATED_ROUTING_SLIP_ENTRIES;
-                m_sess.register(this, m_sess.getPatientId(), m_sess.getClinicId());
+                String m;
+                m = String.format("calling createConsentRecord reg ID is %d", m_common.getRegistrationId());
+                Log.e("AppWaiverFragment", m);
+                m_sess.createConsentRecord(this, m_sess.getPatientId(), m_sess.getClinicId(), m_common.getRegistrationId(), m_waiverChecked, m_photoChecked);
             }
         } else if (m_state == RegistrationState.UPDATED_ROUTING_SLIP_ENTRIES) {
-            m_state = RegistrationState.CREATED_REGISTRATION;
-            String m;
-            m = String.format("calling createConsentRecord reg ID is %d", m_common.getRegistrationId());
-            Log.e("AppWaiverFragment", m);
-            m_sess.createConsentRecord(this, m_sess.getPatientId(), m_sess.getClinicId(), m_common.getRegistrationId(), m_waiverChecked, m_photoChecked);
-        } else if (m_state == RegistrationState.CREATED_REGISTRATION){
             m_state = RegistrationState.CREATED_CONSENT;
             if (m_showSuccess == false) {
                 showSuccess();

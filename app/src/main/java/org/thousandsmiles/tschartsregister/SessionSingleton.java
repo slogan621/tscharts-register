@@ -221,7 +221,11 @@ public class SessionSingleton {
                     Handler handler = new Handler(Looper.getMainLooper());
                     handler.post(new Runnable() {
                         public void run() {
-                            Toast.makeText(getContext(), getContext().getString(R.string.msg_unable_to_register_patient_record), Toast.LENGTH_LONG).show();
+                            if (status == 409) {
+                                Toast.makeText(getContext(), getContext().getString(R.string.msg_patient_was_already_registered_for_this_clinic), Toast.LENGTH_LONG).show();
+                            } else {
+                                Toast.makeText(getContext(), getContext().getString(R.string.msg_unable_to_register_patient_record), Toast.LENGTH_LONG).show();
+                            }
                         }
                     });
                 } else {
