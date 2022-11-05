@@ -175,8 +175,11 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
         return ret;
     }
 
-    /* patient --> medical history --> photo --> vaccinations --> routing slip --> routing slip entries
--       --> register --> consent */
+    /* states:
+       patient --> medical history --> photo --> vaccinations --> register
+       If registration is not a duplicate for this patient and clinic, follow
+       with routing slip --> routing slip entries --> consent
+    */
     @Override
     public void onSuccess(int code, String msg)
     {
@@ -213,7 +216,6 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
         } else if (m_state == RegistrationState.UPDATED_PHOTO) {
             m_state = RegistrationState.UPDATED_VACCINATIONS;
             m_sess.register(this, m_sess.getPatientId(), m_sess.getClinicId());
-            //m_sess.createRoutingSlip(this);
         } else if (m_state == RegistrationState.UPDATED_VACCINATIONS) {
             m_state = RegistrationState.CREATED_REGISTRATION;
             if (code == 409) {
