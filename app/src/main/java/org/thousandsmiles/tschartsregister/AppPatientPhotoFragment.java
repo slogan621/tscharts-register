@@ -1,6 +1,6 @@
 /*
- * (C) Copyright Syd Logan 2017-2018
- * (C) Copyright Thousand Smiles Foundation 2017-2018
+ * (C) Copyright Syd Logan 2017-2022
+ * (C) Copyright Thousand Smiles Foundation 2017-2022
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,14 +56,10 @@ public class AppPatientPhotoFragment extends Fragment {
     private SessionSingleton m_sess = null;
     private boolean m_dirty = false;
     private ImageView m_mainImageView = null;
-    private ImageView m_buttonImageView = null;
     private String m_currentPhotoPath = "";
-    private PhotoFile m_photo1;
-    private PhotoFile m_photo2;
-    private PhotoFile m_photo3;
+    private PhotoFile m_photo1 = null;
     private PhotoFile m_tmpPhoto;     // used to hold result of camera, copied on success to corresponding m_photo[123]
     static final int REQUEST_TAKE_PHOTO = 1;
-    private int m_whichCamera;
 
     private class PhotoFile {
         private File m_file = null;
@@ -81,7 +77,6 @@ public class AppPatientPhotoFragment extends Fragment {
             v = (ImageView) m_activity.findViewById(m_headshotImage);
             if (v != null) {
                 v.setClickable(true);
-                Picasso.get().load(m_file).memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).into(m_buttonImageView);
             }
         }
 
@@ -108,7 +103,6 @@ public class AppPatientPhotoFragment extends Fragment {
         {
             copyInputStreamToOutputStream(in, new FileOutputStream(dest));
         }
-
 
         public void copyInputStreamToOutputStream(final InputStream in,
                                                   final OutputStream out) throws IOException {
@@ -147,7 +141,6 @@ public class AppPatientPhotoFragment extends Fragment {
                 m_activity.runOnUiThread(new Runnable() {
                     public void run() {
                         Toast.makeText(m_activity, m_activity.getString(R.string.msg_tablet_is_out_of_disk_space), Toast.LENGTH_SHORT).show();
-
                     }
                 });
             }
@@ -210,44 +203,21 @@ public class AppPatientPhotoFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
-            if (m_whichCamera == 1) {
+            if (m_photo1 != null) {
                 m_photo1.onPhotoTaken();
-            } else if (m_whichCamera == 2) {
-                m_photo2.onPhotoTaken();
-            } else if (m_whichCamera == 3) {
-                m_photo3.onPhotoTaken();
+                m_photo1.selectImage();
             }
         }
     }
 
     public void handleImageButton1Press(View v) {
-        m_buttonImageView = (ImageView)  m_activity.findViewById(R.id.headshot_image_1);
-        m_whichCamera = 1;
-        m_tmpPhoto.dispatchTakePictureIntent();
-    }
-
-    public void handleImageButton2Press(View v) {
-        m_buttonImageView = (ImageView)  m_activity.findViewById(R.id.headshot_image_2);
-        m_whichCamera = 2;
-        m_tmpPhoto.dispatchTakePictureIntent();
-    }
-
-    public void handleImageButton3Press(View v) {
-        m_buttonImageView = (ImageView) m_activity.findViewById(R.id.headshot_image_3);
-        m_whichCamera = 3;
         m_tmpPhoto.dispatchTakePictureIntent();
     }
 
     public void handleImage1Press(View v) {
-        m_photo1.selectImage();
-    }
-
-    public void handleImage2Press(View v) {
-        m_photo2.selectImage();
-    }
-
-    public void handleImage3Press(View v) {
-        m_photo3.selectImage();
+        if (m_photo1 != null) {
+            m_photo1.selectImage();
+        }
     }
 
     public void handleNextButtonPress(View v) {
@@ -260,7 +230,6 @@ public class AppPatientPhotoFragment extends Fragment {
             builder.setPositiveButton(m_activity.getString(R.string.button_yes), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
-                    //m_sess.updatePatientData(pd);
                     startActivity(new Intent(m_activity, WaiverActivity.class));
                     m_activity.finish();
                 }
@@ -313,15 +282,10 @@ public class AppPatientPhotoFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(false);
+
         m_photo1 = new PhotoFile();
         m_photo1.create();
-        m_photo1.setHeadshotImage(R.id.headshot_image_1);
-        m_photo2 = new PhotoFile();
-        m_photo2.create();
-        m_photo2.setHeadshotImage(R.id.headshot_image_2);
-        m_photo3 = new PhotoFile();
-        m_photo3.create();
-        m_photo3.setHeadshotImage(R.id.headshot_image_3);
+
         m_tmpPhoto = new PhotoFile();
         m_tmpPhoto.create();
         m_currentPhotoPath = m_sess.getCommonSessionSingleton().getPhotoPath();
@@ -366,18 +330,6 @@ public class AppPatientPhotoFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle bundle) {
         super.onViewCreated(view, bundle);
-        ImageView v = (ImageView) m_activity.findViewById(R.id.headshot_image_1);
-        if (v != null) {
-            v.setClickable(false);
-        }
-        v = (ImageView) m_activity.findViewById(R.id.headshot_image_2);
-        if (v != null) {
-            v.setClickable(false);
-        }
-        v = (ImageView) m_activity.findViewById(R.id.headshot_image_3);
-        if (v != null) {
-            v.setClickable(false);
-        }
     }
 
     @Override

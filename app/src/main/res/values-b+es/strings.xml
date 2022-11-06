@@ -242,5 +242,7 @@
     <string name="return_to_search_screen">Volver a la pantalla de búsqueda y empezar de nuevo</string>
     <string name="continue_with_existing_patient_data">Seleccione esta paciente (recomendado)</string>
     <string name="msg_patient_was_already_registered_for_this_clinic">El paciente ya estaba registrado en esta clínica</string>
+    <string name="or_click_next_to_continue">O haga clic en Próximo para continuar</string>
+    <string name="touch_or_press_camera_to_take_photo">Toque o presione la cámara para tomar una foto</string>
 </resources>
 

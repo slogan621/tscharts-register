@@ -3,8 +3,8 @@
 <!--
 
 /*
- * (C) Copyright Syd Logan 2018
- * (C) Copyright Thousand Smiles Foundation 2018
+ * (C) Copyright Syd Logan 2018-2022
+ * (C) Copyright Thousand Smiles Foundation 2018-2022
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,124 +22,84 @@
 -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:paddingTop="16dp"
     android:paddingBottom="16dp"
-    android:orientation="horizontal" >
+    android:orientation="vertical" >
 
     <View
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:layout_width="0dp"
         android:layout_weight="1"/>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:orientation="vertical" >
 
-        <View
-            android:layout_height="0dp"
-            android:layout_width="match_parent"
-            android:layout_weight="1"/>
+        <!--on below line we are creating an image button-->
 
-        <LinearLayout
+        <ImageButton
+            android:id="@+id/idImgBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:layout_gravity="center_horizontal"
-            android:orientation="horizontal" >
+            android:layout_gravity="center"
+            android:onClick="handleImageButton1Press"
+            android:src="@drawable/ic_photo_camera_black_48dp" />
 
-            <ImageView
-                android:id="@+id/headshot_image_1"
-                android:layout_width="116dp"
-                android:layout_height="116dp"
-                android:clickable="true"
-                android:src="@drawable/girlfront"
-                android:onClick="handleImage1Press"
-                />
-
+        <!--on below line we are creating a
+             text for our image button-->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textAlignment="center"
+            android:clickable="false"
+            android:textSize="16dp"
+            android:text="@string/touch_or_press_camera_to_take_photo"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            android:textColor="@color/colorBlack"
+            android:textStyle="bold" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textAlignment="center"
+            android:clickable="false"
+            android:textSize="16dp"
+            android:text="@string/or_click_next_to_continue"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            android:textColor="@color/colorBlack"
+            android:textStyle="bold" />
+<!--
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
+                android:layout_gravity="center"
                 android:onClick="handleImageButton1Press"
                 android:src="@drawable/ic_photo_camera_black_48dp"
                 />
+                -->
 
-        </LinearLayout>
-
-        <View
-            android:layout_height="0dp"
-            android:layout_width="match_parent"
-            android:layout_weight="1"/>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:layout_gravity="center_horizontal"
-            android:orientation="horizontal" >
-
-            <ImageView
-                android:id="@+id/headshot_image_2"
-                android:layout_width="116dp"
-                android:layout_height="116dp"
-                android:clickable="true"
-                android:src="@drawable/girlfront"
-                android:onClick="handleImage2Press"
-                />
-
+    <!--
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:onClick="handleImageButton2Press"
-                android:src="@drawable/ic_photo_camera_black_48dp"
-                />
-
-        </LinearLayout>
+                android:background="@drawable/ic_photo_camera_black_48dp"
+                android:textColor="#FFFFFF"
+                android:onClick="handleImageButton1Press"
+                android:id="@+id/ButtonTest"
+                android:paddingTop="32sp"
+                android:layout_gravity="center_horizontal"
+                android:drawablePadding="15sp"
+                android:text="Take Picture">
+            </ImageButton>
+            -->
 
         <View
             android:layout_height="0dp"
-            android:layout_width="match_parent"
-            android:layout_weight="1"/>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:layout_gravity="center_horizontal"
-            android:orientation="horizontal" >
-
-            <ImageView
-                android:id="@+id/headshot_image_3"
-                android:layout_width="116dp"
-                android:layout_height="116dp"
-                android:clickable="true"
-                android:src="@drawable/girlfront"
-                android:onClick="handleImage3Press"
-                />
-
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:onClick="handleImageButton3Press"
-                android:src="@drawable/ic_photo_camera_black_48dp"
-                />
-
-        </LinearLayout>
-
-        <View
             android:layout_width="0dp"
-            android:layout_height="match_parent"
             android:layout_weight="1"/>
 
-    </LinearLayout>
+
 </LinearLayout>

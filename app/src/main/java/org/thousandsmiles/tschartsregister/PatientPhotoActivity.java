@@ -45,24 +45,8 @@ public class PatientPhotoActivity extends AppCompatActivity {
         m_patientPhotoFragment.handleImageButton1Press(v);
     }
 
-    public void handleImageButton2Press(View v) {
-        m_patientPhotoFragment.handleImageButton2Press(v);
-    }
-
-    public void handleImageButton3Press(View v) {
-        m_patientPhotoFragment.handleImageButton3Press(v);
-    }
-
     public void handleImage1Press(View v) {
         m_patientPhotoFragment.handleImage1Press(v);
-    }
-
-    public void handleImage2Press(View v) {
-        m_patientPhotoFragment.handleImage2Press(v);
-    }
-
-    public void handleImage3Press(View v) {
-        m_patientPhotoFragment.handleImage3Press(v);
     }
 
     @Override
