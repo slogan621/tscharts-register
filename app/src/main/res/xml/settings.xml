@@ -1,7 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory android:title="Server setting">
+    <PreferenceCategory android:title="TS Database Server Setting">
         <EditTextPreference android:defaultValue="192.168.0.128"  android:key="ipAddress" android:title="IP address" android:summary="Change IP separated by dots"></EditTextPreference>
         <EditTextPreference android:defaultValue="443" android:summary="Change port number" android:key="port" android:title="Port"></EditTextPreference>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Wristband Printer Setting">
+        <CheckBoxPreference
+            android:title="Automatic Wristband Printing"
+            android:defaultValue="true"
+            android:summary="Wristband will be printed on successful patient registration"
+            android:key="WBPrinterAuto" />
+        <EditTextPreference android:defaultValue="192.168.0.130"  android:key="WBPrinterIpAddress1" android:title="Wristband Printer 1 IP address" android:summary="Change IP separated by dots"></EditTextPreference>
+        <EditTextPreference android:defaultValue="443" android:summary="Change port number" android:key="WBPrinterPort1" android:title="Wristband Printer 1 Port"></EditTextPreference>
+        <EditTextPreference android:defaultValue="192.168.0.131"  android:key="WBPrinterIpAddress2" android:title="Wristband Printer 2 IP address" android:summary="Change IP separated by dots"></EditTextPreference>
+        <EditTextPreference android:defaultValue="443" android:summary="Change port number" android:key="WBPrinterPort2" android:title="Wristband Printer 2 Port"></EditTextPreference>
+        <EditTextPreference android:defaultValue="192.168.0.132"  android:key="WBPrinterIpAddress3" android:title="Wristband Printer 3 IP address" android:summary="Change IP separated by dots"></EditTextPreference>
+        <EditTextPreference android:defaultValue="443" android:summary="Change port number" android:key="WBPrinterPort3" android:title="Wristband Printer 3 Port"></EditTextPreference>
     </PreferenceCategory>
 </PreferenceScreen>
