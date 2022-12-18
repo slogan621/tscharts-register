@@ -1,6 +1,6 @@
 /*
- * (C) Copyright Syd Logan 2017
- * (C) Copyright Thousand Smiles Foundation 2017
+ * (C) Copyright Syd Logan 2017-2022
+ * (C) Copyright Thousand Smiles Foundation 2017-2022
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -104,6 +104,18 @@ public class SettingsActivity extends PreferenceActivity {
                         .getString(preference.getKey(), ""));
     }
 
+    private static void bindPreferenceSummaryToBoolValue(Preference preference) {
+        // Set the listener to watch for value changes.
+        preference.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
+
+        // Trigger the listener immediately with the preference's
+        // current value.
+        sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
+                PreferenceManager
+                        .getDefaultSharedPreferences(preference.getContext())
+                        .getBoolean(preference.getKey(), false));
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -165,6 +177,14 @@ public class SettingsActivity extends PreferenceActivity {
             // guidelines.
             bindPreferenceSummaryToValue(findPreference("ipAddress"));
             bindPreferenceSummaryToValue(findPreference("port"));
+
+            bindPreferenceSummaryToBoolValue(findPreference("WBPrinterAuto"));
+            bindPreferenceSummaryToValue(findPreference("WBPrinterIpAddress1"));
+            bindPreferenceSummaryToValue(findPreference("WBPrinterPort1"));
+            bindPreferenceSummaryToValue(findPreference("WBPrinterIpAddress2"));
+            bindPreferenceSummaryToValue(findPreference("WBPrinterPort2"));
+            bindPreferenceSummaryToValue(findPreference("WBPrinterIpAddress3"));
+            bindPreferenceSummaryToValue(findPreference("WBPrinterPort3"));
         }
 
         @Override
