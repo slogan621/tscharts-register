@@ -244,5 +244,6 @@
     <string name="msg_patient_was_already_registered_for_this_clinic">El paciente ya estaba registrado en esta clínica</string>
     <string name="or_click_next_to_continue">O haga clic en Próximo para continuar</string>
     <string name="touch_or_press_camera_to_take_photo">Toque o presione la cámara para tomar una foto</string>
+    <string name="title_activity_wristband_printer">Impresoras de Pulseras</string>
 </resources>
 

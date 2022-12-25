@@ -278,7 +278,7 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
 
         builder.setPositiveButton(m_activity.getString(R.string.button_ok), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                startActivity(new Intent(m_activity, PatientSearchActivity.class));
+                startActivity(new Intent(m_activity, WristbandPrinterActivity.class));
                 m_activity.finish();
                 dialog.dismiss();
             }
