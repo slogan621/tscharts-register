@@ -48,7 +48,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.thousandsmiles.tscharts_lib.CommonSessionSingleton;
 import org.thousandsmiles.tscharts_lib.HeadshotImage;
+import org.thousandsmiles.tscharts_lib.PatientData;
 import org.thousandsmiles.tscharts_lib.RESTCompletionListener;
+import org.thousandsmiles.tscharts_lib.WristbandPrintManager;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -278,6 +280,8 @@ public class AppWaiverFragment extends Fragment implements RESTCompletionListene
 
         builder.setPositiveButton(m_activity.getString(R.string.button_ok), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
+                PatientData pd = m_sess.getPatientData();
+                WristbandPrintManager.Companion.getInstance(m_activity).setPatientData(pd);
                 startActivity(new Intent(m_activity, WristbandPrinterActivity.class));
                 m_activity.finish();
                 dialog.dismiss();

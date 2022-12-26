@@ -74,7 +74,6 @@ public class SessionSingleton {
     private boolean m_isNewMedicalHistory = false; /* old patient, new clinic so new medical history */
     private CommonSessionSingleton m_commonSessionSingleton = null;
 
-
     public CommonSessionSingleton getCommonSessionSingleton()
     {
         if (m_commonSessionSingleton == null) {
@@ -99,6 +98,16 @@ public class SessionSingleton {
             m_newPatientData = new PatientData();
         }
         return m_newPatientData;
+    }
+
+    public PatientData getPatientData() {
+        PatientData ret;
+        if (getCommonSessionSingleton().getIsNewPatient() == true) {
+            ret = getNewPatientData();
+        } else {
+            ret = getPatientData(getPatientId());
+        }
+        return ret;
     }
 
     public int getClinicId() { return getCommonSessionSingleton().getClinicId(); }
