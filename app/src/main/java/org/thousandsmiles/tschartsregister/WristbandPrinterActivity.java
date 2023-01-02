@@ -53,7 +53,7 @@ public class WristbandPrinterActivity extends AppCompatActivity implements Wrist
         arguments = new Bundle();
         m_wristbandPrinterListFragment.setArguments(arguments);
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.main_panel, m_wristbandPrinterListFragment)
+                .add(R.id.main_panel, m_wristbandPrinterListFragment)
                 .commit();
     }
 
