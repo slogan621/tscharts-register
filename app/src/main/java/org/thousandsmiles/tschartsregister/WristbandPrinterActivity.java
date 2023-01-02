@@ -1,6 +1,6 @@
 /*
- * (C) Copyright Syd Logan 2022
- * (C) Copyright Thousand Smiles Foundation 2022
+ * (C) Copyright Syd Logan 2022-2023
+ * (C) Copyright Thousand Smiles Foundation 2022-2023
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,22 +16,25 @@
  */
 
 package org.thousandsmiles.tschartsregister;
-
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewTreeObserver;
-
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.thousandsmiles.tscharts_lib.WristbandPrinter;
 import org.thousandsmiles.tscharts_lib.WristbandPrinterListFragment;
+import org.thousandsmiles.tscharts_lib.WristbandStatusListener;
 
-public class WristbandPrinterActivity extends AppCompatActivity {
-    private Context m_context;
-    private WristbandPrinterListFragment m_wristbandPrinterListFragment;
+public class WristbandPrinterActivity extends AppCompatActivity implements WristbandStatusListener {
+    private Context m_context = null;
+    private Activity m_activity = null;
+    private WristbandPrinterListFragment m_wristbandPrinterListFragment = null;
 
     public void handleNextButtonPress(View v) {
         onNextPressed();
@@ -44,8 +47,9 @@ public class WristbandPrinterActivity extends AppCompatActivity {
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         setContentView(R.layout.activity_wristband_printer);
         m_context = getApplicationContext();
+        m_activity = this;
         Bundle arguments;
-        m_wristbandPrinterListFragment = new WristbandPrinterListFragment();
+        m_wristbandPrinterListFragment = new WristbandPrinterListFragment(this);
         arguments = new Bundle();
         m_wristbandPrinterListFragment.setArguments(arguments);
         getSupportFragmentManager().beginTransaction()
@@ -91,6 +95,26 @@ public class WristbandPrinterActivity extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+    }
+
+    @Override
+    public void OnSuccess(int job, @NonNull WristbandPrinter.PrinterStatus status) {
+
+    }
+
+    @Override
+    public void OnError(int job, @NonNull WristbandPrinter.PrinterStatus status, @NonNull String msg) {
+
+    }
+
+    @Override
+    public void OnStatusChange(int job, @NonNull WristbandPrinter.PrinterStatus status) {
+
+    }
+
+    @Override
+    public void OnConnectionStatusChange(int job, @NonNull WristbandPrinter.ConnectedStatus status) {
+
     }
 }
 
