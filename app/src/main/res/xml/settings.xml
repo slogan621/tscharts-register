@@ -11,10 +11,10 @@
             android:summary="Wristband will be printed on successful patient registration"
             android:key="WBPrinterAuto" />
         <EditTextPreference android:defaultValue="192.168.0.130"  android:key="WBPrinterIpAddress1" android:title="Wristband Printer 1 IP address" android:summary="Change IP separated by dots"></EditTextPreference>
-        <EditTextPreference android:defaultValue="443" android:summary="Change port number" android:key="WBPrinterPort1" android:title="Wristband Printer 1 Port"></EditTextPreference>
+        <EditTextPreference android:defaultValue="6101" android:summary="Change port number" android:key="WBPrinterPort1" android:title="Wristband Printer 1 Port"></EditTextPreference>
         <EditTextPreference android:defaultValue="192.168.0.131"  android:key="WBPrinterIpAddress2" android:title="Wristband Printer 2 IP address" android:summary="Change IP separated by dots"></EditTextPreference>
-        <EditTextPreference android:defaultValue="443" android:summary="Change port number" android:key="WBPrinterPort2" android:title="Wristband Printer 2 Port"></EditTextPreference>
+        <EditTextPreference android:defaultValue="6101" android:summary="Change port number" android:key="WBPrinterPort2" android:title="Wristband Printer 2 Port"></EditTextPreference>
         <EditTextPreference android:defaultValue="192.168.0.132"  android:key="WBPrinterIpAddress3" android:title="Wristband Printer 3 IP address" android:summary="Change IP separated by dots"></EditTextPreference>
-        <EditTextPreference android:defaultValue="443" android:summary="Change port number" android:key="WBPrinterPort3" android:title="Wristband Printer 3 Port"></EditTextPreference>
+        <EditTextPreference android:defaultValue="6101" android:summary="Change port number" android:key="WBPrinterPort3" android:title="Wristband Printer 3 Port"></EditTextPreference>
     </PreferenceCategory>
 </PreferenceScreen>
