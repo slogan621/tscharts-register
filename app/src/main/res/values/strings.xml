@@ -246,5 +246,6 @@
     <string name="or_click_next_to_continue">Or, Click Next to Continue</string>
     <string name="touch_or_press_camera_to_take_photo">Touch or Press Camera to Take Photo</string>
     <string name="title_activity_wristband_printer">Wristband Printers</string>
+    <string name="msg_name_must_not_contain_spaces">Name must not contain spaces</string>
 </resources>
 

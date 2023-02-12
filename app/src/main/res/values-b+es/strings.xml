@@ -245,5 +245,6 @@
     <string name="or_click_next_to_continue">O haga clic en Próximo para continuar</string>
     <string name="touch_or_press_camera_to_take_photo">Toque o presione la cámara para tomar una foto</string>
     <string name="title_activity_wristband_printer">Impresoras de Pulseras</string>
+    <string name="msg_name_must_not_contain_spaces">El nombre no debe contener espacios</string>
 </resources>
 

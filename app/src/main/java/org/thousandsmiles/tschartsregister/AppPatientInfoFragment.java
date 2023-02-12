@@ -1306,12 +1306,30 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
                 list.add(R.id.maternal_last);
             }
         }
+        if (!tx1.getText().toString().matches("\\S+")) {
+            ret = false;
+            tx1.setError(m_activity.getString(R.string.msg_name_must_not_contain_spaces));
+        }
+        if (!tx2.getText().toString().matches("\\S+")) {
+            ret = false;
+            tx2.setError(m_activity.getString(R.string.msg_name_must_not_contain_spaces));
+        }
 
         tx1 =(TextView)m_view.findViewById(R.id.first_name);
         tx1.setError(null);
         if (tx1.getText().toString().equals("")) {
             ret = false;
             list.add(R.id.first_name);
+        } else if (!tx1.getText().toString().matches("\\S+")) {
+            ret = false;
+            tx1.setError(m_activity.getString(R.string.msg_name_must_not_contain_spaces));
+        }
+
+        tx1 =(TextView)m_view.findViewById(R.id.middle_name); // ok if blank, but must not have spaces
+        tx1.setError(null);
+        if (!tx1.getText().toString().matches("\\S+")) {
+            ret = false;
+            tx1.setError(m_activity.getString(R.string.msg_name_must_not_contain_spaces));
         }
 
         // Address
