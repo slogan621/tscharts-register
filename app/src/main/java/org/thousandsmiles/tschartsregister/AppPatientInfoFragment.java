@@ -1327,9 +1327,11 @@ public class AppPatientInfoFragment extends Fragment implements DatePickerDialog
 
         tx1 =(TextView)m_view.findViewById(R.id.middle_name); // ok if blank, but must not have spaces
         tx1.setError(null);
-        if (!tx1.getText().toString().matches("\\S+")) {
-            ret = false;
-            tx1.setError(m_activity.getString(R.string.msg_name_must_not_contain_spaces));
+        if (!tx1.getText().toString().equals("")) {
+            if (!tx1.getText().toString().matches("\\S+")) {
+                ret = false;
+                tx1.setError(m_activity.getString(R.string.msg_name_must_not_contain_spaces));
+            }
         }
 
         // Address
